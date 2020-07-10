@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ListaSensoriMovimento">
+
+    <TextView
+        android:id="@+id/TestoMovimento"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:text="Movimento"
+        android:textSize="36sp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore1"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Accelerometro"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/Ok1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/Test1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore2"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Accelerometro non calibrato"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore3"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Gravita'"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore4"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Giroscopio"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok4"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore5"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Giroscopio non calibrato"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore6"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Accelerazione lineare"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok6"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore7"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Vettore di rotazione"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok7"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/sensore8"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Conta passi"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ok8"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/test8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prova" />
+        </TableRow>
+
+    </TableLayout>
+
+
+</LinearLayout>
