@@ -7,6 +7,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DbManager
 {
     private static final String LOG_TAG = DbManager.class.getSimpleName();
@@ -23,7 +26,6 @@ public class DbManager
     public static final String KEY_3 = "valore3";
     public static final String KEY_4 = "valore4";
     public static final String KEY_5 = "valore5";
-
 
     //Costruttore
     public DbManager(Context context)
@@ -48,7 +50,10 @@ public class DbManager
 
     private ContentValues createContentValues(String nome, float[] valori) {
         ContentValues values = new ContentValues();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = new Date();
         values.put( KEY_NAME, nome);
+        values.put( "DataOra", dateFormat.format(date)); //////////////
         for (int i = 0; i < valori.length; i++) {
             values.put("valore"+ i, valori[i]);
         }
