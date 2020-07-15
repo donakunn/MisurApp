@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContentResolver;
@@ -7,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,6 +74,11 @@ public class DbManager
     //crea la tabella inizializzando i valori
     public long createTabella(String nome, float[] valori) {
         ContentValues initialValues = createContentValues(nome, valori);
+        try {
+            backupDB();/////////////////////////////////
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return database.insertOrThrow(DATABASE_TABLE, null, initialValues);
     }
 
@@ -82,16 +89,20 @@ public class DbManager
 
     //backup database
     public void backupDB() throws IOException {
+
         final String inFileName = context.getDatabasePath("mydatabase.db").getPath(); //DA CAMBIARE!!!
         //in alternativa
         //final String inFileName = "/data/data/com.example.myapplication/databases/myapplication.db";
         File dbFile = new File(inFileName);
         FileInputStream fis = new FileInputStream(dbFile);
 
-        String outFileName = Environment.getExternalStorageDirectory()+"/database_copy.db";
+        File folderToSaveDB = new File(Environment.getExternalStorageDirectory()+File.separator + "SensorAppDBBackup");
 
+        if (!folderToSaveDB.exists()) {
+            folderToSaveDB.mkdirs();
+        }
         // Open the empty db as the output stream
-        OutputStream output = new FileOutputStream(outFileName);
+        OutputStream output = new FileOutputStream(folderToSaveDB.getPath()+ "/database_copy.db");
 
         // Transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
