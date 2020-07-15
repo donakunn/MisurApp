@@ -74,8 +74,14 @@ public class DbManager
     //crea la tabella inizializzando i valori
     public long createTabella(String nome, float[] valori) {
         ContentValues initialValues = createContentValues(nome, valori);
+        /*try {
+            backupDB();///////////////////////////////// DA CAMBIARE
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
         try {
-            backupDB();/////////////////////////////////
+            restoreDB();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,6 +109,27 @@ public class DbManager
         }
         // Open the empty db as the output stream
         OutputStream output = new FileOutputStream(folderToSaveDB.getPath()+ "/database_copy.db");
+
+        // Transfer bytes from the inputfile to the outputfile
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fis.read(buffer))>0){
+            output.write(buffer, 0, length);
+        }
+
+        // Close the streams
+        output.flush();
+        output.close();
+        fis.close();
+    }
+    //backup database
+    public void restoreDB() throws IOException {
+
+        final String inFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SensorAppDBBackup/database_copy.db"; //DA CAMBIARE!!!
+        File dbFile = new File(inFileName);
+        FileInputStream fis = new FileInputStream(dbFile);
+        // Open the empty db as the output stream
+        OutputStream output = new FileOutputStream(Environment.getDataDirectory()+ "/data/com.example.myapplication/databases/mydatabase.db");
 
         // Transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
