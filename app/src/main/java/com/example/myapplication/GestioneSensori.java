@@ -1,228 +1,205 @@
 package com.example.myapplication;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-public class GestioneSensori extends Activity implements SensorEventListener, View.OnClickListener {
-    private SensorManager mSensorManager;
-    private Sensor sensore;
-    private float[] valori;
-    Button salvataggio;
-    private DbManager dbManager;
-    //private DbManager dbHelper = new DbManager (this);
-    TextView nomeSensor, valore0, valore1, valore2, valore3, valore4, valore5;
-    String nomeSensore;
-    int tipo;
-
+public class GestioneSensori extends AppCompatActivity  {
+    //il DbManager verrà usato probabilmente in un altro fragment che gestirà il salvataggio del database risiedente sempre in questa activity
+    /*private DbManager dbManager;//attributo
+            dbManager = new DbManager(this);//on create
+            dbManager.open();*/
     @Override
-    public final void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accelerometro);
+        setContentView(R.layout.activity_gestione_sensori);
 
         Bundle datipassati = getIntent().getExtras();
-        nomeSensore = datipassati.getString("NomeSensore");
-        tipo = datipassati.getInt("TipoSensore");
+        int tipo = datipassati.getInt("TipoSensore");
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensore = mSensorManager.getDefaultSensor(tipo);
+        String units = getUnits(tipo); //unità di misura
+        int dim = getNumValori(tipo); //dimensione array per la creazione del layout
+        String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla descrizione dei valori
 
-        nomeSensor = (TextView) findViewById(R.id.NomeSensore);
-        nomeSensor.setText(nomeSensore);
+        Bundle bundle = new Bundle();//serve per passare i valori nel vettore nel fragment per visualizzarli
 
-        valore0 = (TextView) findViewById(R.id.ValoreX);
-        valore1 = (TextView) findViewById(R.id.ValoreY);
-        valore2 = (TextView) findViewById(R.id.ValoreZ);
-        valore3 = (TextView) findViewById(R.id.ValoreX2);
-        valore4 = (TextView) findViewById(R.id.ValoreY2);
-        valore5 = (TextView) findViewById(R.id.ValoreZ2);
-        salvataggio = (Button) findViewById(R.id.Salva);
+        bundle.putInt("dim",dim);
+        bundle.putStringArray("descrizione",descrizione);
+        bundle.putString("unitàMisura", units);
+        bundle.putInt("tipo",tipo);
+        Fragment_visualizzaValori fragInfo = new Fragment_visualizzaValori();
+        fragInfo.setArguments(bundle);
 
-        dbManager = new DbManager(this);
-        dbManager.open();
-        salvataggio.setOnClickListener(this);
-
+        //richiamo del fragment
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori, fragInfo).commit();
 
     }
-    @Override
-    public final void onAccuracyChanged(Sensor arg0, int arg1) { //Sensor sensor, int accuracy
-// Do something here if sensor accuracy changes.
 
-    }
-    @Override
-    public final void onSensorChanged(SensorEvent event) {
-        // Do something with this sensor value.
-    // Many sensors return 3 values, one for each axis.
-        valori = event.values;//array che contiene i valori del sensore di tipo x
 
-        switch(nomeSensore) {
-            //Sensori Movimento
-            case "Accelerometro":
-                    //modifica del valore delle textView
-                valore0.setText("Valore X: "+valori[0] + " m/s^2");
-                valore1.setText("Valore Y: "+valori[1]+ " m/s^2");
-                valore2.setText("Valore Z: "+valori[2]+ " m/s^2");
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+    private String getUnits(int type) {
+        String units;
+        switch (type) {
+            case Sensor.TYPE_ACCELEROMETER:
+                units = "m/s\u00B2";
                 break;
-            case "Accelerometro non calibrato":
-                valore0.setText("Valore X (senza alcuna compensazione di polarizzazione): "+valori[0]+ " m/s^2");
-                valore1.setText("Valore Y (senza alcuna compensazione di polarizzazione): "+valori[1]+ " m/s^2");
-                valore2.setText("Valore Z (senza alcuna compensazione di polarizzazione): "+valori[2]+ " m/s^2");
-                valore3.setText("Valore X (con compensazione della polarizzazione stimata): "+valori[3]+ " m/s^2");
-                valore4.setText("Valore Y (con compensazione della polarizzazione stimata): "+valori[4]+ " m/s^2");
-                valore5.setText("Valore Z (con compensazione della polarizzazione stimata): "+valori[5]+ " m/s^2");
+            case Sensor.TYPE_ACCELEROMETER_UNCALIBRATED:
+                units = "m/s\u00B2";
                 break;
-            case "Gravita'":
-                valore0.setText("Valore X: "+valori[0]+ " m/s^2");
-                valore1.setText("Valore Y: "+valori[1]+ " m/s^2");
-                valore2.setText("Valore Z: "+valori[2]+ " m/s^2");
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_GRAVITY:
+                units = "m/s\u00B2";
                 break;
-            case "Giroscopio":
-                valore0.setText("Valore X: "+valori[0] + " rad/s");
-                valore1.setText("Valore Y: "+valori[1]+ " rad/s");
-                valore2.setText("Valore Z: "+valori[2]+ " rad/s");
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_GYROSCOPE:
+                units = "rad/s";
                 break;
-            case "Giroscopio non calibrato":
-                valore0.setText("Valore X (senza compensazione della deriva): "+valori[0]+ " rad/s");
-                valore1.setText("Valore Y (senza compensazione della deriva): "+valori[1]+ " rad/s");
-                valore2.setText("Valore Z (senza compensazione della deriva): "+valori[2]+ " rad/s");
-                valore3.setText("Valore X (deriva stimata): "+valori[3]);
-                valore4.setText("Valore Y (deriva stimata): "+valori[4]);
-                valore5.setText("Valore Z (deriva stimata): "+valori[5]);
+            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
+                units = "rad/s";
                 break;
-            case "Accelerazione lineare":
-                valore0.setText("Valore X: "+valori[0]+ " m/s^2");
-                valore1.setText("Valore Y: "+valori[1]+ " m/s^2");
-                valore2.setText("Valore Z: "+valori[2]+ " m/s^2");
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                units = "m/s";
                 break;
-            case "Vettore di rotazione":
-                valore0.setText("Valore X: "+valori[0]);
-                valore1.setText("Valore Y: "+valori[1]);
-                valore2.setText("Valore Z: "+valori[2]);
-                valore3.setText("Componente scalare del vettore di rotazione: "+valori[3]);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_STEP_COUNTER:
+                units = "steps";
                 break;
-            case "Conta passi":
-                valore0.setText("Numero di passi: "+valori[0]);
-                valore1.setVisibility(View.INVISIBLE);
-                valore2.setVisibility(View.INVISIBLE);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            //Sensori posizione
+            case Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR:
+                units = "μT";
                 break;
-                //Sensori Posizione
-            case "Vettore di Rotazione di gioco":
-                valore0.setText("Valore X: "+valori[0]);
-                valore1.setText("Valore Y: "+valori[1]);
-                valore2.setText("Valore Z: "+valori[2]);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                units = "μT";
                 break;
-            case "Vettore di Rotazione Geomagnetico":
-                valore0.setText("Valore X: "+valori[0]);
-                valore1.setText("Valore Y: "+valori[1]);
-                valore2.setText("Valore Z: "+valori[2]);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
+                units = "μT";
                 break;
-            case "Campo Magnetico":
-                valore0.setText("Valore X: "+valori[0] + " microtesla");
-                valore1.setText("Valore Y: "+valori[1] + " microtesla");
-                valore2.setText("Valore Z: "+valori[2] + " microtesla");
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_PROXIMITY:
+                units = "cm";
                 break;
-            case "Campo Magnetico non Calibrato":
-                valore0.setText("Valore X (senza calibrazione del ferro duro): "+valori[0] + " microtesla");
-                valore1.setText("Valore Y (senza calibrazione del ferro duro): "+valori[1] + " microtesla");
-                valore2.setText("Valore Z (senza calibrazione del ferro duro): "+valori[2] + " microtesla");
-                valore3.setText("Valore X (stima della polarizzazione del ferro): "+valori[3] + " microtesla");
-                valore4.setText("Valore Y (stima della polarizzazione del ferro): "+valori[4] + " microtesla");
-                valore5.setText("Valore Z (stima della polarizzazione del ferro): "+valori[5] + " microtesla");
+            //sensori ambiente
+            case Sensor.TYPE_AMBIENT_TEMPERATURE:
+                units = "°C";
                 break;
-            case "Prossimità":
-                valore0.setText("Distanza dall'oggetto: "+valori[0] + " cm");
-                valore1.setVisibility(View.INVISIBLE);
-                valore2.setVisibility(View.INVISIBLE);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_LIGHT:
+                units = "lx";
                 break;
-                //Sensori Ambiente
-            case "Temperatura Ambiente":
-                valore0.setText(" "+valori[0] + " °C");
-                valore1.setVisibility(View.INVISIBLE);
-                valore2.setVisibility(View.INVISIBLE);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_PRESSURE:
+                units = "hPa";
                 break;
-            case "Illuminazione":
-                valore0.setText(" "+valori[0]+" lx");
-                valore1.setVisibility(View.INVISIBLE);
-                valore2.setVisibility(View.INVISIBLE);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            case Sensor.TYPE_RELATIVE_HUMIDITY:
+                units = " %";
                 break;
-            case "Pressione":
-                valore0.setText(" "+valori[0]);
-                valore1.setVisibility(View.INVISIBLE);
-                valore2.setVisibility(View.INVISIBLE);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
-                break;
-            case "Umidità Relativa":
-                valore0.setText(" "+valori[0] + " %");
-                valore1.setVisibility(View.INVISIBLE);
-                valore2.setVisibility(View.INVISIBLE);
-                valore3.setVisibility(View.INVISIBLE);
-                valore4.setVisibility(View.INVISIBLE);
-                valore5.setVisibility(View.INVISIBLE);
+            default:
+                units = " ";
                 break;
         }
-
-
-
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, sensore, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSensorManager.unregisterListener(this);
+        return units;
     }
 
-    @Override
-    public void onClick(View v) {
-        dbManager.createTabella(nomeSensore, valori);
-        //dbManager.close(); DA SPOSTARE
+    private int getNumValori(int type) {
+        int numValori = 0;
+
+        switch (type) {
+            //sensori movimento
+            case Sensor.TYPE_ACCELEROMETER:
+                numValori = 3;
+                break;
+            case Sensor.TYPE_ACCELEROMETER_UNCALIBRATED:
+                numValori = 6;
+                break;
+            case Sensor.TYPE_GRAVITY:
+                numValori = 3;
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                numValori = 3;
+                break;
+            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
+                numValori = 6;
+                break;
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                numValori = 3;
+                break;
+            case Sensor.TYPE_ROTATION_VECTOR:
+                numValori = 4;
+                break;
+            case Sensor.TYPE_STEP_COUNTER:
+                numValori = 1;
+                break;
+            //Sensori posizione
+            case Sensor.TYPE_GAME_ROTATION_VECTOR:
+                numValori = 4;
+                break;
+            case Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR:
+                numValori = 3;
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                numValori = 3;
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
+                numValori = 6;
+                break;
+            case Sensor.TYPE_PROXIMITY:
+                numValori = 1;
+                break;
+            //sensori ambiente
+            case Sensor.TYPE_AMBIENT_TEMPERATURE:
+                numValori = 1;
+                break;
+            case Sensor.TYPE_LIGHT:
+                numValori = 1;
+                break;
+            case Sensor.TYPE_PRESSURE:
+                numValori = 1;
+                break;
+            case Sensor.TYPE_RELATIVE_HUMIDITY:
+                numValori = 1;
+                break;
+
+        }
+        return numValori;
+    }
+
+    private String[] getDescrizioneValori(int type){
+        int numValori = getNumValori(type);
+        String[] descrizione = new String[numValori];
+        switch (type) {
+            //sensori movimento
+            case Sensor.TYPE_ACCELEROMETER:
+                descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
+                break;
+            case Sensor.TYPE_ACCELEROMETER_UNCALIBRATED:
+                descrizione = getResources().getStringArray(R.array.descrizione_6_valori);
+                break;
+            case Sensor.TYPE_GRAVITY:
+                descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
+                break;
+            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
+                descrizione = getResources().getStringArray(R.array.descrizione_6_valori);
+                break;
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
+                break;
+            case Sensor.TYPE_ROTATION_VECTOR:
+                descrizione = getResources().getStringArray(R.array.descrizione_4_valori);
+                break;
+            //Sensori posizione
+            case Sensor.TYPE_GAME_ROTATION_VECTOR:
+                descrizione = getResources().getStringArray(R.array.descrizione_4_valori);
+                break;
+            case Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR:
+                descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
+                descrizione = getResources().getStringArray(R.array.descrizione_6_valori);
+                break;
+            default: //include tutti i sensori con 1 solo valore che non hanno descrizione
+                descrizione[0] = " ";
+                break;
+        }
+        return descrizione;
     }
 }

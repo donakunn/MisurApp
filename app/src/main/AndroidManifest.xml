@@ -11,10 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListaSensoriAmbiente"></activity>
-        <activity android:name=".ListaSensoriPosizione" />
+        <activity android:name=".vecchieClassi.ListaSensoriAmbiente"></activity>
+        <activity android:name=".vecchieClassi.ListaSensoriPosizione" />
         <activity android:name=".GestioneSensori" />
-        <activity android:name=".ListaSensoriMovimento" />
+        <activity android:name=".vecchieClassi.ListaSensoriMovimento" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

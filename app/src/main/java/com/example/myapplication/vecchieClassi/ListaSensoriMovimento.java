@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.vecchieClassi;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myapplication.GestioneSensori;
+import com.example.myapplication.R;
 
 public class ListaSensoriMovimento extends AppCompatActivity {
 

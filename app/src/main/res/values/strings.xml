@@ -1,3 +1,59 @@
 <resources>
     <string name="app_name">My Application</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- text che indica che il sensore non è supportato -->
+    <string name="NonSupportato">Non Supportato</string>
+
+    <!-- nomi dei tabs che rappresentano le categorie -->
+    <string name="Movimento">Movimento</string>
+    <string name="Posizione">Posizione</string>
+    <string name="Ambiente">Ambiente</string>
+
+    <!-- text nomi dei sensori movimento -->
+    <string name="Accelerometro">Accelerometro</string>
+    <string name="AccelerometroNonCalibrato">Accelerometro non calibrato</string>
+    <string name="Gravità">Gravità</string>
+    <string name="Giroscopio">Giroscopio</string>
+    <string name="GiroscopioNonCalibrato">Giroscopio non calibrato</string>
+    <string name="AccelerazioneLineare">Accelerazione lineare</string>
+    <string name="VettoreDiRotazione">Vettore di rotazione</string>
+    <string name="Contapassi">Contapassi</string>
+
+    <!-- text nomi dei sensori posizione -->
+    <string name="VettoreRotazioneGioco">Vettore di Rotazione di gioco</string>
+    <string name="VettoreRotazioneGeomagnetico">Vettore di Rotazione Geomagnetico</string>
+    <string name="CampoMagnetico">Campo Magnetico</string>
+    <string name="CampoMagneticoNonCalibrato">Campo Magnetico non Calibrato</string>
+    <string name="Prossimità">Prossimità</string>
+
+    <!-- text nomi dei sensori ambiente -->
+    <string name="TemperaturaAmbiente">Temperatura Ambiente</string>
+    <string name="Illuminazione">Illuminazione</string>
+    <string name="Pressione">Pressione</string>
+    <string name="UmiditàRelativa">Umidità Relativa</string>
+
+
+    <string-array name="descrizione_6_valori">
+        <item>x-uncalib</item>
+        <item>y-uncalib</item>
+        <item>z-uncalib</item>
+        <item>x-bias</item>
+        <item>y-bias</item>
+        <item>z-bias</item>
+    </string-array>
+
+    <string-array name="descrizione_3_valori">
+        <item>x-axis</item>
+        <item>y-axis</item>
+        <item>z-axis</item>
+    </string-array>
+
+    <string-array name="descrizione_4_valori">
+        <item>x-axis</item>
+        <item>y-axis</item>
+        <item>z-axis</item>
+        <item>scalare</item>
+    </string-array>
 </resources>
