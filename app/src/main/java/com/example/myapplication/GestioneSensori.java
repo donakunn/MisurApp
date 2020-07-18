@@ -118,7 +118,7 @@ public class GestioneSensori extends AppCompatActivity  {
                 numValori = 3;
                 break;
             case Sensor.TYPE_ROTATION_VECTOR:
-                numValori = 4;
+                numValori = 5;
                 break;
             case Sensor.TYPE_STEP_COUNTER:
                 numValori = 1;
@@ -143,7 +143,7 @@ public class GestioneSensori extends AppCompatActivity  {
             case Sensor.TYPE_AMBIENT_TEMPERATURE:
                 numValori = 1;
                 break;
-            case Sensor.TYPE_LIGHT:
+            case Sensor.TYPE_LIGHT: //TOO CHECK
                 numValori = 1;
                 break;
             case Sensor.TYPE_PRESSURE:
