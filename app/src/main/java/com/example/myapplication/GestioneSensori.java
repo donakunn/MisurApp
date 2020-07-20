@@ -181,7 +181,7 @@ public class GestioneSensori extends AppCompatActivity  {
                 descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
                 break;
             case Sensor.TYPE_ROTATION_VECTOR:
-                descrizione = getResources().getStringArray(R.array.descrizione_4_valori);
+                descrizione = getResources().getStringArray(R.array.descrizione_5_valori);
                 break;
             //Sensori posizione
             case Sensor.TYPE_GAME_ROTATION_VECTOR:

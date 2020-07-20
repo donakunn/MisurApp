@@ -56,4 +56,13 @@
         <item>z-axis</item>
         <item>scalare</item>
     </string-array>
+
+    <string-array name="descrizione_5_valori">
+        <item>x*sin(θ/2)</item>
+        <item>y*sin(θ/2)</item>
+        <item>z*sin(θ/2)</item>
+        <item>cos(θ/2)</item>
+        <item>estimated heading Accuracy (in radians)</item>
+    </string-array>
+
 </resources>
