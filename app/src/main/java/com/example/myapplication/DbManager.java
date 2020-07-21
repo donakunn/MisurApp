@@ -74,7 +74,7 @@ public class DbManager
             e.printStackTrace();
         }*/
 
-        try {
+        try { //Da sistemare
             restoreDB();
         } catch (IOException e) {
             e.printStackTrace();
