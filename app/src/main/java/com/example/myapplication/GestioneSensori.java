@@ -16,18 +16,18 @@ public class GestioneSensori extends AppCompatActivity  {
         setContentView(R.layout.activity_gestione_sensori);
 
         Bundle datipassati = getIntent().getExtras();
-        int tipo = datipassati.getInt("TipoSensore");
+        Sensore sensoreDaMostrare = datipassati.getParcelable("TipoSensore");
 
-        String units = getUnits(tipo); //unità di misura
+        /*String units = getUnits(tipo); //unità di misura
         int dim = getNumValori(tipo); //dimensione array per la creazione del layout
         String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla descrizione dei valori
-
+        */
         Bundle bundle = new Bundle();//serve per passare i valori nel vettore nel fragment per visualizzarli
 
-        bundle.putInt("dim",dim);
-        bundle.putStringArray("descrizione",descrizione);
-        bundle.putString("unitàMisura", units);
-        bundle.putInt("tipo",tipo);
+        bundle.putInt("dim",sensoreDaMostrare.getDimensione());
+        bundle.putStringArray("descrizione",sensoreDaMostrare.getDescrizione());
+        bundle.putString("unitàMisura", sensoreDaMostrare.getUnitàDiMisura());
+        bundle.putInt("tipo",sensoreDaMostrare.getTipo());
         Fragment_visualizzaValori fragInfo = new Fragment_visualizzaValori();
         fragInfo.setArguments(bundle);
 
@@ -37,7 +37,7 @@ public class GestioneSensori extends AppCompatActivity  {
     }
 
 
-    private String getUnits(int type) {
+    /*private String getUnits(int type) {
         String units;
         switch (type) {
             case Sensor.TYPE_ACCELEROMETER:
@@ -201,5 +201,5 @@ public class GestioneSensori extends AppCompatActivity  {
                 break;
         }
         return descrizione;
-    }
+    }*/
 }
