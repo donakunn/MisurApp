@@ -4,12 +4,19 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 import android.hardware.Sensor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 public class GestioneSensori extends AppCompatActivity  {
-    //il DbManager verrà usato probabilmente in un altro fragment che gestirà il salvataggio del database risiedente sempre in questa activity
+
+
     /*private DbManager dbManager;//attributo
             dbManager = new DbManager(this);//on create
             dbManager.open();*/
+
+    ImageButton salva;
+    private float[] valoriSalvati; //valori da mettere nel db
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +35,31 @@ public class GestioneSensori extends AppCompatActivity  {
         bundle.putStringArray("descrizione",sensoreDaMostrare.getDescrizione());
         bundle.putString("unitàMisura", sensoreDaMostrare.getUnitàDiMisura());
         bundle.putInt("tipo",sensoreDaMostrare.getTipo());
-        Fragment_visualizzaValori fragInfo = new Fragment_visualizzaValori();
-        fragInfo.setArguments(bundle);
+        final Fragment_visualizzaValori visualizzaValori = new Fragment_visualizzaValori();
+        visualizzaValori.setArguments(bundle);
 
-        //richiamo del fragment
-        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori, fragInfo).commit();
+        //richiamo dei fragment
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori, visualizzaValori).commit();
+
+        Fragment_lista_salvataggi listaSalvataggi = new Fragment_lista_salvataggi();
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_lista_salvataggi, listaSalvataggi).commit();
+
+        //bottone salva
+        salva =  (ImageButton) findViewById(R.id.Salva);
+        salva.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                valoriSalvati = visualizzaValori.getValues();//valoriSalvati è l'array da aggiungere al db
+
+
+                //stampa per test da cancellare
+                for(int i=0; i<valoriSalvati.length;i++){
+                    System.out.println(valoriSalvati[i]);
+                }
+            }
+        });
+        //qui va il resto del codice che aggiunge l'array al db...
+        //fragment_lista_salvataggi si occuperà di leggere le query e visualizzarle
+        //ho dato solo una bozza di come dovrebbe visualizzarli in quanto le righe verranno create e aggiunte dinamicamente
 
     }
 

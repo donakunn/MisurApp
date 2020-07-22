@@ -4,20 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".GestioneSensori">
+
 
     <FrameLayout
         android:id="@+id/Fragment_visualizzaValori"
         android:layout_width="match_parent"
-        android:layout_height="252dp"
-        android:layout_marginVertical="5dp">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp">
 
     </FrameLayout>
 
-    <FrameLayout
+    <ImageButton
+        android:id="@+id/Salva"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/Fragment_lista_salvataggi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:background="#FFFFFF"
+            android:elevation="4dp">
+
+        </FrameLayout>
+    </ScrollView>
 </LinearLayout>

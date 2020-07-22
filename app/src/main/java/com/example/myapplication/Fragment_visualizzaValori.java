@@ -20,9 +20,11 @@ import android.widget.TextView;
 public class Fragment_visualizzaValori extends Fragment implements SensorEventListener{
 
     private SensorManager manager;
-    Sensor s;
+    private Sensor s;
     TextView[] valori;
+    private float[] values;
     private int dim;
+
 
     //costruttore
     public Fragment_visualizzaValori() {
@@ -113,7 +115,7 @@ public class Fragment_visualizzaValori extends Fragment implements SensorEventLi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float[] values = event.values;
+        values = event.values;
 
         for(int i = 0; i < dim; i++){
             valori[i].setText(String.format("%.4f", values[i]));
@@ -141,4 +143,11 @@ public class Fragment_visualizzaValori extends Fragment implements SensorEventLi
         super.onPause();
         manager.unregisterListener(this);
     }
+
+    //ritorna l'array per salvare i dati
+    public float[] getValues(){
+        return values;
+    }
+
+
 }
