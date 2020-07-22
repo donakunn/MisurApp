@@ -19,6 +19,11 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
     TextView ok1, ok2,ok3,ok4,ok5;
     TextView nome_sensore1, nome_sensore2, nome_sensore3, nome_sensore4, nome_sensore5;
     private SensorManager manager;
+    private Sensore vettoreRotazioneGioco;
+    private Sensore vettoreRotazioneGeomagnetico;
+    private Sensore campoMagnetico;
+    private Sensore campoMagneticoNonCalibrato;
+    private Sensore prossimita;
 
     public Fragment_listaPosizione() {
         // Required empty public constructor
@@ -62,6 +67,9 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
+            vettoreRotazioneGioco = new Sensore(Sensor.TYPE_GAME_ROTATION_VECTOR,
+                    getResources().getStringArray(R.array.descrizione_4_valori),
+                    " ",4);
         }else {
             ok1.setVisibility(View.VISIBLE);
             row1.setEnabled(false);
@@ -70,6 +78,9 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
+            vettoreRotazioneGeomagnetico = new Sensore(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR,
+                    getResources().getStringArray(R.array.descrizione_3_valori),
+                    "μT",3);
         }else {
             ok2.setVisibility(View.VISIBLE);
             row2.setEnabled(false);
@@ -78,6 +89,9 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
+            campoMagnetico = new Sensore(Sensor.TYPE_MAGNETIC_FIELD,
+                    getResources().getStringArray(R.array.descrizione_3_valori),
+                    "μT",3);
         }else {
             ok3.setVisibility(View.VISIBLE);
             row3.setEnabled(false);
@@ -86,6 +100,9 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
+            campoMagneticoNonCalibrato = new Sensore(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED,
+                    getResources().getStringArray(R.array.descrizione_6_valori),
+                    "μT",6);
         }else {
             ok4.setVisibility(View.VISIBLE);
             row4.setEnabled(false);
@@ -94,6 +111,9 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null){
             nome_sensore5.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row5.setEnabled(true);
+            prossimita = new Sensore(Sensor.TYPE_PROXIMITY,
+                    new String[]{" "},
+                    "cm",1);
         }else {
             ok5.setVisibility(View.VISIBLE);
             row5.setEnabled(false);
@@ -112,23 +132,23 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         Intent intent = new Intent(getActivity(), GestioneSensori.class);
         switch (v.getId()) {
             case R.id.TableRow1:
-                intent.putExtra("TipoSensore", Sensor.TYPE_GAME_ROTATION_VECTOR);
+                intent.putExtra("TipoSensore", vettoreRotazioneGioco);
                 startActivity(intent);
                 break;
             case R.id.TableRow2:
-                intent.putExtra("TipoSensore", Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR);
+                intent.putExtra("TipoSensore", vettoreRotazioneGeomagnetico);
                 startActivity(intent);
                 break;
             case R.id.TableRow3:
-                intent.putExtra("TipoSensore", Sensor.TYPE_MAGNETIC_FIELD);
+                intent.putExtra("TipoSensore", campoMagnetico);
                 startActivity(intent);
                 break;
             case R.id.TableRow4:
-                intent.putExtra("TipoSensore", Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED);
+                intent.putExtra("TipoSensore", campoMagneticoNonCalibrato);
                 startActivity(intent);
                 break;
             case R.id.TableRow5:
-                intent.putExtra("TipoSensore", Sensor.TYPE_PROXIMITY);
+                intent.putExtra("TipoSensore", prossimita);
                 startActivity(intent);
                 break;
         }

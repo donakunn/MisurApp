@@ -23,7 +23,8 @@ public class Fragment_visualizzaValori extends Fragment implements SensorEventLi
     private Sensor s;
     TextView[] valori;
     private float[] values;
-    int dim;
+    private int dim;
+
 
     //costruttore
     public Fragment_visualizzaValori() {

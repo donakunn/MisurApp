@@ -23,18 +23,18 @@ public class GestioneSensori extends AppCompatActivity  {
         setContentView(R.layout.activity_gestione_sensori);
 
         Bundle datipassati = getIntent().getExtras();
-        int tipo = datipassati.getInt("TipoSensore");
+        Sensore sensoreDaMostrare = datipassati.getParcelable("TipoSensore");
 
-        String units = getUnits(tipo); //unità di misura
+        /*String units = getUnits(tipo); //unità di misura
         int dim = getNumValori(tipo); //dimensione array per la creazione del layout
         String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla descrizione dei valori
-
+        */
         Bundle bundle = new Bundle();//serve per passare i valori nel vettore nel fragment per visualizzarli
 
-        bundle.putInt("dim",dim);
-        bundle.putStringArray("descrizione",descrizione);
-        bundle.putString("unitàMisura", units);
-        bundle.putInt("tipo",tipo);
+        bundle.putInt("dim",sensoreDaMostrare.getDimensione());
+        bundle.putStringArray("descrizione",sensoreDaMostrare.getDescrizione());
+        bundle.putString("unitàMisura", sensoreDaMostrare.getUnitàDiMisura());
+        bundle.putInt("tipo",sensoreDaMostrare.getTipo());
         final Fragment_visualizzaValori visualizzaValori = new Fragment_visualizzaValori();
         visualizzaValori.setArguments(bundle);
 
@@ -50,6 +50,7 @@ public class GestioneSensori extends AppCompatActivity  {
             public void onClick(View v) {
                 valoriSalvati = visualizzaValori.getValues();//valoriSalvati è l'array da aggiungere al db
 
+
                 //stampa per test da cancellare
                 for(int i=0; i<valoriSalvati.length;i++){
                     System.out.println(valoriSalvati[i]);
@@ -63,7 +64,7 @@ public class GestioneSensori extends AppCompatActivity  {
     }
 
 
-    private String getUnits(int type) {
+    /*private String getUnits(int type) {
         String units;
         switch (type) {
             case Sensor.TYPE_ACCELEROMETER:
@@ -144,7 +145,7 @@ public class GestioneSensori extends AppCompatActivity  {
                 numValori = 3;
                 break;
             case Sensor.TYPE_ROTATION_VECTOR:
-                numValori = 4;
+                numValori = 5;
                 break;
             case Sensor.TYPE_STEP_COUNTER:
                 numValori = 1;
@@ -207,7 +208,7 @@ public class GestioneSensori extends AppCompatActivity  {
                 descrizione = getResources().getStringArray(R.array.descrizione_3_valori);
                 break;
             case Sensor.TYPE_ROTATION_VECTOR:
-                descrizione = getResources().getStringArray(R.array.descrizione_4_valori);
+                descrizione = getResources().getStringArray(R.array.descrizione_5_valori);
                 break;
             //Sensori posizione
             case Sensor.TYPE_GAME_ROTATION_VECTOR:
@@ -227,5 +228,5 @@ public class GestioneSensori extends AppCompatActivity  {
                 break;
         }
         return descrizione;
-    }
+    }*/
 }
