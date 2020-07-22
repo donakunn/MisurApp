@@ -143,7 +143,7 @@ public class GestioneSensori extends AppCompatActivity  {
             case Sensor.TYPE_AMBIENT_TEMPERATURE:
                 numValori = 1;
                 break;
-            case Sensor.TYPE_LIGHT: //TOO CHECK
+            case Sensor.TYPE_LIGHT:
                 numValori = 1;
                 break;
             case Sensor.TYPE_PRESSURE:

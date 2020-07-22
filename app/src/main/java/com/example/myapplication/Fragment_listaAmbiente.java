@@ -19,6 +19,11 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
     TextView ok1, ok2,ok3,ok4;
     TextView nome_sensore1, nome_sensore2, nome_sensore3, nome_sensore4;
     private SensorManager manager;
+    private Sensore temperaturaAmbiente;
+    private Sensore luminosita;
+    private Sensore pressione;
+    private Sensore umiditaRelativa;
+
 
     public Fragment_listaAmbiente() {
         // Required empty public constructor
@@ -61,6 +66,9 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
+            temperaturaAmbiente = new Sensore(Sensor.TYPE_AMBIENT_TEMPERATURE,
+                    new String[]{" "},
+                    "°C",1);
         }else {
             ok1.setVisibility(View.VISIBLE);
             row1.setEnabled(false);
@@ -70,6 +78,9 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_LIGHT) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
+            luminosita = new Sensore(Sensor.TYPE_LIGHT,
+                    new String[]{" "},
+                    "lx",1);
         }else {
             ok2.setVisibility(View.VISIBLE);
             row2.setEnabled(false);
@@ -79,6 +90,9 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
+            pressione = new Sensore(Sensor.TYPE_PRESSURE,
+                    new String[]{" "},
+                    "hPa",1);
         }else {
             ok3.setVisibility(View.VISIBLE);
             row3.setEnabled(false);
@@ -88,6 +102,9 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
+            umiditaRelativa = new Sensore(Sensor.TYPE_RELATIVE_HUMIDITY,
+                    new String[]{" "},
+                    " %",1);
         }else {
             ok4.setVisibility(View.VISIBLE);
             row4.setEnabled(false);
@@ -107,19 +124,19 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         Intent intent = new Intent(getActivity(), GestioneSensori.class);
         switch (v.getId()) {
             case R.id.TableRow1:
-                intent.putExtra("TipoSensore", Sensor.TYPE_AMBIENT_TEMPERATURE);
+                intent.putExtra("TipoSensore", temperaturaAmbiente);
                 startActivity(intent);
                 break;
             case R.id.TableRow2:
-                intent.putExtra("TipoSensore", Sensor.TYPE_LIGHT);
+                intent.putExtra("TipoSensore", luminosita);
                 startActivity(intent);
                 break;
             case R.id.TableRow3:
-                intent.putExtra("TipoSensore", Sensor.TYPE_PRESSURE);
+                intent.putExtra("TipoSensore", pressione);
                 startActivity(intent);
                 break;
             case R.id.TableRow4:
-                intent.putExtra("TipoSensore", Sensor.TYPE_RELATIVE_HUMIDITY);
+                intent.putExtra("TipoSensore", umiditaRelativa);
                 startActivity(intent);
                 break;
         }
