@@ -10,10 +10,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
-//PROMEMORIA
-//ricordare che nei file xml sono da cancellare activity_accelerometro (che sarebbe il vecchio layout gestione sensori),
-//activity_lista_sensori_movimento, activity_lista_sensori_posizione, activity_lista_sensori_ambiente
-//NEL PACKAGE VECCHIECLASSI TROVI LE VECCHIE ACTIVITY UTILIZZATE
 
 public class MainActivity extends AppCompatActivity {
 

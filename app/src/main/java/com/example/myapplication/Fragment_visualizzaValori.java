@@ -20,8 +20,10 @@ import android.widget.TextView;
 public class Fragment_visualizzaValori extends Fragment implements SensorEventListener{
 
     private SensorManager manager;
-    Sensor s;
+    private Sensor s;
     TextView[] valori;
+    private float[] values;
+    int dim;
 
     //costruttore
     public Fragment_visualizzaValori() {
@@ -40,7 +42,7 @@ public class Fragment_visualizzaValori extends Fragment implements SensorEventLi
 
         //il fragment riceve i dati passati da GestioneSensori
         int tipo = getArguments().getInt("tipo");
-        int dim =getArguments().getInt("dim");
+        this.dim =getArguments().getInt("dim");
         String units = getArguments().getString("unitàMisura");
         String [] descrizione = getArguments().getStringArray("descrizione");
 
@@ -112,9 +114,9 @@ public class Fragment_visualizzaValori extends Fragment implements SensorEventLi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float[] values = event.values;
+        values = event.values;
 
-        for(int i = 0; i < values.length; i++){
+        for(int i = 0; i < dim; i++){
             valori[i].setText(String.format("%.4f", values[i]));
             valori[i].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
             valori[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -140,4 +142,11 @@ public class Fragment_visualizzaValori extends Fragment implements SensorEventLi
         super.onPause();
         manager.unregisterListener(this);
     }
+
+    //ritorna l'array per salvare i dati
+    public float[] getValues(){
+        return values;
+    }
+
+
 }
