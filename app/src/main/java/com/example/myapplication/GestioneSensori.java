@@ -27,9 +27,11 @@ public class GestioneSensori extends AppCompatActivity  {
 
         /*String units = getUnits(tipo); //unità di misura
         int dim = getNumValori(tipo); //dimensione array per la creazione del layout
-        String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla descrizione dei valori
+        String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla
+        descrizione dei valori
         */
-        Bundle bundle = new Bundle();//serve per passare i valori nel vettore nel fragment per visualizzarli
+        Bundle bundle = new Bundle();//serve per passare i valori nel
+                                    // vettore nel fragment per visualizzarli
 
         bundle.putInt("dim",sensoreDaMostrare.getDimensione());
         bundle.putStringArray("descrizione",sensoreDaMostrare.getDescrizione());
@@ -39,16 +41,20 @@ public class GestioneSensori extends AppCompatActivity  {
         visualizzaValori.setArguments(bundle);
 
         //richiamo dei fragment
-        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori, visualizzaValori).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori,
+                visualizzaValori).commit();
 
         Fragment_lista_salvataggi listaSalvataggi = new Fragment_lista_salvataggi();
-        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_lista_salvataggi, listaSalvataggi).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_lista_salvataggi,
+                listaSalvataggi).commit();
 
         //bottone salva
         salva =  (ImageButton) findViewById(R.id.Salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                valoriSalvati = visualizzaValori.getValues();//valoriSalvati è l'array da aggiungere al db
+                valoriSalvati = visualizzaValori.getValues();//valoriSalvati è l'array
+                                                                // da aggiungere al db
+                
 
 
                 //stampa per test da cancellare
@@ -59,7 +65,8 @@ public class GestioneSensori extends AppCompatActivity  {
         });
         //qui va il resto del codice che aggiunge l'array al db...
         //fragment_lista_salvataggi si occuperà di leggere le query e visualizzarle
-        //ho dato solo una bozza di come dovrebbe visualizzarli in quanto le righe verranno create e aggiunte dinamicamente
+        //ho dato solo una bozza di come dovrebbe visualizzarli in quanto le righe verranno
+        // create e aggiunte dinamicamente
 
     }
 

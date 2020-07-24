@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -10,8 +11,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DbManager
 {
@@ -21,14 +25,14 @@ public class DbManager
     private DBhelper dbHelper;
     // Database fields
     private static final String DATABASE_TABLE = "valoriRegistrati";
-    public static final String KEY_ID = "_id";
-    public static final String KEY_NAME = "NomeSensore";
-    public static final String KEY_0 = "valore0";
-    public static final String KEY_1 = "valore1";
-    public static final String KEY_2 = "valore2";
-    public static final String KEY_3 = "valore3";
-    public static final String KEY_4 = "valore4";
-    public static final String KEY_5 = "valore5";
+    private static final String KEY_ID = "_id";
+    private static final String KEY_NAME = "NomeSensore";
+    private static final String KEY_0 = "valore0";
+    private static final String KEY_1 = "valore1";
+    private static final String KEY_2 = "valore2";
+    private static final String KEY_3 = "valore3";
+    private static final String KEY_4 = "valore4";
+    private static final String KEY_5 = "valore5";
 
     //Costruttore
     public DbManager(Context context)
@@ -74,11 +78,11 @@ public class DbManager
             e.printStackTrace();
         }*/
 
-        try { //Da sistemare
+        /*try { //Da sistemare
             restoreDB();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         return database.insertOrThrow(DATABASE_TABLE, null, initialValues);
     }
 
@@ -116,7 +120,7 @@ public class DbManager
         output.close();
         fis.close();
     }
-    //backup database
+    //restore database
     public void restoreDB() throws IOException {
 
         final String inFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SensorAppDBBackup/database_copy.db"; //DA CAMBIARE!!!
@@ -136,6 +140,31 @@ public class DbManager
         output.flush();
         output.close();
         fis.close();
+    }
+
+    List<queryDB> leggiValoriDaDB(String nomeSensore) {
+        List<queryDB> listaQueryLette = new ArrayList<queryDB>();
+        String selectQuery = "SELECT * FROM" + DATABASE_TABLE + " WHERE NomeSensore = '" + nomeSensore + "';";
+        //SQLiteDatabase db = this.getWritableDatabase(); serve?
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                float[] valoriRegistratiDaSensore= {Integer.parseInt(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4)),
+                        Integer.parseInt(cursor.getString(5)),
+                        Integer.parseInt(cursor.getString(6)),
+                        Integer.parseInt(cursor.getString(7)),
+                        Integer.parseInt(cursor.getString(8))};
+                queryDB queryLetta = new queryDB(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(2),valoriRegistratiDaSensore);
+
+                // Adding query to list
+                listaQueryLette.add(queryLetta);
+            } while (cursor.moveToNext());
+        }
+        return listaQueryLette;
     }
 
 

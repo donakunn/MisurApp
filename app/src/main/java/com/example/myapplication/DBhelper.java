@@ -12,7 +12,7 @@ public class DBhelper extends SQLiteOpenHelper
 {
     private static final String DATABASE_NAME = "mydatabase.db";
     private static final int DATABASE_VERSION = 1;
-    SQLiteDatabase db;
+    private SQLiteDatabase db;
     // Lo statement SQL di creazione del database
     private static final String DATABASE_CREATE = "create table valoriRegistrati" +
             "(_id integer primary key autoincrement,NomeSensore text not null,DataOra date," +
