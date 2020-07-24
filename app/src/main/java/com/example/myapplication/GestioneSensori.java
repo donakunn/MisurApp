@@ -15,7 +15,9 @@ public class GestioneSensori extends AppCompatActivity  {
             dbManager.open();*/
 
     ImageButton salva;
-    private float[] valoriSalvati; //valori da mettere nel db
+    private float[] valuesToSave; //valori da mettere nel db
+    private Sensore sensoreDaMostrare;
+    private DbManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,7 @@ public class GestioneSensori extends AppCompatActivity  {
         setContentView(R.layout.activity_gestione_sensori);
 
         Bundle datipassati = getIntent().getExtras();
-        Sensore sensoreDaMostrare = datipassati.getParcelable("TipoSensore");
+        sensoreDaMostrare = datipassati.getParcelable("TipoSensore");
 
         /*String units = getUnits(tipo); //unità di misura
         int dim = getNumValori(tipo); //dimensione array per la creazione del layout
@@ -52,14 +54,17 @@ public class GestioneSensori extends AppCompatActivity  {
         salva =  (ImageButton) findViewById(R.id.Salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                valoriSalvati = visualizzaValori.getValues();//valoriSalvati è l'array
+                valuesToSave = visualizzaValori.getValues();//valoriSalvati è l'array
                                                                 // da aggiungere al db
-                
+                dbManager = new DbManager(getApplicationContext());
+                dbManager.open();
+                dbManager.insertIntoTable(sensoreDaMostrare.getNome(),valuesToSave);
+                dbManager.close();
 
 
                 //stampa per test da cancellare
-                for(int i=0; i<valoriSalvati.length;i++){
-                    System.out.println(valoriSalvati[i]);
+                for(int i=0; i<valuesToSave.length;i++){
+                    System.out.println(valuesToSave[i]);
                 }
             }
         });

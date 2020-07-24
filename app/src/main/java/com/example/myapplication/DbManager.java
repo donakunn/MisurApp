@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,7 +69,7 @@ public class DbManager
 
 
     //crea la tabella inizializzando i valori
-    public long createTabella(String nome, float[] valori) {
+    public long insertIntoTable(String nome, float[] valori) {
         ContentValues initialValues = createContentValues(nome, valori);
         /*try {
             backupDB();///////////////////////////////// DA CAMBIARE
@@ -87,7 +86,7 @@ public class DbManager
     }
 
     //delete a table
-    public void deleteTable(long _id) {
+    public void deleteARow(long _id) {
         database.delete(DATABASE_TABLE, KEY_NAME + "=" + _id, null);
     }
 

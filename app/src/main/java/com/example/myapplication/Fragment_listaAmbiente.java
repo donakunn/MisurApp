@@ -66,7 +66,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
-            temperaturaAmbiente = new Sensore(Sensor.TYPE_AMBIENT_TEMPERATURE,
+            temperaturaAmbiente = new Sensore("TemperaturaAmbiente",Sensor.TYPE_AMBIENT_TEMPERATURE,
                     new String[]{" "},
                     "°C",1);
         }else {
@@ -78,7 +78,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_LIGHT) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
-            luminosita = new Sensore(Sensor.TYPE_LIGHT,
+            luminosita = new Sensore("luminosita'",Sensor.TYPE_LIGHT,
                     new String[]{" "},
                     "lx",1);
         }else {
@@ -90,7 +90,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
-            pressione = new Sensore(Sensor.TYPE_PRESSURE,
+            pressione = new Sensore("Pressione",Sensor.TYPE_PRESSURE,
                     new String[]{" "},
                     "hPa",1);
         }else {
@@ -102,7 +102,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
-            umiditaRelativa = new Sensore(Sensor.TYPE_RELATIVE_HUMIDITY,
+            umiditaRelativa = new Sensore("UmiditaRelativa",Sensor.TYPE_RELATIVE_HUMIDITY,
                     new String[]{" "},
                     " %",1);
         }else {

@@ -67,7 +67,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
-            vettoreRotazioneGioco = new Sensore(Sensor.TYPE_GAME_ROTATION_VECTOR,
+            vettoreRotazioneGioco = new Sensore("VettRotGioco",Sensor.TYPE_GAME_ROTATION_VECTOR,
                     getResources().getStringArray(R.array.descrizione_4_valori),
                     " ",4);
         }else {
@@ -78,7 +78,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
-            vettoreRotazioneGeomagnetico = new Sensore(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR,
+            vettoreRotazioneGeomagnetico = new Sensore("VettRotGeom",Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "μT",3);
         }else {
@@ -89,7 +89,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
-            campoMagnetico = new Sensore(Sensor.TYPE_MAGNETIC_FIELD,
+            campoMagnetico = new Sensore("CampoMagnetico",Sensor.TYPE_MAGNETIC_FIELD,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "μT",3);
         }else {
@@ -100,7 +100,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
-            campoMagneticoNonCalibrato = new Sensore(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED,
+            campoMagneticoNonCalibrato = new Sensore("CampoMagneticoNonCB",Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED,
                     getResources().getStringArray(R.array.descrizione_6_valori),
                     "μT",6);
         }else {
@@ -111,7 +111,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null){
             nome_sensore5.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row5.setEnabled(true);
-            prossimita = new Sensore(Sensor.TYPE_PROXIMITY,
+            prossimita = new Sensore("Prossimita",Sensor.TYPE_PROXIMITY,
                     new String[]{" "},
                     "cm",1);
         }else {
