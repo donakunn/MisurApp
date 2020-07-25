@@ -15,7 +15,9 @@ public class GestioneSensori extends AppCompatActivity  {
             dbManager.open();*/
 
     ImageButton salva;
-    private float[] valoriSalvati; //valori da mettere nel db
+    private float[] valuesToSave; //valori da mettere nel db
+    private Sensore sensoreDaMostrare;
+    private DbManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +25,15 @@ public class GestioneSensori extends AppCompatActivity  {
         setContentView(R.layout.activity_gestione_sensori);
 
         Bundle datipassati = getIntent().getExtras();
-        Sensore sensoreDaMostrare = datipassati.getParcelable("TipoSensore");
+        sensoreDaMostrare = datipassati.getParcelable("TipoSensore");
 
         /*String units = getUnits(tipo); //unità di misura
         int dim = getNumValori(tipo); //dimensione array per la creazione del layout
-        String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla descrizione dei valori
+        String [] descrizione = getDescrizioneValori(tipo); //stringhe finalizzate alla
+        descrizione dei valori
         */
-        Bundle bundle = new Bundle();//serve per passare i valori nel vettore nel fragment per visualizzarli
+        Bundle bundle = new Bundle();//serve per passare i valori nel
+                                    // vettore nel fragment per visualizzarli
 
         bundle.putInt("dim",sensoreDaMostrare.getDimensione());
         bundle.putStringArray("descrizione",sensoreDaMostrare.getDescrizione());
@@ -39,27 +43,35 @@ public class GestioneSensori extends AppCompatActivity  {
         visualizzaValori.setArguments(bundle);
 
         //richiamo dei fragment
-        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori, visualizzaValori).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_visualizzaValori,
+                visualizzaValori).commit();
 
         Fragment_lista_salvataggi listaSalvataggi = new Fragment_lista_salvataggi();
-        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_lista_salvataggi, listaSalvataggi).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.Fragment_lista_salvataggi,
+                listaSalvataggi).commit();
 
         //bottone salva
         salva =  (ImageButton) findViewById(R.id.Salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                valoriSalvati = visualizzaValori.getValues();//valoriSalvati è l'array da aggiungere al db
+                valuesToSave = visualizzaValori.getValues();//valoriSalvati è l'array
+                                                                // da aggiungere al db
+                dbManager = new DbManager(getApplicationContext());
+                dbManager.open();
+                dbManager.insertIntoTable(sensoreDaMostrare.getNome(),valuesToSave);
+                dbManager.close();
 
 
                 //stampa per test da cancellare
-                for(int i=0; i<valoriSalvati.length;i++){
-                    System.out.println(valoriSalvati[i]);
+                for(int i=0; i<valuesToSave.length;i++){
+                    System.out.println(valuesToSave[i]);
                 }
             }
         });
         //qui va il resto del codice che aggiunge l'array al db...
         //fragment_lista_salvataggi si occuperà di leggere le query e visualizzarle
-        //ho dato solo una bozza di come dovrebbe visualizzarli in quanto le righe verranno create e aggiunte dinamicamente
+        //ho dato solo una bozza di come dovrebbe visualizzarli in quanto le righe verranno
+        // create e aggiunte dinamicamente
 
     }
 
