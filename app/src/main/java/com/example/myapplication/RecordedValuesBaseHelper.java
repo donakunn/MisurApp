@@ -8,9 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 su memoria fisica e a recuperare un riferimento all’oggetto SQLiteDatabase,
 usato come accesso ai dati;*/
 
-public class DBhelper extends SQLiteOpenHelper
+public class RecordedValuesBaseHelper extends SQLiteOpenHelper
 {
-    private static final String DATABASE_NAME = "mydatabase.db";
+    private static final String DATABASE_NAME = "misurapp.db";
     private static final int DATABASE_VERSION = 1;
     private SQLiteDatabase db;
     // Lo statement SQL di creazione del database
@@ -20,7 +20,7 @@ public class DBhelper extends SQLiteOpenHelper
             "valore4 float(24), valore5 float(24));";
 
     // Costruttore
-    public DBhelper(Context context) {
+    public RecordedValuesBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         db = getWritableDatabase();
 
