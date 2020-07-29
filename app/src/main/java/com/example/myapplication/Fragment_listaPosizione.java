@@ -19,11 +19,11 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
     TextView ok1, ok2,ok3,ok4,ok5;
     TextView nome_sensore1, nome_sensore2, nome_sensore3, nome_sensore4, nome_sensore5;
     private SensorManager manager;
-    private Sensore vettoreRotazioneGioco;
-    private Sensore vettoreRotazioneGeomagnetico;
-    private Sensore campoMagnetico;
-    private Sensore campoMagneticoNonCalibrato;
-    private Sensore prossimita;
+    private Instrument vettoreRotazioneGioco;
+    private Instrument vettoreRotazioneGeomagnetico;
+    private Instrument campoMagnetico;
+    private Instrument campoMagneticoNonCalibrato;
+    private Instrument prossimita;
 
     public Fragment_listaPosizione() {
         // Required empty public constructor
@@ -67,7 +67,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
-            vettoreRotazioneGioco = new Sensore("VettRotGioco",Sensor.TYPE_GAME_ROTATION_VECTOR,
+            vettoreRotazioneGioco = new Instrument("VettRotGioco",Sensor.TYPE_GAME_ROTATION_VECTOR,
                     getResources().getStringArray(R.array.descrizione_4_valori),
                     " ",4);
         }else {
@@ -78,7 +78,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
-            vettoreRotazioneGeomagnetico = new Sensore("VettRotGeom",Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR,
+            vettoreRotazioneGeomagnetico = new Instrument("VettRotGeom",Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "μT",3);
         }else {
@@ -89,7 +89,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
-            campoMagnetico = new Sensore("CampoMagnetico",Sensor.TYPE_MAGNETIC_FIELD,
+            campoMagnetico = new Instrument("CampoMagnetico",Sensor.TYPE_MAGNETIC_FIELD,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "μT",3);
         }else {
@@ -100,7 +100,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
-            campoMagneticoNonCalibrato = new Sensore("CampoMagneticoNonCB",Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED,
+            campoMagneticoNonCalibrato = new Instrument("CampoMagneticoNonCB",Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED,
                     getResources().getStringArray(R.array.descrizione_6_valori),
                     "μT",6);
         }else {
@@ -111,7 +111,7 @@ public class Fragment_listaPosizione extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null){
             nome_sensore5.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row5.setEnabled(true);
-            prossimita = new Sensore("Prossimita",Sensor.TYPE_PROXIMITY,
+            prossimita = new Instrument("Prossimita",Sensor.TYPE_PROXIMITY,
                     new String[]{" "},
                     "cm",1);
         }else {

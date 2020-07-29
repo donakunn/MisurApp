@@ -19,14 +19,14 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
     TableRow row1,row2, row3, row4,row5,row6, row7, row8;
     TextView ok1, ok2,ok3,ok4,ok5,ok6,ok7,ok8;
     TextView nome_sensore1, nome_sensore2, nome_sensore3, nome_sensore4, nome_sensore5, nome_sensore6, nome_sensore7, nome_sensore8;
-    private Sensore accelerometro;
-    private Sensore accelerometroNonCalibrato;
-    private Sensore gravita;
-    private Sensore giroscopio;
-    private Sensore giroscopioNonCalibrato;
-    private Sensore accelerazioneLineare;
-    private Sensore vettoreRotazione;
-    private Sensore contaPassi;
+    private Instrument accelerometro;
+    private Instrument accelerometroNonCalibrato;
+    private Instrument gravita;
+    private Instrument giroscopio;
+    private Instrument giroscopioNonCalibrato;
+    private Instrument accelerazioneLineare;
+    private Instrument vettoreRotazione;
+    private Instrument contaPassi;
     private SensorManager manager;
 
     public Fragment_listaMovimento() {
@@ -78,7 +78,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
-            accelerometro = new Sensore("Accelerometro",Sensor.TYPE_ACCELEROMETER,
+            accelerometro = new Instrument("Accelerometro",Sensor.TYPE_ACCELEROMETER,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "m/s\u00B2",3);
         }else {
@@ -89,7 +89,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
-            accelerometroNonCalibrato= new Sensore("AccelerometroNonCb",Sensor.TYPE_ACCELEROMETER_UNCALIBRATED,
+            accelerometroNonCalibrato= new Instrument("AccelerometroNonCb",Sensor.TYPE_ACCELEROMETER_UNCALIBRATED,
                     getResources().getStringArray(R.array.descrizione_6_valori),
                     "m/s\u00B2",6);
         }else {
@@ -100,7 +100,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
-            gravita= new Sensore("gravita",Sensor.TYPE_GRAVITY,
+            gravita= new Instrument("gravita",Sensor.TYPE_GRAVITY,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "m/s\u00B2",3);
         }else {
@@ -111,7 +111,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
-            giroscopio= new Sensore("giroscopio",Sensor.TYPE_GYROSCOPE,
+            giroscopio= new Instrument("giroscopio",Sensor.TYPE_GYROSCOPE,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "rad/s",3);
         }else {
@@ -122,7 +122,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null){
             nome_sensore5.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row5.setEnabled(true);
-            giroscopioNonCalibrato= new Sensore("giroscopioNonCb",Sensor.TYPE_GYROSCOPE_UNCALIBRATED,
+            giroscopioNonCalibrato= new Instrument("giroscopioNonCb",Sensor.TYPE_GYROSCOPE_UNCALIBRATED,
                     getResources().getStringArray(R.array.descrizione_6_valori),
                     "rad/s",6);
         }else {
@@ -133,7 +133,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null){
             nome_sensore6.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row6.setEnabled(true);
-            accelerazioneLineare= new Sensore("AccelerazioneNonL",Sensor.TYPE_LINEAR_ACCELERATION,
+            accelerazioneLineare= new Instrument("AccelerazioneNonL",Sensor.TYPE_LINEAR_ACCELERATION,
                     getResources().getStringArray(R.array.descrizione_3_valori),
                     "m/s",3);
         }else {
@@ -144,7 +144,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null){
             nome_sensore7.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row7.setEnabled(true);
-            vettoreRotazione= new Sensore("VettoreRotaz",Sensor.TYPE_ROTATION_VECTOR,
+            vettoreRotazione= new Instrument("VettoreRotaz",Sensor.TYPE_ROTATION_VECTOR,
                     getResources().getStringArray(R.array.descrizione_5_valori),
                     " ",5);
         }else {
@@ -155,7 +155,7 @@ public class Fragment_listaMovimento extends Fragment implements View.OnClickLis
         if (manager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
             nome_sensore8.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row8.setEnabled(true);
-            contaPassi= new Sensore("ContaPassi",Sensor.TYPE_STEP_COUNTER,
+            contaPassi= new Instrument("ContaPassi",Sensor.TYPE_STEP_COUNTER,
                     new String[]{" "},
                     "steps",1);
         }else {

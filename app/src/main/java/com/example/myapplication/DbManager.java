@@ -15,23 +15,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+//da implementare metodi tabella caposcout
+public class DbManager {
 
-public class DbManager
-{
-    private static final String LOG_TAG = DbManager.class.getSimpleName();
+    //private static final String LOG_TAG = DbManager.class.getSimpleName();
     private Context context;
     private SQLiteDatabase database;
-    private DBhelper dbHelper;
+    private RecordedValuesBaseHelper dbHelper;
     // Database fields
-    private static final String DATABASE_TABLE = "valoriRegistrati";
-    private static final String KEY_ID = "_id";
-    private static final String KEY_NAME = "NomeSensore";
-    private static final String KEY_0 = "valore0";
-    private static final String KEY_1 = "valore1";
-    private static final String KEY_2 = "valore2";
-    private static final String KEY_3 = "valore3";
-    private static final String KEY_4 = "valore4";
-    private static final String KEY_5 = "valore5";
+    private static final String BOYSCOUT_DATABASE_TABLE = "valuesRecordedByBoyscout";
+    private static final String SCOUTMASTER_DATABASE_TABLE = "valuesReceivedByBoyscout";
 
     //Costruttore
     public DbManager(Context context)
@@ -42,7 +36,7 @@ public class DbManager
     sarà sufficiente chiamare questi metodi per lavorare con il database.*/
 
     public DbManager open() throws SQLException {
-        dbHelper = new DBhelper(context);
+        dbHelper = new RecordedValuesBaseHelper(context);
         database = dbHelper.getWritableDatabase();
         return this;
     }
@@ -54,58 +48,50 @@ public class DbManager
     che il ContentResolver può processare per fornire l’accesso applicativo
     al modello del contenuto.*/
 
-    private ContentValues createContentValues(String nome, float[] valori) {
+    private ContentValues createContentValues(String instrumentName, float valueToSave) {
         ContentValues values = new ContentValues();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Date date = new Date();
-        values.put( KEY_NAME, nome);
-        values.put( "DataOra", dateFormat.format(date)); //////////////
-        for (int i = 0; i < valori.length; i++) {
-            values.put("valore"+ i, valori[i]);
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MM-yyyy HH:mm:ss", Locale.ITALIAN);
+        values.put(InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME, instrumentName);
+        values.put("Timestamp", dateFormat.format(new Date()));
+        values.put(InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD, valueToSave);
         return values;
     }
 
 
 
-    //crea la tabella inizializzando i valori
-    public long insertIntoTable(String nome, float[] valori) {
-        ContentValues initialValues = createContentValues(nome, valori);
-        /*try {
-            backupDB();///////////////////////////////// DA CAMBIARE
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-        /*try { //Da sistemare
-            restoreDB();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        return database.insertOrThrow(DATABASE_TABLE, null, initialValues);
+    //impacchetta valori in un oggetto di ContentValues e li scrive sul db
+    public long insertIntoTable(String instrumentName, float valueRead) {
+        ContentValues valuesToSave = createContentValues(instrumentName, valueRead);
+        return database.insertOrThrow(BOYSCOUT_DATABASE_TABLE, null, valuesToSave);
     }
 
-    //delete a table
+    //cancella la query dal db il cui id è uguale a quello passato in input
     public void deleteARow(long _id) {
-        database.delete(DATABASE_TABLE, KEY_NAME + "=" + _id, null);
+        database.delete(BOYSCOUT_DATABASE_TABLE,
+                InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME +
+                        "=" + _id, null);
     }
 
     //backup database
     public void backupDB() throws IOException {
 
-        final String inFileName = context.getDatabasePath("mydatabase.db").getPath(); //DA CAMBIARE!!!
+        final String inFileName = context.getDatabasePath("misurapp.db").getPath();
         //in alternativa
-        //final String inFileName = "/data/data/com.example.myapplication/databases/myapplication.db";
+        //final String inFileName =
+        // "/data/data/com.example.myapplication/databases/myapplication.db";
         File dbFile = new File(inFileName);
         FileInputStream fis = new FileInputStream(dbFile);
 
-        File folderToSaveDB = new File(Environment.getExternalStorageDirectory()+File.separator + "SensorAppDBBackup");
+        File folderToSaveDB = new File(Environment.getExternalStorageDirectory()+
+                File.separator + "MisurAppBackup");
 
         if (!folderToSaveDB.exists()) {
             folderToSaveDB.mkdirs();
         }
         // Open the empty db as the output stream
-        OutputStream output = new FileOutputStream(folderToSaveDB.getPath()+ "/database_copy.db");
+        OutputStream output = new FileOutputStream(folderToSaveDB.getPath()+
+                "/MisurApp_Database_copy.db");
 
         // Transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
@@ -122,11 +108,13 @@ public class DbManager
     //restore database
     public void restoreDB() throws IOException {
 
-        final String inFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SensorAppDBBackup/database_copy.db"; //DA CAMBIARE!!!
+        final String inFileName = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                "/MisurAppBackup/MisurApp_Database_copy.db";
         File dbFile = new File(inFileName);
         FileInputStream fis = new FileInputStream(dbFile);
         // Open the empty db as the output stream
-        OutputStream output = new FileOutputStream(Environment.getDataDirectory()+ "/data/com.example.myapplication/databases/mydatabase.db");
+        OutputStream output = new FileOutputStream(Environment.getDataDirectory()+
+                "/data/com.example.myapplication/databases/misurapp.db");
 
         // Transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
@@ -141,30 +129,24 @@ public class DbManager
         fis.close();
     }
 
-    List<queryDB> leggiValoriDaDB(String nomeSensore) {
-        List<queryDB> listaQueryLette = new ArrayList<queryDB>();
-        String selectQuery = "SELECT * FROM" + DATABASE_TABLE + " WHERE NomeSensore = '" + nomeSensore + "';";
+    List<InstrumentRecord> leggiValoriDaDB(String instrumentNameToRead) {
+        List<InstrumentRecord> listaQueryLette = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + BOYSCOUT_DATABASE_TABLE +
+                " WHERE instrumentName = '" + instrumentNameToRead + "';";
         //SQLiteDatabase db = this.getWritableDatabase(); serve?
         Cursor cursor = database.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                float[] valoriRegistratiDaSensore= {Integer.parseInt(cursor.getString(3)),
-                        Integer.parseInt(cursor.getString(4)),
-                        Integer.parseInt(cursor.getString(5)),
-                        Integer.parseInt(cursor.getString(6)),
-                        Integer.parseInt(cursor.getString(7)),
-                        Integer.parseInt(cursor.getString(8))};
-                queryDB queryLetta = new queryDB(Integer.parseInt(cursor.getString(0)),
-                        cursor.getString(2),valoriRegistratiDaSensore);
+                float savedValue=Float.parseFloat(cursor.getString(3));
+                InstrumentRecord queryRead = new InstrumentRecord(
+                        cursor.getString(2),savedValue);
 
                 // Adding query to list
-                listaQueryLette.add(queryLetta);
+                listaQueryLette.add(queryRead);
             } while (cursor.moveToNext());
         }
         return listaQueryLette;
     }
-
-
 }
