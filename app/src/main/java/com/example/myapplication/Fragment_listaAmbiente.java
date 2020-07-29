@@ -19,10 +19,10 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
     TextView ok1, ok2,ok3,ok4;
     TextView nome_sensore1, nome_sensore2, nome_sensore3, nome_sensore4;
     private SensorManager manager;
-    private Sensore temperaturaAmbiente;
-    private Sensore luminosita;
-    private Sensore pressione;
-    private Sensore umiditaRelativa;
+    private Instrument temperaturaAmbiente;
+    private Instrument luminosita;
+    private Instrument pressione;
+    private Instrument umiditaRelativa;
 
 
     public Fragment_listaAmbiente() {
@@ -66,7 +66,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null){
             nome_sensore1.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row1.setEnabled(true);
-            temperaturaAmbiente = new Sensore("TemperaturaAmbiente",Sensor.TYPE_AMBIENT_TEMPERATURE,
+            temperaturaAmbiente = new Instrument("TemperaturaAmbiente",Sensor.TYPE_AMBIENT_TEMPERATURE,
                     new String[]{" "},
                     "°C",1);
         }else {
@@ -78,7 +78,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_LIGHT) != null){
             nome_sensore2.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row2.setEnabled(true);
-            luminosita = new Sensore("luminosita'",Sensor.TYPE_LIGHT,
+            luminosita = new Instrument("luminosita'",Sensor.TYPE_LIGHT,
                     new String[]{" "},
                     "lx",1);
         }else {
@@ -90,7 +90,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
             nome_sensore3.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row3.setEnabled(true);
-            pressione = new Sensore("Pressione",Sensor.TYPE_PRESSURE,
+            pressione = new Instrument("Pressione",Sensor.TYPE_PRESSURE,
                     new String[]{" "},
                     "hPa",1);
         }else {
@@ -102,7 +102,7 @@ public class Fragment_listaAmbiente extends Fragment implements View.OnClickList
         if (manager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null){
             nome_sensore4.setTypeface(nome_sensore1.getTypeface(), Typeface.BOLD);
             row4.setEnabled(true);
-            umiditaRelativa = new Sensore("UmiditaRelativa",Sensor.TYPE_RELATIVE_HUMIDITY,
+            umiditaRelativa = new Instrument("UmiditaRelativa",Sensor.TYPE_RELATIVE_HUMIDITY,
                     new String[]{" "},
                     " %",1);
         }else {

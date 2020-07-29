@@ -2,7 +2,7 @@ package com.example.myapplication;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.hardware.Sensor;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,8 +15,8 @@ public class GestioneSensori extends AppCompatActivity  {
             dbManager.open();*/
 
     ImageButton salva;
-    private float[] valuesToSave; //valori da mettere nel db
-    private Sensore sensoreDaMostrare;
+    private float valueToSave; //valori da mettere nel db
+    private Instrument sensoreDaMostrare;
     private DbManager dbManager;
 
     @Override
@@ -54,18 +54,12 @@ public class GestioneSensori extends AppCompatActivity  {
         salva =  (ImageButton) findViewById(R.id.Salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                valuesToSave = visualizzaValori.getValues();//valoriSalvati è l'array
+                //valueToSave = visualizzaValori.getValues();//valoriSalvati è l'array
                                                                 // da aggiungere al db
                 dbManager = new DbManager(getApplicationContext());
                 dbManager.open();
-                dbManager.insertIntoTable(sensoreDaMostrare.getNome(),valuesToSave);
+                dbManager.insertIntoTable(sensoreDaMostrare.getNome(),valueToSave);
                 dbManager.close();
-
-
-                //stampa per test da cancellare
-                for(int i=0; i<valuesToSave.length;i++){
-                    System.out.println(valuesToSave[i]);
-                }
             }
         });
         //qui va il resto del codice che aggiunge l'array al db...
