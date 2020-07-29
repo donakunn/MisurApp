@@ -18,20 +18,13 @@ import java.util.List;
 
 public class DbManager
 {
-    private static final String LOG_TAG = DbManager.class.getSimpleName();
+    //private static final String LOG_TAG = DbManager.class.getSimpleName();
     private Context context;
     private SQLiteDatabase database;
-    private DBhelper dbHelper;
+    private RecordedValuesBaseHelper dbHelper;
     // Database fields
     private static final String DATABASE_TABLE = "valoriRegistrati";
-    private static final String KEY_ID = "_id";
     private static final String KEY_NAME = "NomeSensore";
-    private static final String KEY_0 = "valore0";
-    private static final String KEY_1 = "valore1";
-    private static final String KEY_2 = "valore2";
-    private static final String KEY_3 = "valore3";
-    private static final String KEY_4 = "valore4";
-    private static final String KEY_5 = "valore5";
 
     //Costruttore
     public DbManager(Context context)
@@ -42,7 +35,7 @@ public class DbManager
     sarà sufficiente chiamare questi metodi per lavorare con il database.*/
 
     public DbManager open() throws SQLException {
-        dbHelper = new DBhelper(context);
+        dbHelper = new RecordedValuesBaseHelper(context);
         database = dbHelper.getWritableDatabase();
         return this;
     }
