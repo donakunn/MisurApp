@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.myapplication.db.DbManager;
+
 public class GestioneSensori extends AppCompatActivity  {
 
 
