@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.db;
 //Questa classe descrive lo schema delle due tabelle contenenti i valori salvati dagli strumenti
 public class InstrumentsDBSchema {
     //schema tabella che contiene i valori registrati dall'app in modalità boyscout

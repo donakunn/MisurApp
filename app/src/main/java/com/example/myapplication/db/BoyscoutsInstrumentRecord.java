@@ -1,6 +1,8 @@
-package com.example.myapplication;
+package com.example.myapplication.db;
 
-public class BoyscoutsInstrumentRecord extends InstrumentRecord {
+import java.io.Serializable;
+
+public class BoyscoutsInstrumentRecord extends InstrumentRecord implements Serializable {
 
     private String boyScoutNickName;
 
