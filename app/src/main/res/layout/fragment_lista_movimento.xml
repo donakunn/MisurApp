@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment_listaMovimento">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:id="@+id/TableRow1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Sensore1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/Accelerometro"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/Ok1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Sensore2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/AccelerometroNonCalibrato"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Sensore3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/Gravità"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+
+                <TextView
+                    android:id="@+id/Sensore4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/Giroscopio"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+
+                <TextView
+                    android:id="@+id/Sensore5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/GiroscopioNonCalibrato"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Sensore6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/AccelerazioneLineare"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Sensore7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/VettoreDiRotazione"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/TableRow8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Sensore8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/Contapassi"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ok8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/NonSupportato"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+</FrameLayout>
