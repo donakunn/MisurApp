@@ -1,15 +1,13 @@
 package com.example.myapplication;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import com.google.android.material.tabs.TabLayout;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,32 +16,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TabLayout tabLayout = findViewById(R.id.tabs);//tabBar nel video
+        Button client = findViewById(R.id.Boyscout);
+        Button server = (Button)findViewById(R.id.Caposcout);
 
-        final ViewPager viewPager = findViewById(R.id.viewPager);
-        PageAdapter pagerAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapter);
 
-        tabLayout.setupWithViewPager(viewPager);
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+        client.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
+                Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
+                startActivity(intent);
             }
         });
 
+        server.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
+                Intent intent = new Intent(MainActivity.this,DatabaseCaposcout.class);
+                startActivity(intent);
+            }
+        });
 
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -53,51 +44,4 @@ public class MainActivity extends AppCompatActivity {
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
     }//fine onCreate();
-
-    private class PageAdapter extends FragmentPagerAdapter {
-        private int numOfTabs;
-
-        public PageAdapter(FragmentManager fm, int numOfTabs) {
-            super(fm, numOfTabs);
-            this.numOfTabs = numOfTabs;
-        }
-
-
-        // Will be displayed as the tab's label
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch(position) {
-                case 0:
-                    return getResources().getString(R.string.Movimento);
-
-                case 1:
-                    return getResources().getString(R.string.Posizione);
-
-                case 2:
-                    return getResources().getString(R.string.Ambiente);
-
-                default:
-                    return null;
-            }
-        }
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position){
-                case 0:
-                    return new Fragment_listaMovimento();
-                case 1:
-                    return new Fragment_listaPosizione();
-                case 2:
-                    return new Fragment_listaAmbiente();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return numOfTabs;
-        }
-    }
 }
