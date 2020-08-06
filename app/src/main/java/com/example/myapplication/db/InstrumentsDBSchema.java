@@ -8,6 +8,7 @@ public class InstrumentsDBSchema {
         public static final class cols {
             public static final String INSTRUMENTNAME = "instrumentName";
             public static final String VALUEREAD = "valueRead";
+            public static final String TIMESTAMP = "timestamp";
             //public static final String SECONDVALUEREAD = "secondValueRead";
             //public static final String THIRDVALUEREAD = "thirdValueRead";
             //public static final String FOURTHVALUEREAD = "fourthValueRead";

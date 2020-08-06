@@ -54,7 +54,7 @@ public class DbManager {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "dd-MM-yyyy HH:mm:ss", Locale.ITALIAN);
         values.put(InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME, instrumentName);
-        values.put("Timestamp", dateFormat.format(new Date()));
+        values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP, dateFormat.format(new Date()));
         values.put(InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD, valueToSave);
         return values;
     }
@@ -130,7 +130,7 @@ public class DbManager {
         fis.close();
     }
 
-    List<InstrumentRecord> leggiValoriDaDB(String instrumentNameToRead) {
+    public List<InstrumentRecord> readValuesFromDB(String instrumentNameToRead) {
         List<InstrumentRecord> listaQueryLette = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + BOYSCOUT_DATABASE_TABLE +
                 " WHERE instrumentName = '" + instrumentNameToRead + "';";

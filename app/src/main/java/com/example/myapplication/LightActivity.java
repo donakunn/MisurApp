@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.db.DbManager;
+
 public class LightActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
@@ -46,7 +48,11 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
-
+                DbManager dbManager = new DbManager(getApplicationContext());
+                dbManager.open();
+                dbManager.insertIntoTable("Sensor.TYPE_LIGHT",valore);
+                dbManager.close();
+                //check Context e open e close
 
 
                 //feedback

@@ -13,6 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.myapplication.db.DbManager;
+import com.example.myapplication.db.InstrumentRecord;
+
+import java.util.List;
+
 public class DatabaseBoyscout extends AppCompatActivity {
 
     @Override
@@ -23,13 +28,18 @@ public class DatabaseBoyscout extends AppCompatActivity {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
         TableRow query;
-        TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
+                (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
 
         TextView data;
         TextView valore;
         ImageButton cancella;
 
+        DbManager appDb = new DbManager(this);
+
+        List<InstrumentRecord> valuesToShow = appDb.readValuesFromDB("Sensor.TYPE_LIGHT");
+        //da cambiare con il sensore relativo
         int num_query = 3;
 
         for(int i =0; i< num_query;i++){
@@ -57,13 +67,15 @@ public class DatabaseBoyscout extends AppCompatActivity {
 
             query.addView(valore);
 
-            cancella = new ImageButton(DatabaseBoyscout.this, null, R.style.buttondeletestyle);
+            cancella = new ImageButton
+                    (DatabaseBoyscout.this, null, R.style.buttondeletestyle);
             cancella.setLayoutParams(tableRowPar);
             cancella.setImageResource(R.drawable.ic_baseline_delete_24);
 
             cancella.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    v.startAnimation(AnimationUtils.loadAnimation(DatabaseBoyscout.this, R.anim.button_click));
+                    v.startAnimation(AnimationUtils.loadAnimation
+                            (DatabaseBoyscout.this, R.anim.button_click));
 
                 }
             });
