@@ -135,6 +135,7 @@ public class DbManager {
         String selectQuery = "SELECT * FROM " + BOYSCOUT_DATABASE_TABLE +
                 " WHERE instrumentName = '" + instrumentNameToRead + "';";
         //SQLiteDatabase db = this.getWritableDatabase(); serve?
+        this.open();
         Cursor cursor = database.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
@@ -148,6 +149,7 @@ public class DbManager {
                 listaQueryLette.add(queryRead);
             } while (cursor.moveToNext());
         }
+        this.close();
         return listaQueryLette;
     }
 }

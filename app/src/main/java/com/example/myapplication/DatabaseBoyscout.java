@@ -36,13 +36,13 @@ public class DatabaseBoyscout extends AppCompatActivity {
         TextView valore;
         ImageButton cancella;
 
-        DbManager appDb = new DbManager(this);
+        DbManager appDb = new DbManager(getApplicationContext());//Check context
 
         List<InstrumentRecord> valuesToShow = appDb.readValuesFromDB("Sensor.TYPE_LIGHT");
         //da cambiare con il sensore relativo
         int num_query = 3;
 
-        for(int i =0; i< num_query;i++){
+        for (InstrumentRecord record : valuesToShow){
             query = new TableRow(DatabaseBoyscout.this);
             query.setPadding(20,20,5,20);
 
@@ -53,7 +53,7 @@ public class DatabaseBoyscout extends AppCompatActivity {
             data.setPadding(10,10,10,10);
             data.setTextAppearance(R.style.textstyle);
             data.setTypeface(null,Typeface.BOLD);
-            data.setText("data");
+            data.setText(record.getDate());
 
             query.addView(data);
 
@@ -63,7 +63,7 @@ public class DatabaseBoyscout extends AppCompatActivity {
             valore.setGravity(Gravity.CENTER);
             valore.setTextAppearance(R.style.textstyle);
             valore.setTypeface(null,Typeface.BOLD);
-            valore.setText("valore");
+            valore.setText(String.valueOf(record.getValue()));
 
             query.addView(valore);
 
