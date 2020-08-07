@@ -1,8 +1,6 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -12,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.example.myapplication.db.DbManager;
 import com.example.myapplication.db.InstrumentRecord;
 
@@ -31,18 +28,17 @@ public class DatabaseBoyscout extends AppCompatActivity {
         TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
                 (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-
         TextView data;
         TextView valore;
         ImageButton cancella;
 
-        DbManager appDb = new DbManager(getApplicationContext());//Check context
+        final DbManager appDb = new DbManager(getApplicationContext());//Check context
 
-        List<InstrumentRecord> valuesToShow = appDb.readValuesFromDB("Sensor.TYPE_LIGHT");
+        List<InstrumentRecord> valuesToShow = appDb.readValuesFromDB
+                ("Sensor.TYPE_LIGHT");
         //da cambiare con il sensore relativo
-        int num_query = 3;
 
-        for (InstrumentRecord record : valuesToShow){
+        for (final InstrumentRecord record : valuesToShow){
             query = new TableRow(DatabaseBoyscout.this);
             query.setPadding(20,20,5,20);
 
@@ -76,13 +72,12 @@ public class DatabaseBoyscout extends AppCompatActivity {
                 public void onClick(View v) {
                     v.startAnimation(AnimationUtils.loadAnimation
                             (DatabaseBoyscout.this, R.anim.button_click));
-
+                    appDb.deleteARow(record.getId());
                 }
             });
 
             query.addView(cancella);
             linearLayout.addView(query);
-
         }
     }//fine onCreate
 }

@@ -68,10 +68,11 @@ public class DbManager {
     }
 
     //cancella la query dal db il cui id è uguale a quello passato in input
-    public void deleteARow(long _id) {
+    public void deleteARow(long idRecordToDelete) {
+        this.open();
         database.delete(BOYSCOUT_DATABASE_TABLE,
-                InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME +
-                        "=" + _id, null);
+                "_id= "+idRecordToDelete, null);
+        this.close();
     }
 
     //backup database
@@ -141,9 +142,8 @@ public class DbManager {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                float savedValue=Float.parseFloat(cursor.getString(3));
-                InstrumentRecord queryRead = new InstrumentRecord(
-                        cursor.getString(2),savedValue);
+                InstrumentRecord queryRead = new InstrumentRecord(cursor.getLong(0),
+                        cursor.getString(2),Float.parseFloat(cursor.getString(3)));
 
                 // Adding query to list
                 listaQueryLette.add(queryRead);
