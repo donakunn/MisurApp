@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -10,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import com.example.myapplication.db.DbManager;
 import com.example.myapplication.db.InstrumentRecord;
 
@@ -17,58 +19,64 @@ import java.util.List;
 
 public class DatabaseBoyscout extends AppCompatActivity {
 
+    private TableRow dbBoyScoutQueries;
+    private TextView date;
+    private TextView value;
+    private ImageButton deleteButton;
+    private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
+            (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+    private DbManager appDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_boyscout);
-
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-
-        TableRow query;
-        TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
-                (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-
-        TextView data;
-        TextView valore;
-        ImageButton cancella;
-
-        final DbManager appDb = new DbManager(getApplicationContext());//Check context
-
-        List<InstrumentRecord> valuesToShow = appDb.readValuesFromDB
+        LinearLayout linearLayout = findViewById(R.id.linearLayout);
+        appDb = new DbManager(this);
+        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
                 ("Sensor.TYPE_LIGHT");
-        //da cambiare con il sensore relativo
+        if (instrumentRecordsReadFromDB.isEmpty()) {
+            return;
+            //sollevare l'eccezione e tornare all'activity precedente
+        } else {
+            //da cambiare con il sensore relativo
+            showBoyscoutTableValues(instrumentRecordsReadFromDB);
+        }
+        linearLayout.addView(dbBoyScoutQueries);
+    }
 
-        for (final InstrumentRecord record : valuesToShow){
-            query = new TableRow(DatabaseBoyscout.this);
-            query.setPadding(20,20,5,20);
+    private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
+        for (final InstrumentRecord record : instrumentRecords) {
+            dbBoyScoutQueries = new TableRow(DatabaseBoyscout.this);
+            dbBoyScoutQueries.setPadding(20, 20, 5, 20);
 
-            data = new TextView(DatabaseBoyscout.this);
+            date = new TextView(DatabaseBoyscout.this);
             tableRowPar.weight = 1;
-            data.setLayoutParams(tableRowPar);
-            data.setGravity(Gravity.CENTER_VERTICAL);
-            data.setPadding(10,10,10,10);
-            data.setTextAppearance(R.style.textstyle);
-            data.setTypeface(null,Typeface.BOLD);
-            data.setText(record.getDate());
+            date.setLayoutParams(tableRowPar);
+            date.setGravity(Gravity.CENTER_VERTICAL);
+            date.setPadding(10, 10, 10, 10);
+            date.setTextAppearance(R.style.textstyle);
+            date.setTypeface(null, Typeface.BOLD);
+            date.setText(record.getDate());
 
-            query.addView(data);
+            dbBoyScoutQueries.addView(date);
 
-            valore = new TextView(DatabaseBoyscout.this);
+            value = new TextView(DatabaseBoyscout.this);
             tableRowPar.weight = 1;
-            valore.setLayoutParams(tableRowPar);
-            valore.setGravity(Gravity.CENTER);
-            valore.setTextAppearance(R.style.textstyle);
-            valore.setTypeface(null,Typeface.BOLD);
-            valore.setText(String.valueOf(record.getValue()));
+            value.setLayoutParams(tableRowPar);
+            value.setGravity(Gravity.CENTER);
+            value.setTextAppearance(R.style.textstyle);
+            value.setTypeface(null, Typeface.BOLD);
+            value.setText(String.valueOf(record.getValue()));
 
-            query.addView(valore);
+            dbBoyScoutQueries.addView(value);
 
-            cancella = new ImageButton
+            deleteButton = new ImageButton
                     (DatabaseBoyscout.this, null, R.style.buttondeletestyle);
-            cancella.setLayoutParams(tableRowPar);
-            cancella.setImageResource(R.drawable.ic_baseline_delete_24);
+            deleteButton.setLayoutParams(tableRowPar);
+            deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
-            cancella.setOnClickListener(new View.OnClickListener() {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     v.startAnimation(AnimationUtils.loadAnimation
                             (DatabaseBoyscout.this, R.anim.button_click));
@@ -76,8 +84,8 @@ public class DatabaseBoyscout extends AppCompatActivity {
                 }
             });
 
-            query.addView(cancella);
-            linearLayout.addView(query);
+            dbBoyScoutQueries.addView(deleteButton);
+
         }
-    }//fine onCreate
+    }
 }
