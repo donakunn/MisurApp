@@ -1,8 +1,6 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,12 +10,10 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.myapplication.db.DbManager;
 
 public class LightActivity extends AppCompatActivity implements SensorEventListener {
@@ -29,6 +25,7 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
     private TextView misura;
     private ImageButton salva;
     private ImageButton dati;
+    private static final String sensorUsed="Sensor.TYPE_LIGHT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,27 +34,21 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         setContentView(R.layout.activity_light);
-
         lampadina = (ImageView) findViewById(R.id.img_lampadina);
         misura = (TextView) findViewById(R.id.misura);
-
-
-
-
         salva = (ImageButton)  findViewById(R.id.salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
                 DbManager dbManager = new DbManager(getApplicationContext());
                 dbManager.open();
-                dbManager.insertIntoTable("Sensor.TYPE_LIGHT",valore);
+                dbManager.insertIntoTable(sensorUsed,valore);
                 dbManager.close();
                 //check Context e open e close
 
-
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM| Gravity.RIGHT, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });
@@ -66,7 +57,8 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
         dati.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
-                Intent intent = new Intent(LightActivity.this,DatabaseBoyscout.class);
+                Intent intent = new Intent(LightActivity.this,BoyscoutDBValuesActivity.class);
+                intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });
