@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BarometerActivity"></activity>
+        <activity android:name=".CompassActivity"></activity>
+        <activity android:name=".BarometerActivity" />
         <activity android:name=".AltimeterActivity" />
         <activity android:name=".DatabaseCaposcout" />
         <activity android:name=".BoyscoutDBValuesActivity" />
