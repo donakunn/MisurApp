@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".DatabaseCaposcout"></activity>
-        <activity android:name=".DatabaseBoyscout" />
+        <activity android:name=".BoyscoutDBValuesActivity" />
         <activity android:name=".LightActivity" />
         <activity android:name=".ListaStrumentiActivity" />
         <activity android:name=".vecchieClassi.ListaSensoriAmbiente" />

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -17,13 +18,10 @@ import com.example.myapplication.db.DbManager;
 import com.example.myapplication.db.InstrumentRecord;
 
 import java.util.List;
+import java.util.Objects;
 
-public class DatabaseBoyscout extends AppCompatActivity {
+public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
-    private TableRow dbBoyScoutQueries;
-    private TextView date;
-    private TextView value;
-    private ImageButton deleteButton;
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private DbManager appDb;
@@ -36,7 +34,7 @@ public class DatabaseBoyscout extends AppCompatActivity {
         linearLayout = findViewById(R.id.linearLayout);
         appDb = new DbManager(this);
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
-                ("Sensor.TYPE_LIGHT");
+                (Objects.requireNonNull(getIntent().getExtras()).getString("sensorName"));
         //da cambiare con il sensore relativo
         if (instrumentRecordsReadFromDB.isEmpty()) {
             return;
@@ -47,49 +45,61 @@ public class DatabaseBoyscout extends AppCompatActivity {
 
     private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
         for (final InstrumentRecord record : instrumentRecords) {
-            dbBoyScoutQueries = new TableRow(DatabaseBoyscout.this);
-            dbBoyScoutQueries.setPadding(20, 20, 5, 20);
+            TableRow dbBoyScoutQuery = new TableRow(BoyscoutDBValuesActivity.this);
+            dbBoyScoutQuery.setPadding(20, 20, 5, 20);
 
-            date = new TextView(DatabaseBoyscout.this);
+            TextView date = new TextView(BoyscoutDBValuesActivity.this);
             tableRowPar.weight = 1;
             date.setLayoutParams(tableRowPar);
             date.setGravity(Gravity.CENTER_VERTICAL);
             date.setPadding(10, 10, 10, 10);
-            date.setTextAppearance(R.style.textstyle);
+            //date.setTextAppearance(R.style.textstyle);
             date.setTypeface(null, Typeface.BOLD);
             date.setText(record.getDate());
 
-            dbBoyScoutQueries.addView(date);
+            dbBoyScoutQuery.addView(date);
 
-            value = new TextView(DatabaseBoyscout.this);
+            TextView value = new TextView(BoyscoutDBValuesActivity.this);
             tableRowPar.weight = 1;
             value.setLayoutParams(tableRowPar);
             value.setGravity(Gravity.CENTER);
-            value.setTextAppearance(R.style.textstyle);
+            //value.setTextAppearance(R.style.textstyle);
             value.setTypeface(null, Typeface.BOLD);
             value.setText(String.valueOf(record.getValue()));
 
-            dbBoyScoutQueries.addView(value);
+            dbBoyScoutQuery.addView(value);
 
-            deleteButton = new ImageButton
-                    (DatabaseBoyscout.this, null, R.style.buttondeletestyle);
+            ImageButton deleteButton = new ImageButton
+                    (BoyscoutDBValuesActivity.this, null, R.style.buttondeletestyle);
             deleteButton.setLayoutParams(tableRowPar);
             deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    v.startAnimation(AnimationUtils.loadAnimation
-                            (DatabaseBoyscout.this, R.anim.button_click));
-                    appDb.deleteARow(record.getId());
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.cancellato), Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM, 0, 50);
-                    toast.show();
+                   actionsOnDeleteButtonPress(v,record);
                 }
             });
 
-            dbBoyScoutQueries.addView(deleteButton);
-            linearLayout.addView(dbBoyScoutQueries);
+            dbBoyScoutQuery.addView(deleteButton);
+            linearLayout.addView(dbBoyScoutQuery);
         }
+    }
+
+    private void actionsOnDeleteButtonPress(View v,InstrumentRecord record) {
+        v.startAnimation(AnimationUtils.loadAnimation
+                (BoyscoutDBValuesActivity.this, R.anim.button_click));
+        appDb.deleteARow(record.getId());
+        Toast toast = Toast.makeText(getApplicationContext(),
+                getResources().getString(R.string.cancellato), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 50);
+        toast.show();
+        deleteAndRedraw(v);
+    }
+
+    private void deleteAndRedraw(View v) {
+        View row = (View) v.getParent();
+        ViewGroup container = ((ViewGroup)row.getParent());
+        container.removeView(row);
+        container.invalidate();
     }
 }
