@@ -17,7 +17,7 @@
     <string name="strumento_termometro">Termometro</string>
     <string name="strumento_barometro">Barometro</string>
     <string name="strumento_umidità">Umidità</string>
-    <string name="strumento_rumore">Rumore</string>
+    <string name="strumento_altimetro">Altimetro</string>
 
     <string name="salvato">Salvato</string>
     <string name="cancellato">Cancellato</string>

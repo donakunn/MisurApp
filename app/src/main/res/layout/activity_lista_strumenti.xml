@@ -230,7 +230,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/rumore"
+            android:id="@+id/altimetro"
             style="@style/buttonstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -240,18 +240,18 @@
                 android:id="@+id/imageView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_rumore" />
+                app:srcCompat="@drawable/ic_altimetro" />
 
             <TextView
-                android:id="@+id/textRumore"
+                android:id="@+id/textAltimetro"
                 style="@style/textstyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/strumento_rumore" />
+                android:text="@string/strumento_altimetro" />
 
             <TextView
-                android:id="@+id/rumoreNonSupportato"
+                android:id="@+id/altimetroNonSupportato"
                 style="@style/textstyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

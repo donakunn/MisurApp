@@ -27,7 +27,7 @@ public class ListaStrumentiActivity extends AppCompatActivity {
         TextView textTermometro = findViewById(R.id.textTermometro);
         TextView textBarometro = findViewById(R.id.textBarometro);
         TextView textUmidita = findViewById(R.id.textUmidità);
-        TextView textRumore = findViewById(R.id.textRumore);
+        TextView textAltimetro = findViewById(R.id.textAltimetro);
 
         TextView bussolaNonSupportato = findViewById(R.id.bussolaNonSupportato);
         TextView contapassiNonSupportato = findViewById(R.id.contapassiNonSupportato);
@@ -37,7 +37,7 @@ public class ListaStrumentiActivity extends AppCompatActivity {
         TextView termometroNonSupportato = findViewById(R.id.termometroNonSupportato);
         TextView barometroNonSupportato = findViewById(R.id.barometroNonSupportato);
         TextView umiditaNonSupportato = findViewById(R.id.umiditàNonSupportato);
-        TextView rumoreNonSupportato = findViewById(R.id.rumoreNonSupportato);
+        TextView altimetroNonSupportato = findViewById(R.id.altimetroNonSupportato);
 
         TableRow bussola = findViewById(R.id.bussola);
         TableRow contapassi = findViewById(R.id.contapassi);
@@ -46,10 +46,11 @@ public class ListaStrumentiActivity extends AppCompatActivity {
         TableRow termometro = findViewById(R.id.termometro);
         TableRow barometro = findViewById(R.id.barometro);
         TableRow umidita = findViewById(R.id.umidità);
-        TableRow rumore = findViewById(R.id.rumore);
+        TableRow altimetro = findViewById(R.id.altimetro);
 
         SensorManager manager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
 
+        //contapassi
         if (manager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             textContapassi.setTypeface(textContapassi.getTypeface(), Typeface.BOLD);
         }else{
@@ -57,6 +58,19 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             contapassi.setEnabled(false);
         }
 
+        //bussola
+        if (manager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null) {
+            if ((manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) || (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) == null)){
+                bussolaNonSupportato.setVisibility(View.VISIBLE);
+                bussola.setEnabled(false);
+            }else{
+                textBussola.setTypeface(textBussola.getTypeface(), Typeface.BOLD);
+            }
+        }else{
+            textBussola.setTypeface(textBussola.getTypeface(), Typeface.BOLD);
+        }
+
+        //luminosità
         if (manager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
             textLuminosita.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
         }else{
@@ -64,6 +78,7 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             luminosita.setEnabled(false);
         }
 
+        //temperatura
         if (manager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null) {
             textTermometro.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
         }else{
@@ -71,6 +86,7 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             termometro.setEnabled(false);
         }
 
+        //umidità
         if (manager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
             textUmidita.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
         }else{
@@ -78,21 +94,32 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             umidita.setEnabled(false);
         }
 
+        //pressione - altimetro
+        if (manager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
+            textBarometro.setTypeface(textBarometro.getTypeface(), Typeface.BOLD);
+            textAltimetro.setTypeface(textAltimetro.getTypeface(), Typeface.BOLD);
+        }else{
+            barometroNonSupportato.setVisibility(View.VISIBLE);
+            barometro.setEnabled(false);
+            altimetroNonSupportato.setVisibility(View.VISIBLE);
+            altimetro.setEnabled(false);
+        }
+
 
 
         bussola.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ListaStrumentiActivity.this,CompassActivity.class);
+                startActivity(intent);
             }
         });
 
         contapassi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ListaStrumentiActivity.this,StepActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -115,32 +142,32 @@ public class ListaStrumentiActivity extends AppCompatActivity {
         termometro.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ListaStrumentiActivity.this,ThermometerActivity.class);
+                startActivity(intent);
             }
         });
 
         barometro.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ListaStrumentiActivity.this,BarometerActivity.class);
+                startActivity(intent);
             }
         });
 
         umidita.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ListaStrumentiActivity.this,HygrometerActivity.class);
+                startActivity(intent);
             }
         });
 
-        rumore.setOnClickListener(new View.OnClickListener() {
+        altimetro.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ListaStrumentiActivity.this,AltimeterActivity.class);
+                startActivity(intent);
             }
         });
 
