@@ -6,8 +6,8 @@ public class BoyscoutsInstrumentRecord extends InstrumentRecord implements Seria
 
     private String boyScoutNickName;
 
-    public BoyscoutsInstrumentRecord(String boyScoutNickName,String date, float value) {
-        super(date, value);
+    public BoyscoutsInstrumentRecord(long id,String boyScoutNickName,String date, float value) {
+        super(id,date, value);
         this.boyScoutNickName = boyScoutNickName;
     }
 

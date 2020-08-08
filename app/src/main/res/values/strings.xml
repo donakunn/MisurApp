@@ -20,5 +20,6 @@
     <string name="strumento_rumore">Rumore</string>
 
     <string name="salvato">Salvato</string>
+    <string name="cancellato">Cancellato</string>
 
 </resources>

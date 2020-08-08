@@ -30,8 +30,8 @@ public class RecordedValuesBaseHelper extends SQLiteOpenHelper {
         database.execSQL("create table " + InstrumentsDBSchema.BoyscoutTable.TABLENAME +
                 " ("+ " _id integer primary key autoincrement, " +
                 InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME + " text not null, " +
-                "DataOra date, " + InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD +
-                " float(24));" );
+                InstrumentsDBSchema.ScoutMasterTable.cols.TIMESTAMP + " date, "+
+                InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD + " float(24));" );
         database.execSQL("create table " + InstrumentsDBSchema.ScoutMasterTable.TABLENAME +
                 " ("+ " _id integer primary key autoincrement, " +
                 InstrumentsDBSchema.ScoutMasterTable.cols.BOYSCOUTNICKNAME + " text not null, "+
