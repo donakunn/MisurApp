@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.db.DbManager;
 import com.example.myapplication.db.InstrumentRecord;
@@ -26,23 +27,22 @@ public class DatabaseBoyscout extends AppCompatActivity {
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private DbManager appDb;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_boyscout);
-        LinearLayout linearLayout = findViewById(R.id.linearLayout);
+        linearLayout = findViewById(R.id.linearLayout);
         appDb = new DbManager(this);
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
                 ("Sensor.TYPE_LIGHT");
+        //da cambiare con il sensore relativo
         if (instrumentRecordsReadFromDB.isEmpty()) {
             return;
-            //sollevare l'eccezione e tornare all'activity precedente
         } else {
-            //da cambiare con il sensore relativo
             showBoyscoutTableValues(instrumentRecordsReadFromDB);
         }
-        linearLayout.addView(dbBoyScoutQueries);
     }
 
     private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
@@ -81,11 +81,15 @@ public class DatabaseBoyscout extends AppCompatActivity {
                     v.startAnimation(AnimationUtils.loadAnimation
                             (DatabaseBoyscout.this, R.anim.button_click));
                     appDb.deleteARow(record.getId());
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.cancellato), Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM, 0, 50);
+                    toast.show();
                 }
             });
 
             dbBoyScoutQueries.addView(deleteButton);
-
+            linearLayout.addView(dbBoyScoutQueries);
         }
     }
 }
