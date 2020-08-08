@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -97,9 +99,34 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
     }
 
     private void deleteAndRedraw(View v) {
-        View row = (View) v.getParent();
-        ViewGroup container = ((ViewGroup)row.getParent());
-        container.removeView(row);
-        container.invalidate();
+        final View row = (View) v.getParent();
+        onDeleteAnimation(row);
+        linearLayout.postDelayed(new Runnable() {
+            public void run() {
+                ViewGroup container = ((ViewGroup)row.getParent());
+                container.removeView(row);
+                container.invalidate();
+            }
+        }, 500);
     }
+
+    private void onDeleteAnimation(final View row) {
+        Animation fadeout = new AlphaAnimation(1.f, 0.f);
+        fadeout.setDuration(500);
+        fadeout.setAnimationListener(new Animation.AnimationListener(){
+
+            @Override
+            public void onAnimationStart(Animation animation){}
+
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                row.setVisibility(View.GONE);
+            }
+        });
+        row.startAnimation(fadeout);
+    }
+
 }
