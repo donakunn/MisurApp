@@ -74,37 +74,6 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/livella"
-            style="@style/buttonstyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true">
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_livella" />
-
-            <TextView
-                android:id="@+id/textLivella"
-                style="@style/textstyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/strumento_livella" />
-
-            <TextView
-                android:id="@+id/livellaNonSupportato"
-                style="@style/textstyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/avviso_non_supportato"
-                android:visibility="invisible" />
-
-        </TableRow>
-
-        <TableRow
             android:id="@+id/luminosità"
             style="@style/buttonstyle"
             android:layout_width="match_parent"
