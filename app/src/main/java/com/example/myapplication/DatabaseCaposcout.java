@@ -35,44 +35,40 @@ public class DatabaseCaposcout extends AppCompatActivity {
             query = new TableRow(DatabaseCaposcout.this);
             query.setPadding(20,20,5,20);
 
-            nickname = new TextView(DatabaseCaposcout.this);
+            nickname = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             nickname.setLayoutParams(tableRowPar);
             nickname.setGravity(Gravity.CENTER_VERTICAL);
             nickname.setPadding(10,10,10,10);
-            nickname.setTextAppearance(R.style.textstyle);
             nickname.setTypeface(null, Typeface.BOLD);
             nickname.setText("nickname");
 
             query.addView(nickname);
 
-            data = new TextView(DatabaseCaposcout.this);
+            data = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             data.setLayoutParams(tableRowPar);
             data.setGravity(Gravity.CENTER_VERTICAL);
             data.setPadding(10,10,10,10);
-            data.setTextAppearance(R.style.textstyle);
             data.setTypeface(null, Typeface.BOLD);
             data.setText("data");
 
             query.addView(data);
 
-            strumento = new TextView(DatabaseCaposcout.this);
+            strumento = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             strumento.setLayoutParams(tableRowPar);
             strumento.setGravity(Gravity.CENTER_VERTICAL);
             strumento.setPadding(10,10,10,10);
-            strumento.setTextAppearance(R.style.textstyle);
             strumento.setTypeface(null, Typeface.BOLD);
             strumento.setText("strumento");
 
             query.addView(strumento);
 
-            valore = new TextView(DatabaseCaposcout.this);
+            valore = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             valore.setLayoutParams(tableRowPar);
             valore.setGravity(Gravity.CENTER_VERTICAL);
-            valore.setTextAppearance(R.style.textstyle);
             valore.setTypeface(null,Typeface.BOLD);
             valore.setText("valore");
 
