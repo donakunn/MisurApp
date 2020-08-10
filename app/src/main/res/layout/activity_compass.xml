@@ -48,31 +48,32 @@
 
         <ImageView
             android:id="@+id/imageView"
+            android:src="@drawable/sfondo_bussola"
             style="@style/imagestyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:scaleType="centerInside"
-            android:src="@drawable/sfondo_bussola"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <!-- android:src="@drawable/sfondo_bussola"-->
         <ImageView
             android:id="@+id/img_animazione"
+            android:src="@drawable/ago_bussola"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:elevation="2dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ago_bussola"
+
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="@+id/imageView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <!-- android:src="@drawable/ago_bussola"-->
 
     <ImageButton
         android:id="@+id/salva"
