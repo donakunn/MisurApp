@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.db.DbManager;
+
 public class CompassActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
@@ -32,6 +34,8 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
     private float[] mLastMagnetometer = new float[3];
     private boolean mLastAccelerometerSet = false;
     private boolean mLastMagnetometerSet = false;
+    private static final String sensorUsed="compass";
+    private DbManager dbManager = new DbManager(this);
 
 
     @Override
@@ -48,7 +52,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this, R.anim.button_click));
-
+                dbManager.saveRegisteredValues(sensorUsed,mAzimuth);
 
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.salvato), Toast.LENGTH_SHORT);
@@ -62,6 +66,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this, R.anim.button_click));
                 Intent intent = new Intent(CompassActivity.this, BoyscoutDBValuesActivity.class);
+                intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });

@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.db.DbManager;
+
 public class ThermometerActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
@@ -24,6 +26,8 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
     private TextView misura;
     private ImageButton salva;
     private ImageButton dati;
+    private static final String sensorUsed="thermometer";
+    private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
-
+                dbManager.saveRegisteredValues(sensorUsed,valore);
 
 
                 //feedback
@@ -57,6 +61,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
                 Intent intent = new Intent(ThermometerActivity.this,BoyscoutDBValuesActivity.class);
+                intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });

@@ -25,7 +25,8 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
     private TextView misura;
     private ImageButton salva;
     private ImageButton dati;
-    private static final String sensorUsed="Sensor.TYPE_LIGHT";
+    private static final String sensorUsed="light";
+    private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +41,7 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
-                DbManager dbManager = new DbManager(getApplicationContext());
-                dbManager.open();
-                dbManager.insertIntoTable(sensorUsed,valore);
-                dbManager.close();
+                dbManager.saveRegisteredValues(sensorUsed,valore);
                 //check Context e open e close
 
                 //feedback

@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.db.DbManager;
+
 public class HygrometerActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
@@ -25,6 +27,8 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
     private ImageButton salva;
     private ImageButton dati;
     float angle;
+    private static final String sensorUsed="hygrometer";
+    private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +46,13 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
+                dbManager.saveRegisteredValues(sensorUsed,valore);
 
 
 
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM| Gravity.RIGHT, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });
@@ -57,6 +62,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
                 Intent intent = new Intent(HygrometerActivity.this,BoyscoutDBValuesActivity.class);
+                intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });

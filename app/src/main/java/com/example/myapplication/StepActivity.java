@@ -15,13 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.db.DbManager;
+
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor sensor;
     private TextView misura;
     private ImageView imageView;
-    private Integer steps;
+    private int steps;
+    private static final String sensorUsed="steps";
+    private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
+                dbManager.saveRegisteredValues(sensorUsed,steps);
 
 
                 //feedback
@@ -52,6 +57,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
                 Intent intent = new Intent(StepActivity.this,BoyscoutDBValuesActivity.class);
+                intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });
@@ -80,7 +86,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else {
             imageView.setImageResource(R.drawable.contapassi2);
         }
-        misura.setText(steps.toString());
+        misura.setText(String.valueOf(steps));
     }
 
     @Override

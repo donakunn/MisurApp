@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.db.DbManager;
+
 public class AltimeterActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
@@ -26,6 +28,8 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
     private ImageButton dati;
     private float angle;
     private float altitude;
+    private static final String sensorUsed="altimeter";
+    private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +47,12 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
-
+                dbManager.saveRegisteredValues(sensorUsed,valore);
 
 
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM| Gravity.RIGHT, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });
@@ -58,6 +62,7 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
                 Intent intent = new Intent(AltimeterActivity.this,BoyscoutDBValuesActivity.class);
+                intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });

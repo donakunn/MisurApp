@@ -60,9 +60,15 @@ public class DbManager {
     }
 
 
+    public void saveRegisteredValues(String sensorUsed, float value) {
+        this.open();
+        insertIntoTable(sensorUsed,value);
+        this.close();
+    }
 
     //impacchetta valori in un oggetto di ContentValues e li scrive sul db
-    public long insertIntoTable(String instrumentName, float valueRead) {
+
+    private long insertIntoTable(String instrumentName, float valueRead) {
         ContentValues valuesToSave = createContentValues(instrumentName, valueRead);
         return database.insertOrThrow(BOYSCOUT_DATABASE_TABLE, null, valuesToSave);
     }
