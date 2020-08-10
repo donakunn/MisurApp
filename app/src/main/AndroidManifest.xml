@@ -12,7 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DatabaseCaposcout"></activity>
+        <activity android:name=".ThermometerActivity"></activity>
+        <activity android:name=".StepActivity" />
+        <activity android:name=".HygrometerActivity" />
+        <activity android:name=".CompassActivity" />
+        <activity android:name=".BarometerActivity" />
+        <activity android:name=".AltimeterActivity" />
+        <activity android:name=".DatabaseCaposcout" />
         <activity android:name=".BoyscoutDBValuesActivity" />
         <activity android:name=".LightActivity" />
         <activity android:name=".ListaStrumentiActivity" />
