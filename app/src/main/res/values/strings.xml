@@ -12,10 +12,10 @@
 
     <string name="strumento_bussola">Bussola</string>
     <string name="strumento_contapassi">Contapassi</string>
-    <string name="strumento_fotometro">Fotometro</string>
+    <string name="strumento_luminosità">Luminosità</string>
     <string name="strumento_termometro">Termometro</string>
     <string name="strumento_barometro">Barometro</string>
-    <string name="strumento_igrometro">Igrometro</string>
+    <string name="strumento_umidità">Umidità</string>
     <string name="strumento_altimetro">Altimetro</string>
 
     <string name="salvato">Salvato</string>

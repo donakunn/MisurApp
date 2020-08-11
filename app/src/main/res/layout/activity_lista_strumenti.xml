@@ -74,7 +74,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/fotometro"
+            android:id="@+id/luminosità"
             style="@style/buttonstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,18 +84,18 @@
                 android:id="@+id/imageView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_fotometro" />
+                app:srcCompat="@drawable/ic_lampadina" />
 
             <TextView
-                android:id="@+id/textFotometro"
+                android:id="@+id/textLuminosità"
                 style="@style/textstyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/strumento_fotometro" />
+                android:text="@string/strumento_luminosità" />
 
             <TextView
-                android:id="@+id/fotometroNonSupportato"
+                android:id="@+id/luminositàNonSupportato"
                 style="@style/textstyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/igrometro"
+            android:id="@+id/umidità"
             style="@style/buttonstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -178,18 +178,18 @@
                 android:id="@+id/imageView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_igrometro" />
+                app:srcCompat="@drawable/ic_umidita" />
 
             <TextView
-                android:id="@+id/textIgrometro"
+                android:id="@+id/textUmidità"
                 style="@style/textstyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/strumento_igrometro" />
+                android:text="@string/strumento_umidità" />
 
             <TextView
-                android:id="@+id/igrometroNonSupportato"
+                android:id="@+id/umiditàNonSupportato"
                 style="@style/textstyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
