@@ -13,17 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ThermometerActivity"></activity>
-        <activity android:name=".StepActivity" />
-        <activity android:name=".HygrometerActivity" />
-        <activity android:name=".CompassActivity" />
-        <activity android:name=".BarometerActivity" />
-        <activity android:name=".AltimeterActivity" />
-        <activity android:name=".DatabaseCaposcout" />
-        <activity android:name=".BoyscoutDBValuesActivity" />
-        <activity android:name=".LightActivity" />
-        <activity android:name=".ListaStrumentiActivity" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name="com.example.misurapp.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="com.example.misurapp.ThermometerActivity" />
+        <activity android:name="com.example.misurapp.StepActivity" />
+        <activity android:name="com.example.misurapp.HygrometerActivity" />
+        <activity android:name="com.example.misurapp.CompassActivity" />
+        <activity android:name="com.example.misurapp.BarometerActivity" />
+        <activity android:name="com.example.misurapp.AltimeterActivity" />
+        <activity android:name="com.example.misurapp.DatabaseCaposcout" />
+        <activity android:name="com.example.misurapp.BoyscoutDBValuesActivity" />
+        <activity android:name="com.example.misurapp.LightActivity" />
+        <activity android:name="com.example.misurapp.ListaStrumentiActivity" />
+        <activity android:name="com.example.misurapp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
