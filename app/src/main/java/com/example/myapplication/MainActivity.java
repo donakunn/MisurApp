@@ -23,8 +23,10 @@ public class MainActivity extends AppCompatActivity {
         client.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
-                Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                 startActivity(intent);
+                //Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
+                //startActivity(intent);
             }
         });
 

@@ -27,7 +27,6 @@ public class MultiServer {
                 } catch (IOException e) {
                     socket.close();
                 }
-
             }
 
         } finally {
