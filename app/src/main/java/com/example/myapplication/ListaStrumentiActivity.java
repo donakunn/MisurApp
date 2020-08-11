@@ -22,26 +22,26 @@ public class ListaStrumentiActivity extends AppCompatActivity {
 
         TextView textBussola = findViewById(R.id.textBussola);
         TextView textContapassi = findViewById(R.id.textContapassi);
-        TextView textLuminosita = findViewById(R.id.textLuminosità);
+        TextView textFotometro = findViewById(R.id.textFotometro);
         TextView textTermometro = findViewById(R.id.textTermometro);
         TextView textBarometro = findViewById(R.id.textBarometro);
-        TextView textUmidita = findViewById(R.id.textUmidità);
+        TextView textIgrometro = findViewById(R.id.textIgrometro);
         TextView textAltimetro = findViewById(R.id.textAltimetro);
 
         TextView bussolaNonSupportato = findViewById(R.id.bussolaNonSupportato);
         TextView contapassiNonSupportato = findViewById(R.id.contapassiNonSupportato);
-        TextView luminositaNonSupportato = findViewById(R.id.luminositàNonSupportato);
+        TextView fotometroNonSupportato = findViewById(R.id.fotometroNonSupportato);
         TextView termometroNonSupportato = findViewById(R.id.termometroNonSupportato);
         TextView barometroNonSupportato = findViewById(R.id.barometroNonSupportato);
-        TextView umiditaNonSupportato = findViewById(R.id.umiditàNonSupportato);
+        TextView igrometroNonSupportato = findViewById(R.id.igrometroNonSupportato);
         TextView altimetroNonSupportato = findViewById(R.id.altimetroNonSupportato);
 
         TableRow bussola = findViewById(R.id.bussola);
         TableRow contapassi = findViewById(R.id.contapassi);
-        TableRow luminosita = findViewById(R.id.luminosità);
+        TableRow fotometro = findViewById(R.id.fotometro);
         TableRow termometro = findViewById(R.id.termometro);
         TableRow barometro = findViewById(R.id.barometro);
-        TableRow umidita = findViewById(R.id.umidità);
+        TableRow igrometro = findViewById(R.id.igrometro);
         TableRow altimetro = findViewById(R.id.altimetro);
 
         SensorManager manager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
@@ -66,12 +66,12 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             textBussola.setTypeface(textBussola.getTypeface(), Typeface.BOLD);
         }
 
-        //luminosità
+        //fotometro
         if (manager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
-            textLuminosita.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
+            textFotometro.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
         }else{
-            luminositaNonSupportato.setVisibility(View.VISIBLE);
-            luminosita.setEnabled(false);
+            fotometroNonSupportato.setVisibility(View.VISIBLE);
+            fotometro.setEnabled(false);
         }
 
         //temperatura
@@ -82,12 +82,12 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             termometro.setEnabled(false);
         }
 
-        //umidità
+        //igrometro
         if (manager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
-            textUmidita.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
+            textIgrometro.setTypeface(textTermometro.getTypeface(), Typeface.BOLD);
         }else{
-            umiditaNonSupportato.setVisibility(View.VISIBLE);
-            umidita.setEnabled(false);
+            igrometroNonSupportato.setVisibility(View.VISIBLE);
+            igrometro.setEnabled(false);
         }
 
         //pressione - altimetro
@@ -120,7 +120,7 @@ public class ListaStrumentiActivity extends AppCompatActivity {
         });
 
 
-        luminosita.setOnClickListener(new View.OnClickListener() {
+        fotometro.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
                 Intent intent = new Intent(ListaStrumentiActivity.this,LightActivity.class);
@@ -144,7 +144,7 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             }
         });
 
-        umidita.setOnClickListener(new View.OnClickListener() {
+        igrometro.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
                 Intent intent = new Intent(ListaStrumentiActivity.this,HygrometerActivity.class);
