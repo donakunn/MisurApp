@@ -22,7 +22,6 @@ public class ListaStrumentiActivity extends AppCompatActivity {
 
         TextView textBussola = findViewById(R.id.textBussola);
         TextView textContapassi = findViewById(R.id.textContapassi);
-        TextView textLivella = findViewById(R.id.textLivella);
         TextView textLuminosita = findViewById(R.id.textLuminosità);
         TextView textTermometro = findViewById(R.id.textTermometro);
         TextView textBarometro = findViewById(R.id.textBarometro);
@@ -31,8 +30,6 @@ public class ListaStrumentiActivity extends AppCompatActivity {
 
         TextView bussolaNonSupportato = findViewById(R.id.bussolaNonSupportato);
         TextView contapassiNonSupportato = findViewById(R.id.contapassiNonSupportato);
-        TextView livellaNonSupportato = findViewById(R.id.livellaNonSupportato);
-        TextView luminositàNonSupportato = findViewById(R.id.luminositàNonSupportato);
         TextView luminositaNonSupportato = findViewById(R.id.luminositàNonSupportato);
         TextView termometroNonSupportato = findViewById(R.id.termometroNonSupportato);
         TextView barometroNonSupportato = findViewById(R.id.barometroNonSupportato);
@@ -41,7 +38,6 @@ public class ListaStrumentiActivity extends AppCompatActivity {
 
         TableRow bussola = findViewById(R.id.bussola);
         TableRow contapassi = findViewById(R.id.contapassi);
-        TableRow livella = findViewById(R.id.livella);
         TableRow luminosita = findViewById(R.id.luminosità);
         TableRow termometro = findViewById(R.id.termometro);
         TableRow barometro = findViewById(R.id.barometro);
@@ -123,13 +119,6 @@ public class ListaStrumentiActivity extends AppCompatActivity {
             }
         });
 
-        livella.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                /*Intent intent = new Intent(MainActivity.this,ListaSensoriMovimento.class);
-                startActivity(intent);*/
-            }
-        });
 
         luminosita.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

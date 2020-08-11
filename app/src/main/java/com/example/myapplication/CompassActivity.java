@@ -109,7 +109,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         }
 
         mAzimuth = Math.round(mAzimuth);
-        imageView.setRotation(-mAzimuth);
+        imageView.setRotation(mAzimuth);
 
         String where = "NO";
 

@@ -50,22 +50,20 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
             TableRow dbBoyScoutQuery = new TableRow(BoyscoutDBValuesActivity.this);
             dbBoyScoutQuery.setPadding(20, 20, 5, 20);
 
-            TextView date = new TextView(BoyscoutDBValuesActivity.this);
+            TextView date = new TextView(BoyscoutDBValuesActivity.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             date.setLayoutParams(tableRowPar);
             date.setGravity(Gravity.CENTER_VERTICAL);
             date.setPadding(10, 10, 10, 10);
-            //date.setTextAppearance(R.style.textstyle);
             date.setTypeface(null, Typeface.BOLD);
             date.setText(record.getDate());
 
             dbBoyScoutQuery.addView(date);
 
-            TextView value = new TextView(BoyscoutDBValuesActivity.this);
+            TextView value = new TextView(BoyscoutDBValuesActivity.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             value.setLayoutParams(tableRowPar);
             value.setGravity(Gravity.CENTER);
-            //value.setTextAppearance(R.style.textstyle);
             value.setTypeface(null, Typeface.BOLD);
             value.setText(String.valueOf(record.getValue()));
 
