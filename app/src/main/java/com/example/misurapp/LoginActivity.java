@@ -1,17 +1,15 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,11 +32,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        lblInfo = (TextView) findViewById(R.id.lblInfo);
-        lblHeader = (TextView) findViewById(R.id.lblHeader);
+        lblInfo = findViewById(R.id.lblInfo);
+        lblHeader = findViewById(R.id.lblHeader);
 
-        btnLogin = (SignInButton) findViewById(R.id.btnLogin);
-        btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnLogout = findViewById(R.id.btnLogout);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -48,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         account = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
         //if (account != null)
-         //   updateUI(account);
+        //   updateUI(account);
         //else
             //btnLogout.setVisibility(View.GONE);
 
@@ -95,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 1);
-        account.getEmail();
+        //account.getEmail();
     }
 
     @Override

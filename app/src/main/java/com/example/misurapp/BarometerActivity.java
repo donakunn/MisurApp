@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -15,43 +15,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.db.DbManager;
+import com.example.misurapp.db.DbManager;
 
-public class ThermometerActivity extends AppCompatActivity implements SensorEventListener {
+public class BarometerActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor sensor;
-    private ImageView termometro;
+    private ImageView imageView;
     private float valore;
     private TextView misura;
     private ImageButton salva;
     private ImageButton dati;
-    private static final String sensorUsed="thermometer";
+    private float angle;
+    private static final String sensorUsed="barometer";
     private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_thermometer);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        setContentView(R.layout.activity_barometer);
 
-
-        termometro = (ImageView) findViewById(R.id.img_animazione);
+        imageView = (ImageView) findViewById(R.id.img_animazione);
         misura = (TextView) findViewById(R.id.misura);
 
 
         salva = (ImageButton)  findViewById(R.id.salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
+                v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
                 dbManager.saveRegisteredValues(sensorUsed,valore);
 
 
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM| Gravity.RIGHT, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });
@@ -59,8 +59,8 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
         dati = (ImageButton)  findViewById(R.id.datiSalvati);
         dati.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ThermometerActivity.this,BoyscoutDBValuesActivity.class);
+                v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
+                Intent intent = new Intent(BarometerActivity.this,BoyscoutDBValuesActivity.class);
                 intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
@@ -80,48 +80,13 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
     public void onSensorChanged(SensorEvent event) {
         valore = event.values[0];
 
-        if (valore<= -10){
-            termometro.setImageResource(R.drawable.termometro0);
+        if (valore < 970 || valore >1050){
+            imageView.setRotation(0);
+        }else{
+            angle = (((valore - 1010)*360)/80);
+            imageView.setRotation((int) angle);
         }
-
-        if (valore > -10 && valore <= -5){
-            termometro.setImageResource(R.drawable.termometro1);
-        }
-
-        if (valore > -5 && valore <= 0){
-            termometro.setImageResource(R.drawable.termometro2);
-        }
-
-        if (valore > 0 && valore <= 5){
-            termometro.setImageResource(R.drawable.termometro3);
-        }
-
-        if (valore > 5 && valore <= 10){
-            termometro.setImageResource(R.drawable.termometro4);
-        }
-
-        if (valore > 10 && valore <= 15){
-            termometro.setImageResource(R.drawable.termometro5);
-        }
-
-        if (valore > 15 && valore <= 20){
-            termometro.setImageResource(R.drawable.termometro6);
-        }
-
-        if (valore > 20 && valore <= 25){
-            termometro.setImageResource(R.drawable.termometro7);
-        }
-
-        if (valore > 25 && valore <= 30){
-            termometro.setImageResource(R.drawable.termometro8);
-        }
-
-        if (valore > 30){
-            termometro.setImageResource(R.drawable.termometro9);
-        }
-
-
-        misura.setText(valore+" °C");
+        misura.setText(valore+" hPa");
     }
 
     @Override

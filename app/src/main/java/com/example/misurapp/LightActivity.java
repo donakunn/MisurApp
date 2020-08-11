@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.myapplication.db.DbManager;
+import com.example.misurapp.db.DbManager;
 
 public class LightActivity extends AppCompatActivity implements SensorEventListener {
 

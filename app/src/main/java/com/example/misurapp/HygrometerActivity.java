@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -15,48 +15,53 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.db.DbManager;
+import com.example.misurapp.db.DbManager;
 
-public class StepActivity extends AppCompatActivity implements SensorEventListener {
+public class HygrometerActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor sensor;
-    private TextView misura;
     private ImageView imageView;
-    private int steps;
-    private static final String sensorUsed="steps";
+    private float valore;
+    private TextView misura;
+    private ImageButton salva;
+    private ImageButton dati;
+    float angle;
+    private static final String sensorUsed="hygrometer";
     private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+        setContentView(R.layout.activity_hygrometer);
 
-        imageView = findViewById(R.id.img_animazione);
-        misura =  findViewById(R.id.misura);
+        imageView = (ImageView) findViewById(R.id.img_animazione);
+        misura = (TextView) findViewById(R.id.misura);
 
-        ImageButton salva = findViewById(R.id.salva);
+
+        salva = (ImageButton)  findViewById(R.id.salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed,steps);
+                v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
+                dbManager.saveRegisteredValues(sensorUsed,valore);
+
 
 
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM| Gravity.END, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });
 
-        ImageButton dati = findViewById(R.id.datiSalvati);
+        dati = (ImageButton)  findViewById(R.id.datiSalvati);
         dati.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
-                Intent intent = new Intent(StepActivity.this,BoyscoutDBValuesActivity.class);
+                v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
+                Intent intent = new Intent(HygrometerActivity.this,BoyscoutDBValuesActivity.class);
                 intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
@@ -65,28 +70,21 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
 
-
-    protected void onDestroy(){
-        super.onDestroy();
-    }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
-        steps = (int) event.values[0];
+        valore = event.values[0];
 
-        if (steps % 2 == 0) {
-            imageView.setImageResource(R.drawable.contapassi1);
-        } else {
-            imageView.setImageResource(R.drawable.contapassi2);
-        }
-        misura.setText(String.valueOf(steps));
+        angle = (((valore - 50)*360)/120);
+        imageView.setRotation((int) angle);
+
+        misura.setText(valore+" %");
     }
 
     @Override

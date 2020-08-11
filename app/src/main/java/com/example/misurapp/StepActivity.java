@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -15,81 +15,78 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.db.DbManager;
+import com.example.misurapp.db.DbManager;
 
-public class AltimeterActivity extends AppCompatActivity implements SensorEventListener {
+public class StepActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor sensor;
-    private ImageView imageView;
-    private float valore;
     private TextView misura;
-    private ImageButton salva;
-    private ImageButton dati;
-    private float angle;
-    private float altitude;
-    private static final String sensorUsed="altimeter";
+    private ImageView imageView;
+    private int steps;
+    private static final String sensorUsed="steps";
     private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_altimeter);
+        setContentView(R.layout.activity_step);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
+        imageView = findViewById(R.id.img_animazione);
+        misura =  findViewById(R.id.misura);
 
-        imageView = (ImageView) findViewById(R.id.img_animazione);
-        misura = (TextView) findViewById(R.id.misura);
-
-        salva = (ImageButton)  findViewById(R.id.salva);
+        ImageButton salva = findViewById(R.id.salva);
         salva.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed,valore);
+                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
+                dbManager.saveRegisteredValues(sensorUsed,steps);
 
 
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
+                toast.setGravity(Gravity.BOTTOM| Gravity.END, 0, 0);
                 toast.show();
             }
         });
 
-        dati = (ImageButton)  findViewById(R.id.datiSalvati);
+        ImageButton dati = findViewById(R.id.datiSalvati);
         dati.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
-                Intent intent = new Intent(AltimeterActivity.this,BoyscoutDBValuesActivity.class);
+                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
+                Intent intent = new Intent(StepActivity.this,BoyscoutDBValuesActivity.class);
                 intent.putExtra("sensorName",sensorUsed);
                 startActivity(intent);
             }
         });
-    }
 
+    }
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
 
+
+    protected void onDestroy(){
+        super.onDestroy();
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
-        valore = event.values[0];
+        steps = (int) event.values[0];
 
-        altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE,valore);
-
-        if(altitude>6000 || altitude < 0){
-            imageView.setRotation(0);
-        }else{
-            angle = ((altitude*360)/6000);
-            imageView.setRotation(angle);
+        if (steps % 2 == 0) {
+            imageView.setImageResource(R.drawable.contapassi1);
+        } else {
+            imageView.setImageResource(R.drawable.contapassi2);
         }
-        misura.setText(altitude+" m");
+        misura.setText(String.valueOf(steps));
     }
 
     @Override

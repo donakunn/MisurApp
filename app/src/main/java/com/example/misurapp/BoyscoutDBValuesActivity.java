@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,8 +16,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.db.DbManager;
-import com.example.myapplication.db.InstrumentRecord;
+import com.example.misurapp.db.DbManager;
+import com.example.misurapp.db.InstrumentRecord;
 
 import java.util.List;
 import java.util.Objects;

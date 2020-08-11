@@ -1,4 +1,4 @@
-package com.example.myapplication.clientServer;
+package com.example.misurapp.clientServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;

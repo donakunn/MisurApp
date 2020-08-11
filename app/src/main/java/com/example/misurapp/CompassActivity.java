@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.misurapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.db.DbManager;
+import com.example.misurapp.db.DbManager;
 
 public class CompassActivity extends AppCompatActivity implements SensorEventListener {
 

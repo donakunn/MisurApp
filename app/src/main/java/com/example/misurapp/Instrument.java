@@ -1,8 +1,4 @@
-package com.example.myapplication;
-
-import android.content.ContentValues;
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.example.misurapp;
 
 public class Instrument {
     private String instrumentName;

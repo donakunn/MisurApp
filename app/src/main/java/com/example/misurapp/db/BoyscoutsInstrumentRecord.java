@@ -1,4 +1,4 @@
-package com.example.myapplication.db;
+package com.example.misurapp.db;
 
 import java.io.Serializable;
 

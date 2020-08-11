@@ -1,6 +1,6 @@
-package com.example.myapplication.clientServer;
+package com.example.misurapp.clientServer;
 
-import com.example.myapplication.db.BoyscoutsInstrumentRecord;
+import com.example.misurapp.db.BoyscoutsInstrumentRecord;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
