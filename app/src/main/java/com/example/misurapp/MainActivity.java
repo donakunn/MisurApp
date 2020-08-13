@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
                     Intent intent = new Intent(MainActivity.this, ListaStrumentiActivity.class);
                     startActivity(intent);
-                    //Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
-                    //startActivity(intent);
+
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             getResources().getString(R.string.LoginRequest), Toast.LENGTH_SHORT);
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
         if (account != null)
-           updateUI(account);
+           btnLogin.setVisibility(View.GONE);
         else
         btnLogout.setVisibility(View.GONE);
 
@@ -121,34 +120,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }//fine onCreate();
 
-    private void updateUI(GoogleSignInAccount account) {
-      /*    try {
-
-                + "\r\nEmail : " + account.getEmail() + "\r\nGiven name : " + account.getGivenName()
-                    + "\r\nDisplay Name : " + account.getDisplayName() + "\r\nId : "
-                    + account.getId();
-//+ "\r\nImage URL : " + account.getPhotoUrl().toString();
-//+ "\r\nAccount : " + account.getAccount().toString()
-            lblInfo.setText(strData);
-
-            lblHeader.setText("Sign In with Google Successful");
-            btnLogin.setVisibility(View.GONE);
-            btnLogout.setVisibility(View.VISIBLE);
-
-        } catch (NullPointerException ex) {
-            lblInfo.setText(lblInfo.getText().toString() + "\r\n" + "NullPointerException : " + ex.getMessage().toString());
-        } catch (RuntimeException ex) {
-            lblInfo.setText(lblInfo.getText().toString() + "\r\n" + "RuntimeException : " + ex.getMessage().toString());
-        } catch (Exception ex) {
-// lblInfo.setText(ex.getMessage().toString());
-        } */
-    }
-
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 1);
-        //account.getEmail();
+        Toast toast = Toast.makeText(getApplicationContext(),
+                getResources().getString(R.string.LoginComplete), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 50);
+        toast.show();
     }
 
     @Override
@@ -158,17 +137,19 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-            editor.putString("email", account.getEmail());
-            editor.putBoolean("hasLogin", true);
-            editor.apply();
+            if (account!= null) {
+                editor.putString("email", account.getEmail());
+                editor.putBoolean("hasLogin", true);
+                editor.apply();
+                btnLogin.setVisibility(View.GONE);
+                btnLogout.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            updateUI(account);
+            account = completedTask.getResult(ApiException.class);
         } catch (ApiException e) {
             Log.w("Google Error ", "signInResult:failed code=" + e.getStatusCode());
         }
@@ -183,6 +164,15 @@ public class MainActivity extends AppCompatActivity {
                         revokeAccess();
                     }
                 });
+        editor.putBoolean("hasLogin",false);
+        editor.apply();
+        btnLogout.setVisibility(View.GONE);
+        btnLogin.setVisibility(View.VISIBLE);
+        Toast toast = Toast.makeText(getApplicationContext(),
+                getResources().getString(R.string.LogoutComplete), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 50);
+        toast.show();
+
     }
 
     private void revokeAccess() {
