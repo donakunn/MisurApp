@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,47 +42,39 @@ public class MainActivity extends AppCompatActivity {
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
-        Button client = findViewById(R.id.Boyscout);
-        Button server = (Button) findViewById(R.id.Caposcout);
+        Button boyscoutButton = findViewById(R.id.Boyscout);
+        Button scoutMasterButton = (Button) findViewById(R.id.Caposcout);
 
-
-        client.setOnClickListener(new View.OnClickListener() {
+        boyscoutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (prefs.getBoolean("hasLogin",false)) {
+                if (prefs.getBoolean("hasLogin", false)) {
                     v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
                     Intent intent = new Intent(MainActivity.this, ListaStrumentiActivity.class);
                     startActivity(intent);
 
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.LoginRequest), Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM, 0, 50);
-                    toast.show();
+                    toastMaker(getResources().getString(R.string.LoginRequest));
                 }
             }
         });
 
-        server.setOnClickListener(new View.OnClickListener() {
+        scoutMasterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (prefs.getBoolean("hasLogin", false)) {
                     v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
                     Intent intent = new Intent(MainActivity.this, DatabaseCaposcout.class);
                     startActivity(intent);
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.LoginRequest), Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM, 0, 50);
-                    toast.show();
-
+                    toastMaker(getResources().getString(R.string.LoginRequest));
                 }
             }
         });
 
-        ActivityCompat.requestPermissions(MainActivity.this,
+        ActivityCompat.requestPermissions(MainActivity.this, //da spostare
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 1);
 
-        ActivityCompat.requestPermissions(MainActivity.this,
+        ActivityCompat.requestPermissions(MainActivity.this, //da spostare
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
 
@@ -101,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
 
         account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
         if (account != null)
-           btnLogin.setVisibility(View.GONE);
+            btnLogin.setVisibility(View.GONE);
         else
-        btnLogout.setVisibility(View.GONE);
+            btnLogout.setVisibility(View.GONE);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 signIn();
             }
         });
-
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,14 +110,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }//fine onCreate();
 
-
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 1);
-        Toast toast = Toast.makeText(getApplicationContext(),
-                getResources().getString(R.string.LoginComplete), Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, 50);
-        toast.show();
     }
 
     @Override
@@ -137,14 +122,17 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-            if (account!= null) {
-                editor.putString("email", account.getEmail());
-                editor.putBoolean("hasLogin", true);
-                editor.apply();
-                btnLogin.setVisibility(View.GONE);
-                btnLogout.setVisibility(View.VISIBLE);
+            toastMaker(getResources().getString(R.string.LoginComplete));
+            if (account != null) {
+                saveLoginPropertiesInPreferences(account.getEmail(),true);
+                setLogoutVisible();
             }
         }
+    }
+    private void saveLoginPropertiesInPreferences(String email, boolean loginState) {
+        editor.putString("email", email);
+        editor.putBoolean("hasLogin", loginState);
+        editor.apply();
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -160,19 +148,11 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-// ...
                         revokeAccess();
                     }
                 });
-        editor.putBoolean("hasLogin",false);
-        editor.apply();
-        btnLogout.setVisibility(View.GONE);
-        btnLogin.setVisibility(View.VISIBLE);
-        Toast toast = Toast.makeText(getApplicationContext(),
-                getResources().getString(R.string.LogoutComplete), Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, 50);
-        toast.show();
-
+        saveLoginPropertiesInPreferences(null,false);
+        toastMaker(getResources().getString(R.string.LogoutComplete));
     }
 
     private void revokeAccess() {
@@ -180,13 +160,22 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-// ...
-                  /*        lblInfo.setText("Please Login.");
-                        lblHeader.setText("Android Login with Google");
-                        btnLogin.setVisibility(View.VISIBLE);
-                        btnLogout.setVisibility(View.GONE);
-//imgProfilePic.setBackgroundResource(R.drawable.ic_lock); */
+                        setLoginVisible();
                     }
                 });
+    }
+
+    private void toastMaker(String textToShow) {
+        Toast toast = Toast.makeText(getApplicationContext(), textToShow, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 50);
+        toast.show();
+    }
+    private void setLoginVisible() {
+        btnLogin.setVisibility(View.VISIBLE);
+        btnLogout.setVisibility(View.GONE);
+    }
+    private void setLogoutVisible() {
+        btnLogin.setVisibility(View.GONE);
+        btnLogout.setVisibility(View.VISIBLE);
     }
 }

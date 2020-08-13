@@ -38,7 +38,7 @@
      * incoming connections, a thread for connecting with a device, and a
      * thread for performing data transmissions when connected.
      */
-    public class BluetoothChatService {
+    public class BluetoothConnection {/*
         // Debugging
         private static final String TAG = "BluetoothChatService";
 
@@ -53,8 +53,8 @@
                 UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
         // Member fields
-        private final BluetoothAdapter mAdapter;
-        private final Handler mHandler;
+        //private final BluetoothAdapter mAdapter;
+        //private final Handler mHandler;
         private AcceptThread mSecureAcceptThread;
         private AcceptThread mInsecureAcceptThread;
         private ConnectThread mConnectThread;
@@ -74,7 +74,7 @@
          * @param context The UI Activity Context
          * @param handler A Handler to send messages back to the UI Activity
          */
-        public BluetoothChatService(Context context, Handler handler) {
+      /*  public BluetoothChatService(Context context, Handler handler) {
             mAdapter = BluetoothAdapter.getDefaultAdapter();
             mState = STATE_NONE;
             mNewState = mState;
@@ -84,7 +84,7 @@
         /**
          * Update UI title according to the current state of the chat connection
          */
-        private synchronized void updateUserInterfaceTitle() {
+     /*   private synchronized void updateUserInterfaceTitle() {
             mState = getState();
             Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
             mNewState = mState;
@@ -96,7 +96,7 @@
         /**
          * Return the current connection state.
          */
-        public synchronized int getState() {
+   /*     public synchronized int getState() {
             return mState;
         }
 
@@ -104,7 +104,7 @@
          * Start the chat service. Specifically start AcceptThread to begin a
          * session in listening (server) mode. Called by the Activity onResume()
          */
-        public synchronized void start() {
+     /*   public synchronized void start() {
             Log.d(TAG, "start");
 
             // Cancel any thread attempting to make a connection
@@ -138,7 +138,7 @@
          * @param device The BluetoothDevice to connect
          * @param secure Socket Security type - Secure (true) , Insecure (false)
          */
-        public synchronized void connect(BluetoothDevice device, boolean secure) {
+   /*     public synchronized void connect(BluetoothDevice device, boolean secure) {
             Log.d(TAG, "connect to: " + device);
 
             // Cancel any thread attempting to make a connection
@@ -168,7 +168,7 @@
          * @param socket The BluetoothSocket on which the connection was made
          * @param device The BluetoothDevice that has been connected
          */
-        public synchronized void connected(BluetoothSocket socket, BluetoothDevice
+     /*   public synchronized void connected(BluetoothSocket socket, BluetoothDevice
                 device, final String socketType) {
             Log.d(TAG, "connected, Socket Type:" + socketType);
 
@@ -211,7 +211,7 @@
         /**
          * Stop all threads
          */
-        public synchronized void stop() {
+   /*     public synchronized void stop() {
             Log.d(TAG, "stop");
 
             if (mConnectThread != null) {
@@ -244,7 +244,7 @@
          * @param out The bytes to write
          * @see ConnectedThread#write(byte[])
          */
-        public void write(byte[] out) {
+      /*  public void write(byte[] out) {
             // Create temporary object
             ConnectedThread r;
             // Synchronize a copy of the ConnectedThread
@@ -259,7 +259,7 @@
         /**
          * Indicate that the connection attempt failed and notify the UI Activity.
          */
-        private void connectionFailed() {
+    /*    private void connectionFailed() {
             // Send a failure message back to the Activity
             //Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
             Bundle bundle = new Bundle();
@@ -278,7 +278,7 @@
         /**
          * Indicate that the connection was lost and notify the UI Activity.
          */
-        private void connectionLost() {
+   /*     private void connectionLost() {
             // Send a failure message back to the Activity
             //Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
             Bundle bundle = new Bundle();
@@ -299,7 +299,7 @@
          * like a server-side client. It runs until a connection is accepted
          * (or until cancelled).
          */
-        private class AcceptThread extends Thread {
+      /*  private class AcceptThread extends Thread {
             // The local server socket
             private final BluetoothServerSocket mmServerSocket;
             private String mSocketType;
@@ -385,7 +385,7 @@
          * with a device. It runs straight through; the connection either
          * succeeds or fails.
          */
-        private class ConnectThread extends Thread {
+  /*      private class ConnectThread extends Thread {
             private final BluetoothSocket mmSocket;
             private final BluetoothDevice mmDevice;
             private String mSocketType;
@@ -458,7 +458,7 @@
          * This thread runs during a connection with a remote device.
          * It handles all incoming and outgoing transmissions.
          */
-        private class ConnectedThread extends Thread {
+     /*   private class ConnectedThread extends Thread {
             private final BluetoothSocket mmSocket;
             private final InputStream mmInStream;
             private final OutputStream mmOutStream;
@@ -509,7 +509,7 @@
              *
              * @param buffer The bytes to write
              */
-            public void write(byte[] buffer) {
+        /*    public void write(byte[] buffer) {
                 try {
                     mmOutStream.write(buffer);
 
@@ -528,6 +528,6 @@
                     Log.e(TAG, "close() of connect socket failed", e);
                 }
             }
-        }
+        } */
     }
 
