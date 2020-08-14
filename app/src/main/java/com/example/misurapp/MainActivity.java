@@ -1,82 +1,68 @@
 package com.example.misurapp;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    GoogleSignInClient mGoogleSignInClient;
-    TextView lblInfo, lblHeader;
-    SignInButton btnLogin;
-    Button btnLogout;
-    GoogleSignInOptions gso;
-    GoogleSignInAccount account;
+    String [] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
+        setContentView(R.layout.activity_main);
+
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Button client = findViewById(R.id.Boyscout);
-        Button server = (Button) findViewById(R.id.Caposcout);
+        Button server = (Button)findViewById(R.id.Caposcout);
 
 
         client.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (prefs.getBoolean("hasLogin",false)) {
-                    v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
-                    Intent intent = new Intent(MainActivity.this, ListaStrumentiActivity.class);
-                    startActivity(intent);
-                    //Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
-                    //startActivity(intent);
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.LoginRequest), Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM, 0, 50);
-                    toast.show();
-                }
+                v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
+                Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
+                startActivity(intent);
             }
         });
 
         server.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (prefs.getBoolean("hasLogin", false)) {
-                    v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
-                    Intent intent = new Intent(MainActivity.this, DatabaseCaposcout.class);
-                    startActivity(intent);
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.LoginRequest), Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM, 0, 50);
-                    toast.show();
-
-                }
+                v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
+                Intent intent = new Intent(MainActivity.this,DatabaseCaposcout.class);
+                startActivity(intent);
             }
         });
 
@@ -88,115 +74,138 @@ public class MainActivity extends AppCompatActivity {
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
 
-        lblInfo = findViewById(R.id.lblInfo);
-        lblHeader = findViewById(R.id.lblHeader);
 
-        btnLogin = findViewById(R.id.btnLogin);
-        btnLogout = findViewById(R.id.btnLogout);
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, gso);
-
-        account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-        if (account != null)
-           updateUI(account);
-        else
-        btnLogout.setVisibility(View.GONE);
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut();
-            }
-        });
     }//fine onCreate();
 
-    private void updateUI(GoogleSignInAccount account) {
-      /*    try {
 
-                + "\r\nEmail : " + account.getEmail() + "\r\nGiven name : " + account.getGivenName()
-                    + "\r\nDisplay Name : " + account.getDisplayName() + "\r\nId : "
-                    + account.getId();
-//+ "\r\nImage URL : " + account.getPhotoUrl().toString();
-//+ "\r\nAccount : " + account.getAccount().toString()
-            lblInfo.setText(strData);
+    private void writeToFile(String data,Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
 
-            lblHeader.setText("Sign In with Google Successful");
-            btnLogin.setVisibility(View.GONE);
-            btnLogout.setVisibility(View.VISIBLE);
+    private String readFromFile(Context context) {
 
-        } catch (NullPointerException ex) {
-            lblInfo.setText(lblInfo.getText().toString() + "\r\n" + "NullPointerException : " + ex.getMessage().toString());
-        } catch (RuntimeException ex) {
-            lblInfo.setText(lblInfo.getText().toString() + "\r\n" + "RuntimeException : " + ex.getMessage().toString());
-        } catch (Exception ex) {
-// lblInfo.setText(ex.getMessage().toString());
-        } */
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput("config.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("\n").append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 
 
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 1);
-        //account.getEmail();
+    private void setAppLocale(String localCode){
+        Resources res = getResources();
+        DisplayMetrics dm =res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            conf.setLocale(new Locale(localCode.toLowerCase()));
+        }else{
+            conf.locale = new Locale(localCode.toLowerCase());
+        }
+        res.updateConfiguration(conf, dm);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Gestisci i clic sugli elementi della barra delle azioni qui.
+        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
+        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
+        int id = item.getItemId();
 
-        if (requestCode == 1) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-            editor.putString("email", account.getEmail());
-            editor.putBoolean("hasLogin", true);
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_cambio_lingua) {
+            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = getIntent();
+
+                    switch (which){
+
+                        case 0:
+                            setAppLocale("en");
+                            finish();
+                            startActivity(intent);
+                            break;
+
+                        case 1:
+                            setAppLocale("es");
+                            finish();
+                            startActivity(intent);
+                            break;
+
+                        case 2:
+                            setAppLocale("it");
+                            finish();
+                            startActivity(intent);
+                            break;
+                    }
+
+                }
+            });
+            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog mDialog = mBuilder.create();
+            mDialog.show();
+            return true;
+        }
+
+        if (id == R.id.action_backup) {
+            return true;
+        }
+
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if(prefs.getBoolean("flagMain", false)){
+            editor.putBoolean("flagMain", false);
             editor.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            updateUI(account);
-        } catch (ApiException e) {
-            Log.w("Google Error ", "signInResult:failed code=" + e.getStatusCode());
-        }
-    }
-
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-// ...
-                        revokeAccess();
-                    }
-                });
-    }
-
-    private void revokeAccess() {
-        mGoogleSignInClient.revokeAccess()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-// ...
-                  /*        lblInfo.setText("Please Login.");
-                        lblHeader.setText("Android Login with Google");
-                        btnLogin.setVisibility(View.VISIBLE);
-                        btnLogout.setVisibility(View.GONE);
-//imgProfilePic.setBackgroundResource(R.drawable.ic_lock); */
-                    }
-                });
     }
 }
