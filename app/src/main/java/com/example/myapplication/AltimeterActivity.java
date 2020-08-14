@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.db.DbManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
 
@@ -37,7 +38,6 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
     private ImageView imageView;
     private float valore;
     private TextView misura;
-    private ImageButton salva;
     private float angle;
     private float altitude;
     String [] listItems;
@@ -61,8 +61,9 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
         imageView = (ImageView) findViewById(R.id.img_animazione);
         misura = (TextView) findViewById(R.id.misura);
 
-        salva = (ImageButton)  findViewById(R.id.salva);
-        salva.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
 
@@ -73,7 +74,6 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
                 toast.show();
             }
         });
-
     }
 
     protected void onResume() {

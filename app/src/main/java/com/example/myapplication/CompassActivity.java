@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.Locale;
 
 public class CompassActivity extends AppCompatActivity implements SensorEventListener {
@@ -64,19 +66,19 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         imageView = findViewById(R.id.img_animazione);
         misura = findViewById(R.id.misura);
 
-        ImageButton salva = findViewById(R.id.salva);
-        salva.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this, R.anim.button_click));
 
 
                 //feedback
-                Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.salvato), Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM | Gravity.END, 0, 0);
+                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });
-        start();
     }
 
     @Override

@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.Locale;
 
 public class BarometerActivity extends AppCompatActivity implements SensorEventListener {
@@ -35,7 +37,6 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
     private ImageView imageView;
     private float valore;
     private TextView misura;
-    private ImageButton salva;
     private float angle;
     String [] listItems;
     SharedPreferences prefs;
@@ -59,16 +60,16 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
         misura = (TextView) findViewById(R.id.misura);
 
 
-        salva = (ImageButton)  findViewById(R.id.salva);
-        salva.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
 
 
-
                 //feedback
                 Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM| Gravity.RIGHT, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
                 toast.show();
             }
         });

@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.myapplication.db.DbManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
 
@@ -36,7 +37,6 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
     private ImageView lampadina;
     private float valore;
     private TextView misura;
-    private ImageButton salva;
     private static final String sensorUsed="Sensor.TYPE_LIGHT";
     String [] listItems;
     SharedPreferences prefs;
@@ -57,8 +57,10 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
 
         lampadina = (ImageView) findViewById(R.id.img_lampadina);
         misura = (TextView) findViewById(R.id.misura);
-        salva = (ImageButton)  findViewById(R.id.salva);
-        salva.setOnClickListener(new View.OnClickListener() {
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
                 DbManager dbManager = new DbManager(getApplicationContext());
@@ -73,9 +75,8 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
                 toast.show();
             }
         });
-
-
     }
+
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
