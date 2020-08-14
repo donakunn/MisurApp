@@ -12,29 +12,30 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Locale;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -45,23 +46,18 @@ import java.io.OutputStreamWriter;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    GoogleSignInClient mGoogleSignInClient;
-    TextView lblInfo, lblHeader;
-    SignInButton btnLogin;
-    Button btnLogout;
-    GoogleSignInOptions gso;
-    GoogleSignInAccount account;
+    String [] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
+        setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+      Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Button boyscoutButton = findViewById(R.id.Boyscout);
@@ -69,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         boyscoutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 if (prefs.getBoolean("hasLogin", false)) {
                     v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
                     Intent intent = new Intent(MainActivity.this, ListaStrumentiActivity.class);
@@ -77,11 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     toastMaker(getResources().getString(R.string.LoginRequest));
                 }
+
             }
         });
 
         scoutMasterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 if (prefs.getBoolean("hasLogin", false)) {
                     v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
                     Intent intent = new Intent(MainActivity.this, DatabaseCaposcout.class);
@@ -99,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(MainActivity.this, //da spostare
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
-
-        btnLogin = findViewById(R.id.btnLogin);
+btnLogin = findViewById(R.id.btnLogin);
         btnLogout = findViewById(R.id.btnLogout);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

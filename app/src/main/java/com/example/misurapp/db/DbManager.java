@@ -122,7 +122,7 @@ public class DbManager {
         FileInputStream fis = new FileInputStream(dbFile);
         // Open the empty db as the output stream
         OutputStream output = new FileOutputStream(Environment.getDataDirectory()+
-                "/data/com.example.myapplication/databases/misurapp.db");
+                "/data/com.example.misurapp/databases/misurapp.db");
 
         // Transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
