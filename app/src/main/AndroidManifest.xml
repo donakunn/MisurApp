@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ThermometerActivity"></activity>
+
+        <activity android:name=".ThermometerActivity"/>
         <activity android:name=".StepActivity" />
         <activity android:name=".HygrometerActivity" />
         <activity android:name=".CompassActivity" />
@@ -23,9 +24,9 @@
         <activity android:name=".LightActivity" />
         <activity android:name=".ListaStrumentiActivity" />
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

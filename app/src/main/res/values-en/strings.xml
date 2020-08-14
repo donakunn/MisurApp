@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lingua_italiana">Italian</string>
+    <string name="lingua_inglese">English</string>
+    <string name="lingua_spagnola">Spanish</string>
+    <string name="action_cambio_lingua">Change Language</string>
+    <string name="action_backup">Backup</string>
+    <string name="utente_boyscout">Boyscout</string>
+    <string name="utente_caposcout">Scoutmaster</string>
+    <string name="categoria_posizione">Position</string>
+    <string name="categoria_movimento">Motion</string>
+    <string name="categoria_ambiente">Ambient</string>
+    <string name="avviso_non_supportato">Not Supported</string>
+    <string name="strumento_bussola">Compass</string>
+    <string name="strumento_contapassi">Counterstep</string>
+    <string name="strumento_fotometro">Photometer</string>
+    <string name="strumento_barometro">Barometer</string>
+    <string name="strumento_igrometro">Hygrometer</string>
+    <string name="strumento_altimetro">Altimeter</string>
+    <string name="salvato">Saved</string>
+    <string name="cancellato">Deleted</string>
+    <string name="strumento_termometro">Thermometer</string>
+    <string name="dialog_annulla">Cancel</string>
+
+    <plurals name="numberOfSteps">
+        <item quantity="one">%d step</item>
+        <item quantity="other">%d steps</item>
+    </plurals>
+
+</resources>

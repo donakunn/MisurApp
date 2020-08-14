@@ -1,10 +1,21 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -20,6 +31,7 @@ import com.example.myapplication.db.DbManager;
 import com.example.myapplication.db.InstrumentRecord;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class BoyscoutDBValuesActivity extends AppCompatActivity {
@@ -28,11 +40,22 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private DbManager appDb;
     private LinearLayout linearLayout;
+    String [] listItems;
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_boyscout);
+
+        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
+        editor = prefs.edit();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         linearLayout = findViewById(R.id.linearLayout);
         appDb = new DbManager(this);
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
@@ -125,6 +148,108 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
             }
         });
         row.startAnimation(fadeout);
+    }
+
+    private void setAppLocale(String localCode){
+        Resources res = getResources();
+        DisplayMetrics dm =res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            conf.setLocale(new Locale(localCode.toLowerCase()));
+        }else{
+            conf.locale = new Locale(localCode.toLowerCase());
+        }
+        res.updateConfiguration(conf, dm);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem condividi = menu.findItem(R.id.action_condividi);
+        condividi.setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Gestisci i clic sugli elementi della barra delle azioni qui.
+        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
+        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_cambio_lingua) {
+            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = getIntent();
+
+
+                    switch (which){
+
+                        case 0:
+                            setAppLocale("en");
+                            finish();
+                            startActivity(intent);
+                            editor.putBoolean("flagMain", true);
+                            editor.putBoolean("flagStrumenti", true);
+                            editor.putBoolean("flagStrumento", true);
+                            editor.apply();
+                            break;
+
+                        case 1:
+                            setAppLocale("es");
+                            finish();
+                            startActivity(intent);
+                            editor.putBoolean("flagMain", true);
+                            editor.putBoolean("flagStrumenti", true);
+                            editor.putBoolean("flagStrumento", true);
+                            editor.apply();
+                            break;
+
+                        case 2:
+                            setAppLocale("it");
+                            finish();
+                            startActivity(intent);
+                            editor.putBoolean("flagMain", true);
+                            editor.putBoolean("flagStrumenti", true);
+                            editor.putBoolean("flagStrumento", true);
+                            editor.apply();
+                            break;
+                    }
+
+                }
+            });
+
+            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog mDialog = mBuilder.create();
+            mDialog.show();
+            return true;
+        }
+
+        if (id == R.id.action_backup) {
+            return true;
+        }
+
+        //pulsante condividi
+        if (id == R.id.action_condividi) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
