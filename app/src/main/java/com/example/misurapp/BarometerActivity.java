@@ -199,7 +199,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(BarometerActivity.this,BoyscoutDBValuesActivity.class);
-            //intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",sensorUsed);
             startActivity(intent);
             return true;
         }

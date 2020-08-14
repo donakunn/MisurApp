@@ -1,13 +1,13 @@
 package com.example.misurapp;
 
 import android.Manifest;
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.hardware.SensorManager;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -29,24 +29,26 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Locale;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    String [] listItems;
+    GoogleSignInClient mGoogleSignInClient;
+    TextView lblInfo, lblHeader;
+    SignInButton btnLogin;
+    Button btnLogout;
+    GoogleSignInOptions gso;
+    GoogleSignInAccount account;
+    String[] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
 
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         editor = prefs.edit();
         setContentView(R.layout.activity_main);
 
-      Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Button boyscoutButton = findViewById(R.id.Boyscout);
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(MainActivity.this, //da spostare
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
-btnLogin = findViewById(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnLogin);
         btnLogout = findViewById(R.id.btnLogout);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -141,11 +143,12 @@ btnLogin = findViewById(R.id.btnLogin);
             handleSignInResult(task);
             toastMaker(getResources().getString(R.string.LoginComplete));
             if (account != null) {
-                saveLoginPropertiesInPreferences(account.getEmail(),true);
+                saveLoginPropertiesInPreferences(account.getEmail(), true);
                 setLogoutVisible();
             }
         }
     }
+
     private void saveLoginPropertiesInPreferences(String email, boolean loginState) {
         editor.putString("email", email);
         editor.putBoolean("hasLogin", loginState);
@@ -168,7 +171,7 @@ btnLogin = findViewById(R.id.btnLogin);
                         revokeAccess();
                     }
                 });
-        saveLoginPropertiesInPreferences(null,false);
+        saveLoginPropertiesInPreferences(null, false);
         toastMaker(getResources().getString(R.string.LogoutComplete));
     }
 
@@ -187,68 +190,30 @@ btnLogin = findViewById(R.id.btnLogin);
         toast.setGravity(Gravity.BOTTOM, 0, 50);
         toast.show();
     }
+
     private void setLoginVisible() {
         btnLogin.setVisibility(View.VISIBLE);
         btnLogout.setVisibility(View.GONE);
     }
+
     private void setLogoutVisible() {
         btnLogin.setVisibility(View.GONE);
         btnLogout.setVisibility(View.VISIBLE);
     }
 
-    private void writeToFile(String data,Context context) {
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-    }
 
-    private String readFromFile(Context context) {
-
-        String ret = "";
-
-        try {
-            InputStream inputStream = context.openFileInput("config.txt");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append("\n").append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-
-        return ret;
-    }
-
-
-    private void setAppLocale(String localCode){
+    private void setAppLocale(String localCode) {
         Resources res = getResources();
-        DisplayMetrics dm =res.getDisplayMetrics();
+        DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             conf.setLocale(new Locale(localCode.toLowerCase()));
-        }else{
+        } else {
             conf.locale = new Locale(localCode.toLowerCase());
         }
         res.updateConfiguration(conf, dm);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -266,14 +231,14 @@ btnLogin = findViewById(R.id.btnLogin);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = getIntent();
 
-                    switch (which){
+                    switch (which) {
 
                         case 0:
                             setAppLocale("en");
@@ -311,14 +276,12 @@ btnLogin = findViewById(R.id.btnLogin);
             return true;
         }
 
-
-
         return super.onOptionsItemSelected(item);
     }
 
     protected void onResume() {
         super.onResume();
-        if(prefs.getBoolean("flagMain", false)){
+        if (prefs.getBoolean("flagMain", false)) {
             editor.putBoolean("flagMain", false);
             editor.apply();
             Intent intent = getIntent();

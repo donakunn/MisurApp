@@ -200,7 +200,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(StepActivity.this,BoyscoutDBValuesActivity.class);
-            //intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",sensorUsed);
             startActivity(intent);
             return true;
         }
