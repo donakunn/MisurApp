@@ -268,7 +268,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         }
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(CompassActivity.this,BoyscoutDBValuesActivity.class);
-            //intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",sensorUsed);
             startActivity(intent);
             return true;
         }

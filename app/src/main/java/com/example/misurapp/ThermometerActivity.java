@@ -232,7 +232,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(ThermometerActivity.this,BoyscoutDBValuesActivity.class);
-            //intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",sensorUsed);
             startActivity(intent);
             return true;
         }

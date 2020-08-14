@@ -193,7 +193,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(HygrometerActivity.this,BoyscoutDBValuesActivity.class);
-            //intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",sensorUsed);
             startActivity(intent);
             return true;
         }

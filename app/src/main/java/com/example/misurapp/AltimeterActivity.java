@@ -208,7 +208,7 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(AltimeterActivity.this,BoyscoutDBValuesActivity.class);
-            //intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",sensorUsed);
             startActivity(intent);
             return true;
         }
