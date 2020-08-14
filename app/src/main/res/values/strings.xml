@@ -36,7 +36,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="LoginRequest">Login_necessario_per_procedere</string>
+
+    <string name="LoginRequest">Login necessario per procedere</string>
+    <string name="LoginComplete">Login effettuato con successo</string>
+    <string name="LogoutComplete">Logout completato con successo</string>
+
+
     <string name="dialog_annulla">Annulla</string>
 
     <plurals name="numberOfSteps">
@@ -45,4 +50,5 @@
     </plurals>
 
 </resources>
+
 
