@@ -27,6 +27,7 @@
 
     <string name="salvato">Salvato</string>
     <string name="cancellato">Cancellato</string>
+    <string name="noValue">Nessun valore salvato</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

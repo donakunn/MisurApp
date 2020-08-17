@@ -2,6 +2,7 @@ package com.example.misurapp.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,8 +16,12 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.Context.MODE_PRIVATE;
+
 //da implementare metodi tabella caposcout
 public class DbManager {
 
@@ -27,6 +32,8 @@ public class DbManager {
     // Database fields
     private static final String BOYSCOUT_DATABASE_TABLE = "valuesRecordedByBoyscout";
     private static final String SCOUTMASTER_DATABASE_TABLE = "valuesReceivedByBoyscout";
+    SharedPreferences prefs;
+    private static String PREF_NAME = "shared_pref_name";
 
     //Costruttore
     public DbManager(Context context)
@@ -138,7 +145,7 @@ public class DbManager {
     }
 
     public List<InstrumentRecord> readValuesFromDB(String instrumentNameToRead) {
-        List<InstrumentRecord> listaQueryLette = new ArrayList<>();
+        List<InstrumentRecord> listaQueryLette = new LinkedList<>();
         String selectQuery = "SELECT * FROM " + BOYSCOUT_DATABASE_TABLE +
                 " WHERE instrumentName = '" + instrumentNameToRead + "';";
         //SQLiteDatabase db = this.getWritableDatabase(); serve?
@@ -157,5 +164,18 @@ public class DbManager {
         }
         this.close();
         return listaQueryLette;
+    }
+
+    public BoyscoutsInstrumentRecords readValuesFromDBWithEmail
+            (String instrumentNameToRead) {
+        List<InstrumentRecord> valueRead = readValuesFromDB(instrumentNameToRead);
+        return new BoyscoutsInstrumentRecords(getEmail(context),valueRead);
+    }
+
+    private static SharedPreferences getPrefs(Context context) {
+        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+    public static String getEmail(Context context) {
+        return getPrefs(context).getString("email", "");
     }
 }

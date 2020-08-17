@@ -1,6 +1,7 @@
+/*
 package com.example.misurapp.clientServer;
 
-import com.example.misurapp.db.BoyscoutsInstrumentRecord;
+import com.example.misurapp.db.BoyscoutsInstrumentRecords;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,3 +39,4 @@ public class ServeOneClient extends Thread {
     }
 
 }
+*/
