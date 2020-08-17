@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,25 +48,37 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_database_boyscout);
 
-        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
-        editor = prefs.edit();
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        linearLayout = findViewById(R.id.linearLayout);
         appDb = new DbManager(this);
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
                 (Objects.requireNonNull(getIntent().getExtras()).getString("sensorName"));
         //da cambiare con il sensore relativo
         if (instrumentRecordsReadFromDB.isEmpty()) {
-            return;
+            final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setMessage(R.string.noValue);
+            dlgAlert.setTitle("MisurApp");
+            dlgAlert.setCancelable(true);
+            dlgAlert.setPositiveButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            BoyscoutDBValuesActivity.this.finish();
+                        }
+                    });
+            dlgAlert.create().show();
         } else {
+            setContentView(R.layout.activity_database_boyscout);
+
+            prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
+            editor = prefs.edit();
+
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+
+            linearLayout = findViewById(R.id.linearLayout);
             showBoyscoutTableValues(instrumentRecordsReadFromDB);
         }
+
     }
 
     private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
