@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.misurapp.db.DbManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public class LightActivity extends AppCompatActivity implements SensorEventListener {
@@ -212,6 +213,11 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
         }
 
         if (id == R.id.action_backup) {
+            try {
+                dbManager.backupDB();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
 
