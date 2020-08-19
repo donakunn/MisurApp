@@ -28,6 +28,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.misurapp.BluetoothConnection.DeviceListActivity;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
 
@@ -52,6 +53,13 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         appDb = new DbManager(this);
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
                 (Objects.requireNonNull(getIntent().getExtras()).getString("sensorName"));
+        setContentView(R.layout.activity_database_boyscout);
+        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
+        editor = prefs.edit();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        linearLayout = findViewById(R.id.linearLayout);
+        
         //da cambiare con il sensore relativo
         if (instrumentRecordsReadFromDB.isEmpty()) {
             final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
@@ -66,16 +74,6 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
                     });
             dlgAlert.create().show();
         } else {
-            setContentView(R.layout.activity_database_boyscout);
-
-            prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
-            editor = prefs.edit();
-
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-
-
-            linearLayout = findViewById(R.id.linearLayout);
             showBoyscoutTableValues(instrumentRecordsReadFromDB);
         }
 
@@ -261,6 +259,8 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
         //pulsante condividi
         if (id == R.id.action_condividi) {
+            Intent intent = new Intent(BoyscoutDBValuesActivity.this, DeviceListActivity.class);
+            startActivity(intent);
             return true;
         }
 
