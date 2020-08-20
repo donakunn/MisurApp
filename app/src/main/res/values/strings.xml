@@ -54,6 +54,8 @@
     <string name="conferma_invio_dati">Sei sicuro di voler inviare i dati a:</string>
     <string name="Si">Sì</string>
     <string name="No">No</string>
+    <string name="bluetoothNotAvailable">Bluetooth not available</string>
+    <string name="not_connected">not connected</string>
 
 </resources>
 

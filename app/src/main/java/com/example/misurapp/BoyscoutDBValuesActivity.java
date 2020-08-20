@@ -42,34 +42,34 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private DbManager appDb;
     private LinearLayout linearLayout;
-    String [] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    private String[] listItems;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+    private String sensorName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        sensorName = Objects.requireNonNull(getIntent().getExtras()).getString("sensorName");
         appDb = new DbManager(this);
-        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB
-                (Objects.requireNonNull(getIntent().getExtras()).getString("sensorName"));
+        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB(sensorName);
         setContentView(R.layout.activity_database_boyscout);
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
-        
+
         //da cambiare con il sensore relativo
         if (instrumentRecordsReadFromDB.isEmpty()) {
-            final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage(R.string.noValue);
             dlgAlert.setTitle("MisurApp");
-            dlgAlert.setCancelable(true);
+            dlgAlert.setCancelable(false);
             dlgAlert.setPositiveButton("Ok",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            BoyscoutDBValuesActivity.this.finish();
+                            finish();
                         }
                     });
             dlgAlert.create().show();
@@ -163,13 +163,13 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         row.startAnimation(fadeout);
     }
 
-    private void setAppLocale(String localCode){
+    private void setAppLocale(String localCode) {
         Resources res = getResources();
-        DisplayMetrics dm =res.getDisplayMetrics();
+        DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             conf.setLocale(new Locale(localCode.toLowerCase()));
-        }else{
+        } else {
             conf.locale = new Locale(localCode.toLowerCase());
         }
         res.updateConfiguration(conf, dm);
@@ -183,8 +183,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem condividi = menu.findItem(R.id.action_condividi);
         condividi.setVisible(true);
         return true;
@@ -198,7 +197,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override
@@ -206,7 +205,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
                     Intent intent = getIntent();
 
 
-                    switch (which){
+                    switch (which) {
 
                         case 0:
                             setAppLocale("en");
@@ -260,6 +259,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         //pulsante condividi
         if (id == R.id.action_condividi) {
             Intent intent = new Intent(BoyscoutDBValuesActivity.this, DeviceListActivity.class);
+            intent.putExtra("sensorName", sensorName);
             startActivity(intent);
             return true;
         }

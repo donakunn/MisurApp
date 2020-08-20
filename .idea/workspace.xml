@@ -9,13 +9,31 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dda4b96e-7579-40a4-8c33-2ee5f230644e" name="Default Changelist" comment="" />
+    <list default="true" id="dda4b96e-7579-40a4-8c33-2ee5f230644e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothConnectionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothConnectionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/DeviceListActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/DeviceListActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/BoyscoutsInstrumentRecords.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/BoyscoutsInstrumentRecords.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="1215fc3cbb322903" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3a_API_29" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -367,10 +385,11 @@
     </state>
     <state x="517" y="272" key="AndroidCreateResourceFileDialog/0.0.1536.834@0.0.1536.834" timestamp="1597764265734" />
     <state x="861" y="460" width="838" height="482" key="AndroidCreateResourceFileDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1597672973151" />
-    <state x="627" y="230" key="AndroidCreateXmlResourceDialog" timestamp="1597764311154">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state x="1045" y="389" key="AndroidCreateXmlResourceDialog" timestamp="1597941980781">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="627" y="230" key="AndroidCreateXmlResourceDialog/0.0.1536.834@0.0.1536.834" timestamp="1597764311154" />
+    <state x="1045" y="389" key="AndroidCreateXmlResourceDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1597941980781" />
     <state x="496" y="470" key="AndroidProcessChooserDialog" timestamp="1597677793965">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
@@ -559,25 +578,25 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/DeviceListActivity.java</url>
-          <line>177</line>
+          <line>224</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java</url>
-          <line>49</line>
-          <properties class="com.example.misurapp.BoyscoutDBValuesActivity" method="onCreate" />
+          <line>97</line>
+          <properties class="com.example.misurapp.BoyscoutDBValuesActivity" />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java</url>
-          <line>81</line>
-          <properties class="com.example.misurapp.BoyscoutDBValuesActivity" method="showBoyscoutTableValues" />
+          <line>117</line>
+          <properties class="com.example.misurapp.BoyscoutDBValuesActivity" />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java</url>
-          <line>111</line>
-          <properties method="onClick" />
+          <line>133</line>
+          <properties class="com.example.misurapp.BoyscoutDBValuesActivity" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
