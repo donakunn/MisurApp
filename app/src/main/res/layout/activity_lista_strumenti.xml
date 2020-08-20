@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/strumento_luminosità" />
+                android:text="@string/strumento_fotometro" />
 
             <TextView
                 android:id="@+id/luminositàNonSupportato"
@@ -206,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/strumento_umidità" />
+                android:text="@string/strumento_igrometro" />
 
             <TextView
                 android:id="@+id/umiditàNonSupportato"

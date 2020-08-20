@@ -21,6 +21,7 @@
 
     <TextView
         android:id="@+id/title_paired_devices"
+        style="@style/textstyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#666"
@@ -32,6 +33,7 @@
 
     <ListView
         android:id="@+id/paired_devices"
+        style="@style/buttonstyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -40,25 +42,26 @@
 
     <TextView
         android:id="@+id/title_new_devices"
+        style="@style/textstyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#666"
-        android:paddingLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="2dp"
         android:text="@string/title_other_devices"
-        android:textColor="#fff"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/new_devices"
+        style="@style/buttonstyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:layout_weight="2"
-        android:stackFromBottom="true"
-        />
+        android:stackFromBottom="true" />
 
     <Button
         android:id="@+id/button_scan"
+        style="@style/buttonstyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_scan"
