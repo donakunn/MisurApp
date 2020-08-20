@@ -19,24 +19,16 @@
 
     <string name="strumento_bussola">Bussola</string>
     <string name="strumento_contapassi">Contapassi</string>
-    <string name="strumento_luminosità">Luminosità</string>
     <string name="strumento_termometro">Termometro</string>
     <string name="strumento_barometro">Barometro</string>
-    <string name="strumento_umidità">Umidità</string>
     <string name="strumento_altimetro">Altimetro</string>
 
     <string name="salvato">Salvato</string>
     <string name="cancellato">Cancellato</string>
     <string name="noValue">Nessun valore salvato</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
 
     <string name="LoginRequest">Login necessario per procedere</string>
     <string name="LoginComplete">Login effettuato con successo</string>
@@ -44,18 +36,24 @@
 
 
     <string name="dialog_annulla">Annulla</string>
-    <string name="title_paired_devices">ciccio</string>
-    <string name="title_other_devices">wow</string>
-    <string name="button_scan">scan</string>
-    <string name="none_paired">none_paired</string>
-    <string name="scanning">scanning</string>
-    <string name="select_device">select device</string>
-    <string name="none_found">none founde</string>
+    <string name="title_paired_devices">Dispositivi accoppiati</string>
+    <string name="title_other_devices">Dispositivi trovati:</string>
+    <string name="button_scan">Scansiona</string>
+    <string name="none_paired">nessun accoppiamento</string>
+    <string name="scanning">Sto cercando</string>
+    <string name="select_device">Seleziona dispositivo</string>
+    <string name="none_found">Non trovato</string>
 
     <plurals name="numberOfSteps">
         <item quantity="one">%d passo</item>
         <item quantity="other">%d passi</item>
     </plurals>
+    <string name="strumento_fotometro">Fotometro</string>
+    <string name="strumento_igrometro">Igrometro</string>
+
+    <string name="conferma_invio_dati">Sei sicuro di voler inviare i dati a:</string>
+    <string name="Si">Sì</string>
+    <string name="No">No</string>
 
 </resources>
 

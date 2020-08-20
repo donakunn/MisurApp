@@ -26,5 +26,19 @@
         <item quantity="one">%d step</item>
         <item quantity="other">%d steps</item>
     </plurals>
+    <string name="noValue">No value saved</string>
+    <string name="LoginRequest">Login required to proceed</string>
+    <string name="LoginComplete">Login successful</string>
+    <string name="LogoutComplete">Logout completed with success</string>
+    <string name="title_other_devices">Devices found:</string>
+    <string name="button_scan">Scan</string>
+    <string name="none_paired">none pairing</string>
+    <string name="scanning">Scanning</string>
+    <string name="select_device">Select device</string>
+    <string name="none_found">Not found</string>
+    <string name="title_paired_devices">Devices paired</string>
+    <string name="conferma_invio_dati">Are you sure you want to send the data to:</string>
+    <string name="Si">Yes</string>
+    <string name="No">No</string>
 
 </resources>

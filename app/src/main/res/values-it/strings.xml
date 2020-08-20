@@ -26,4 +26,18 @@
         <item quantity="one">%d passo</item>
         <item quantity="other">%d passi</item>
     </plurals>
+    <string name="noValue">Nessun valore salvato</string>
+    <string name="LoginRequest">Login necessario per procedere</string>
+    <string name="LoginComplete">Login effettuato con successo</string>
+    <string name="LogoutComplete">Logout completato con successo</string>
+    <string name="title_other_devices">Dispositivi trovati:</string>
+    <string name="button_scan">Scansiona</string>
+    <string name="none_paired">nessun accoppiamento</string>
+    <string name="scanning">Sto cercando</string>
+    <string name="select_device">Seleziona dispositivo</string>
+    <string name="none_found">Non trovato</string>
+    <string name="title_paired_devices">Dispositivi accoppiati</string>
+    <string name="conferma_invio_dati">Sei sicuro di voler inviare i dati a:</string>
+    <string name="Si">Sì</string>
+    <string name="No">No</string>
 </resources>

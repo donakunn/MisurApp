@@ -24,6 +24,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -37,6 +38,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.example.misurapp.MainActivity;
 import com.example.misurapp.R;
 
 import java.util.Set;
@@ -185,21 +189,53 @@ public class DeviceListActivity extends Activity {
 
     private AdapterView.OnItemClickListener mDeviceClickListener
             = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
+        public void onItemClick(AdapterView<?> av, final View v, int arg2, long arg3) {
+
+            final String info = ((TextView) v).getText().toString();
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DeviceListActivity.this);
+            alertDialog.setMessage(R.string.conferma_invio_dati + info);//info dovrebbe essere il nome del Device
+            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //Qui va il codice che avvia la connessione Bluetooth
+                    // User clicked OK button
+                    // Cancel discovery because it's costly and we're about to connect
+                    mBtAdapter.cancelDiscovery();
+                    // Get the device MAC address, which is the last 17 chars in the View
+                    //String info = ((TextView) v).getText().toString();
+                    String address = info.substring(info.length() - 17);
+                    // Create the result Intent and include the MAC address
+                    Intent intent = new Intent();
+                    intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+                    // Set result and finish this Activity
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+            });
+
+            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+            //annulla la scelta
+                }
+            });
+            AlertDialog mDialog = alertDialog.create();
+            alertDialog.show();
+
             // Cancel discovery because it's costly and we're about to connect
-            mBtAdapter.cancelDiscovery();
+           // mBtAdapter.cancelDiscovery();
 
             // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            String address = info.substring(info.length() - 17);
+            /*String info = ((TextView) v).getText().toString();
+            String address = info.substring(info.length() - 17);*/
 
             // Create the result Intent and include the MAC address
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+           /* Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);*/
 
             // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+           /* setResult(Activity.RESULT_OK, intent);
+            finish();*/
         }
     };
 
