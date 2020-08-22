@@ -67,13 +67,7 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed,valore);
-                //check Context e open e close
-
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
             }
         });
     }

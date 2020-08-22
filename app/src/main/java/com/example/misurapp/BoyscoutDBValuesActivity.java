@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,9 +27,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.misurapp.BluetoothConnection.DeviceListActivity;
+import com.example.misurapp.BluetoothConnection.ClientActivity;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
+import com.example.misurapp.db.InstrumentsDBSchema;
 
 import java.util.List;
 import java.util.Locale;
@@ -52,7 +52,8 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sensorName = Objects.requireNonNull(getIntent().getExtras()).getString("sensorName");
         appDb = new DbManager(this);
-        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB(sensorName);
+        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB(
+                InstrumentsDBSchema.BoyscoutTable.TABLENAME,sensorName);
         setContentView(R.layout.activity_database_boyscout);
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
@@ -122,7 +123,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
     private void actionsOnDeleteButtonPress(View v, InstrumentRecord record) {
         v.startAnimation(AnimationUtils.loadAnimation
                 (BoyscoutDBValuesActivity.this, R.anim.button_click));
-        appDb.deleteARow(record.getId());
+        appDb.deleteARow(InstrumentsDBSchema.BoyscoutTable.TABLENAME,record.getId());
         Toast toast = Toast.makeText(getApplicationContext(),
                 getResources().getString(R.string.cancellato), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM, 0, 50);
@@ -258,7 +259,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
         //pulsante condividi
         if (id == R.id.action_condividi) {
-            Intent intent = new Intent(BoyscoutDBValuesActivity.this, DeviceListActivity.class);
+            Intent intent = new Intent(BoyscoutDBValuesActivity.this, ClientActivity.class);
             intent.putExtra("sensorName", sensorName);
             startActivity(intent);
             return true;

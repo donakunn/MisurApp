@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.db.InstrumentsDBSchema;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
@@ -68,12 +69,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed, valore);
-
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
             }
         });
 

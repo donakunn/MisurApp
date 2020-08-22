@@ -67,12 +67,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed,valore);
-
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
             }
         });
 
