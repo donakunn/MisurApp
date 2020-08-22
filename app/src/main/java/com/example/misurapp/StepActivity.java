@@ -66,13 +66,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed,steps);
-
-
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,(float)steps);
             }
         });
 

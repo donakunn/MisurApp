@@ -74,12 +74,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed, mAzimuth);
-
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed, (float) mAzimuth);
             }
         });
 
