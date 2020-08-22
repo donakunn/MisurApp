@@ -11,7 +11,7 @@ usato come accesso ai dati;*/
 public class RecordedValuesBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "misurapp.db";
     private static final int DATABASE_VERSION = 1;
-
+    //private SQLiteDatabase db;
     // Lo statement SQL di creazione del database
     private static final String DATABASE_CREATE = "create table valoriRegistrati" +
             "(_id integer primary key autoincrement,NomeSensore text not null,DataOra date," +
@@ -21,6 +21,7 @@ public class RecordedValuesBaseHelper extends SQLiteOpenHelper {
     // Costruttore
     public RecordedValuesBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        //db = getWritableDatabase();
     }
 
     // Questo metodo viene chiamato durante la creazione del database
@@ -33,7 +34,7 @@ public class RecordedValuesBaseHelper extends SQLiteOpenHelper {
                 InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD + " float(24));" );
         database.execSQL("create table " + InstrumentsDBSchema.ScoutMasterTable.TABLENAME +
                 " ("+ " _id integer primary key autoincrement, " +
-                InstrumentsDBSchema.ScoutMasterTable.cols.EMAIL + " text not null, "+
+                InstrumentsDBSchema.ScoutMasterTable.cols.BOYSCOUTNICKNAME + " text not null, "+
                 InstrumentsDBSchema.ScoutMasterTable.cols.TIMESTAMP + " date, "+
                 InstrumentsDBSchema.ScoutMasterTable.cols.INSTRUMENTNAME + " text not null, " +
                 InstrumentsDBSchema.ScoutMasterTable.cols.VALUEREAD + " float(24));" );

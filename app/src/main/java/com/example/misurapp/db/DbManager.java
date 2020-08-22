@@ -29,7 +29,10 @@ public class DbManager {
     private Context context;
     private SQLiteDatabase database;
     private RecordedValuesBaseHelper dbHelper;
-    private SharedPreferences prefs;
+    // Database fields
+    private static final String BOYSCOUT_DATABASE_TABLE = "valuesRecordedByBoyscout";
+    private static final String SCOUTMASTER_DATABASE_TABLE = "valuesReceivedByBoyscout";
+    SharedPreferences prefs;
     private static String PREF_NAME = "shared_pref_name";
 
     //Costruttore
@@ -53,47 +56,34 @@ public class DbManager {
     che il ContentResolver può processare per fornire l’accesso applicativo
     al modello del contenuto.*/
 
-    private ContentValues createContentValues(String tableName,String email,String timestamp,
-                                              String instrumentName, float valueToSave) {
+    private ContentValues createContentValues(String instrumentName, float valueToSave) {
         ContentValues values = new ContentValues();
-        if (tableName.equals(InstrumentsDBSchema.BoyscoutTable.TABLENAME)) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(
-                    "dd-MM-yyyy HH:mm:ss", Locale.ITALIAN);
-            values.put(InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME, instrumentName);
-            values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP,
-                    dateFormat.format(new Date()));
-            values.put(InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD, valueToSave);
-        }
-        else if (tableName.equals(InstrumentsDBSchema.ScoutMasterTable.TABLENAME)){
-            values.put(InstrumentsDBSchema.ScoutMasterTable.cols.EMAIL,email);
-            values.put(InstrumentsDBSchema.ScoutMasterTable.cols.TIMESTAMP,timestamp);
-            values.put(InstrumentsDBSchema.ScoutMasterTable.cols.INSTRUMENTNAME,instrumentName);
-            values.put(InstrumentsDBSchema.ScoutMasterTable.cols.VALUEREAD,valueToSave);
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MM-yyyy HH:mm:ss", Locale.ITALIAN);
+        values.put(InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME, instrumentName);
+        values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP, dateFormat.format(new Date()));
+        values.put(InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD, valueToSave);
         return values;
     }
 
 
-    public void saveRegisteredValues(String tableName,String email,String timestamp,
-                                     String instrumentName, float value) {
+    public void saveRegisteredValues(String sensorUsed, float value) {
         this.open();
-        insertIntoTable(tableName,email,timestamp,instrumentName,value);
+        insertIntoTable(sensorUsed,value);
         this.close();
     }
 
-    //impacchetta valori in un oggetto di ContentValues e li salva sul db
+    //impacchetta valori in un oggetto di ContentValues e li scrive sul db
 
-    private long insertIntoTable(String tableName,String email,String timestamp,
-                                 String instrumentName, float valueRead) {
-        ContentValues valuesToSave = createContentValues(tableName,email,timestamp,
-                instrumentName, valueRead);
-        return database.insertOrThrow(tableName, null, valuesToSave);
+    private long insertIntoTable(String instrumentName, float valueRead) {
+        ContentValues valuesToSave = createContentValues(instrumentName, valueRead);
+        return database.insertOrThrow(BOYSCOUT_DATABASE_TABLE, null, valuesToSave);
     }
 
     //cancella la query dal db il cui id è uguale a quello passato in input
-    public void deleteARow(String tableName,long idRecordToDelete) {
+    public void deleteARow(long idRecordToDelete) {
         this.open();
-        database.delete(tableName,
+        database.delete(BOYSCOUT_DATABASE_TABLE,
                 "_id= "+idRecordToDelete, null);
         this.close();
     }
@@ -154,9 +144,9 @@ public class DbManager {
         fis.close();
     }
 
-    public List<InstrumentRecord> readValuesFromDB(String tableName,String instrumentNameToRead) {
+    public List<InstrumentRecord> readValuesFromDB(String instrumentNameToRead) {
         List<InstrumentRecord> listaQueryLette = new LinkedList<>();
-        String selectQuery = "SELECT * FROM " + tableName +
+        String selectQuery = "SELECT * FROM " + BOYSCOUT_DATABASE_TABLE +
                 " WHERE instrumentName = '" + instrumentNameToRead + "';";
         //SQLiteDatabase db = this.getWritableDatabase(); serve?
         this.open();
@@ -177,15 +167,15 @@ public class DbManager {
     }
 
     public BoyscoutsInstrumentRecords readValuesFromDBWithEmail
-            (String tableName,String instrumentNameToRead) {
-        List<InstrumentRecord> valueRead = readValuesFromDB(tableName,instrumentNameToRead);
+            (String instrumentNameToRead) {
+        List<InstrumentRecord> valueRead = readValuesFromDB(instrumentNameToRead);
         return new BoyscoutsInstrumentRecords(getEmail(context),valueRead);
     }
 
     private static SharedPreferences getPrefs(Context context) {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
-    private static String getEmail(Context context) {
+    public static String getEmail(Context context) {
         return getPrefs(context).getString("email", "");
     }
 }

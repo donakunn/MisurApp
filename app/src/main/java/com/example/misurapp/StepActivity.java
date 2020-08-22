@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,17 +39,32 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private Sensor sensor;
     private TextView misura;
     private ImageView imageView;
-    private static final String sensorUsed="steps";
+    private static final String sensorUsed="lastStepsRegister";
     private DbManager dbManager = new DbManager(this);
-    private Integer steps = 0;
+    private int stepsRegister = 0;
+    private int stepsShow;
     String [] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
+
+    SharedPreferences lastStepRegister;
+    SharedPreferences.Editor editorLastStepRegister;
+
+    SharedPreferences stepDisplay;
+    SharedPreferences.Editor editorStepDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
+
+        lastStepRegister = getSharedPreferences("reset", MODE_PRIVATE);
+        editorLastStepRegister = lastStepRegister.edit();
+        stepsRegister = lastStepRegister.getInt("reset",0);
+
+        stepDisplay = getSharedPreferences("stepsDisplay", MODE_PRIVATE);
+        editorStepDisplay = stepDisplay.edit();
+
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
@@ -61,12 +77,34 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         imageView = findViewById(R.id.img_animazione);
         misura =  findViewById(R.id.misura);
 
+
+        Button reset = findViewById(R.id.reset);
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
+
+                stepsRegister = lastStepRegister.getInt("reset",0);
+                stepsShow = 0;
+                
+                editorStepDisplay.putInt("stepsDisplay",0);
+                editorStepDisplay.apply();
+                setUpText(0);
+            }
+        });
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,(float)steps);
+                dbManager.saveRegisteredValues(sensorUsed,stepsShow);
+
+
+                //feedback
+                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, 300);
+                toast.show();
             }
         });
 
@@ -86,7 +124,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
     }
 
 
@@ -96,14 +133,21 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        steps = (int) event.values[0];
+        stepsShow =  ((int) event.values[0] - stepsRegister) + stepDisplay.getInt("stepsDisplay", 0);
 
-        if (steps % 2 == 0) {
+        if (stepsShow % 2 == 0) {
             imageView.setImageResource(R.drawable.contapassi1);
         } else {
             imageView.setImageResource(R.drawable.contapassi2);
         }
-        setUpText(steps);
+        setUpText(stepsShow);
+
+        editorStepDisplay.putInt("stepsDisplay",stepsShow);
+        editorStepDisplay.apply();
+
+        editorLastStepRegister.putInt("reset",(int) event.values[0]);
+        editorLastStepRegister.apply();
+
     }
 
     @Override
@@ -210,8 +254,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
     //plurals
-    private void setUpText(int nSteps) {
-        String stepsDetect = getResources().getQuantityString(R.plurals.numberOfSteps, nSteps, nSteps);
-        misura.setText(stepsDetect);
+    private void setUpText(int nlastStepsRegister) {
+        String lastStepsRegisterDetect = getResources().getQuantityString(R.plurals.numberOfSteps, nlastStepsRegister, nlastStepsRegister);
+        misura.setText(lastStepsRegisterDetect);
     }
 }

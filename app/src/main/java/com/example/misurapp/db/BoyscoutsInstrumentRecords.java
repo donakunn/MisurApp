@@ -25,10 +25,10 @@ public class BoyscoutsInstrumentRecords  implements Serializable {
         return email;
     }
 
-    public byte[] serialize() throws IOException {
+    public byte[] serialize(BoyscoutsInstrumentRecords recordToSend) throws IOException {
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());
-        objectOutputStream.writeObject(this);
+        objectOutputStream.writeObject(recordToSend);
         return byteArray.toByteArray();
     }
 

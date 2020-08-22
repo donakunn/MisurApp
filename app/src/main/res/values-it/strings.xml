@@ -40,4 +40,9 @@
     <string name="conferma_invio_dati">Sei sicuro di voler inviare i dati a:</string>
     <string name="Si">Sì</string>
     <string name="No">No</string>
+    <string name="Azzera">Azzera</string>
+    <string name="data">Data</string>
+    <string name="strumento">Strumento</string>
+    <string name="misura">Misura</string>
+    <string name="conferma_google_drive">Vuoi salvare le misure su Google Drive?</string>
 </resources>
