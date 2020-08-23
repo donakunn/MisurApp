@@ -17,18 +17,12 @@
     <item
         android:id="@+id/action_condividi"
         android:visible="false"
-        android:icon="@drawable/ic_share"
+        android:icon="@android:drawable/ic_menu_share"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_archivio"
         android:icon="@drawable/ic_menu_archive"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_google_drive"
-        android:icon="@drawable/ic_google_drive"
         android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

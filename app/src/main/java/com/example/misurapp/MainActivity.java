@@ -273,8 +273,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_backup) {
-            Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
-            startActivity(intent);
             return true;
         }
 

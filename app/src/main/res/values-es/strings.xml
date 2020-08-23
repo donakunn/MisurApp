@@ -40,10 +40,5 @@
     <string name="conferma_invio_dati">¿Está seguro de que desea enviar los datos a:</string>
     <string name="Si">Sip</string>
     <string name="No">No</string>
-    <string name="Azzera">Reiniciar</string>
-    <string name="data">Fecha</string>
-    <string name="strumento">Herramienta</string>
-    <string name="misura">Medida</string>
-    <string name="conferma_google_drive">¿Quieres guardar las medidas en Google Drive?</string>
 
 </resources>

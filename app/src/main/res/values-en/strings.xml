@@ -40,10 +40,5 @@
     <string name="conferma_invio_dati">Are you sure you want to send the data to:</string>
     <string name="Si">Yes</string>
     <string name="No">No</string>
-    <string name="Azzera">Reset</string>
-    <string name="data">Date</string>
-    <string name="strumento">Instrument</string>
-    <string name="misura">Measure</string>
-    <string name="conferma_google_drive">Do you want to save your measurements on Google Drive?</string>
 
 </resources>

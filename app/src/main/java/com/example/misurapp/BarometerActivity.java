@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.db.InstrumentsDBSchema;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
@@ -49,7 +50,6 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barometer);
-
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
@@ -58,6 +58,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        setContentView(R.layout.activity_barometer);
 
         imageView = (ImageView) findViewById(R.id.img_animazione);
         misura = (TextView) findViewById(R.id.misura);
@@ -68,12 +69,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
-                dbManager.saveRegisteredValues(sensorUsed, valore);
-
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
             }
         });
 
