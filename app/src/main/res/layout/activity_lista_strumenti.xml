@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ListaStrumentiActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TableRow
+            android:id="@+id/bussola"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_bussola" />
+
+            <TextView
+                android:id="@+id/textBussola"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_bussola" />
+
+            <TextView
+                android:id="@+id/bussolaNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/contapassi"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_contapassi" />
+
+            <TextView
+                android:id="@+id/textContapassi"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_contapassi" />
+
+            <TextView
+                android:id="@+id/contapassiNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/luminosità"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_lampadina" />
+
+            <TextView
+                android:id="@+id/textLuminosità"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_fotometro" />
+
+            <TextView
+                android:id="@+id/luminositàNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/termometro"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_termometro" />
+
+            <TextView
+                android:id="@+id/textTermometro"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_termometro" />
+
+            <TextView
+                android:id="@+id/termometroNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/barometro"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_barometro" />
+
+            <TextView
+                android:id="@+id/textBarometro"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_barometro" />
+
+            <TextView
+                android:id="@+id/barometroNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/umidità"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_umidita" />
+
+            <TextView
+                android:id="@+id/textUmidità"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_igrometro" />
+
+            <TextView
+                android:id="@+id/umiditàNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/altimetro"
+            style="@style/buttonstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_altimetro" />
+
+            <TextView
+                android:id="@+id/textAltimetro"
+                style="@style/textstyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strumento_altimetro" />
+
+            <TextView
+                android:id="@+id/altimetroNonSupportato"
+                style="@style/textstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/avviso_non_supportato"
+                android:visibility="invisible" />
+
+        </TableRow>
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>

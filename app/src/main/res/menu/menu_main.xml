@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.misurapp.MainActivity">
+    <item
+        android:id="@+id/action_cambio_lingua"
+        android:orderInCategory="1"
+        android:title="@string/action_cambio_lingua"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_backup"
+        android:orderInCategory="2"
+        android:title="@string/action_backup"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_condividi"
+        android:visible="false"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_archivio"
+        android:icon="@drawable/ic_menu_archive"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_google_drive"
+        android:icon="@drawable/ic_google_drive"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+</menu>
