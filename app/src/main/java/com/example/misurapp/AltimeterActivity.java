@@ -30,6 +30,7 @@ import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentsDBSchema;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public class AltimeterActivity extends AppCompatActivity implements SensorEventListener {
@@ -112,6 +113,109 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
 
     }
 
+    private void setAppLocale(String localCode){
+        Resources res = getResources();
+        DisplayMetrics dm =res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            conf.setLocale(new Locale(localCode.toLowerCase()));
+        }else{
+            conf.locale = new Locale(localCode.toLowerCase());
+        }
+        res.updateConfiguration(conf, dm);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem condividi = menu.findItem(R.id.action_archivio);
+        condividi.setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Gestisci i clic sugli elementi della barra delle azioni qui.
+        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
+        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_cambio_lingua) {
+            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(AltimeterActivity.this);
+            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = getIntent();
+
+                    switch (which){
+
+                        case 0:
+                            setAppLocale("en");
+                            finish();
+                            startActivity(intent);
+                            editor.putBoolean("flagStrumenti", true);
+                            editor.putBoolean("flagMain", true);
+                            editor.apply();
+                            break;
+
+                        case 1:
+                            setAppLocale("es");
+                            finish();
+                            startActivity(intent);
+                            editor.putBoolean("flagStrumenti", true);
+                            editor.putBoolean("flagMain", true);
+                            editor.apply();
+                            break;
+
+                        case 2:
+                            setAppLocale("it");
+                            finish();
+                            startActivity(intent);
+                            editor.putBoolean("flagStrumenti", true);
+                            editor.putBoolean("flagMain", true);
+                            editor.apply();
+                            break;
+                    }
+
+                }
+            });
+            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog mDialog = mBuilder.create();
+            mDialog.show();
+            return true;
+        }
+
+        if (id == R.id.action_backup) {
+            try {
+                dbManager.backupDB();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        if (id == R.id.action_archivio) {
+            Intent intent = new Intent(AltimeterActivity.this,BoyscoutDBValuesActivity.class);
+            intent.putExtra("sensorName",sensorUsed);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

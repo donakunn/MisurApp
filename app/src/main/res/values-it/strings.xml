@@ -26,6 +26,7 @@
         <item quantity="one">%d passo</item>
         <item quantity="other">%d passi</item>
     </plurals>
+
     <string name="noValue">Nessun valore salvato</string>
     <string name="LoginRequest">Login necessario per procedere</string>
     <string name="LoginComplete">Login effettuato con successo</string>
@@ -40,4 +41,12 @@
     <string name="conferma_invio_dati">Sei sicuro di voler inviare i dati a:</string>
     <string name="Si">Sì</string>
     <string name="No">No</string>
+    <string name="Azzera">Azzera</string>
+    <string name="data">Data</string>
+    <string name="strumento">Strumento</string>
+    <string name="misura">Misura</string>
+    <string name="conferma_google_drive">Vuoi salvare le misure su Google Drive?</string>
+    <string name="logout">Disconnettersi</string>
+    <string name="bluetoothNotAvailable">Bluetooth non disponibile</string>
+    <string name="not_connected">Non collegato</string>
 </resources>

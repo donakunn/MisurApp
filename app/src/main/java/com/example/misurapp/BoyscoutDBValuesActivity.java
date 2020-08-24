@@ -187,6 +187,9 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem condividi = menu.findItem(R.id.action_condividi);
         condividi.setVisible(true);
+
+        MenuItem googleDrive = menu.findItem(R.id.action_google_drive);
+        googleDrive.setVisible(true);
         return true;
     }
 
@@ -262,6 +265,26 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
             Intent intent = new Intent(BoyscoutDBValuesActivity.this, ClientActivity.class);
             intent.putExtra("sensorName", sensorName);
             startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_google_drive) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+            alertDialog.setMessage(R.string.conferma_google_drive);
+            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //Qui va il codice per salvare le misure su Google Drive
+                }
+            });
+
+            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    //annulla la scelta
+                }
+            });
+            AlertDialog mDialog = alertDialog.create();
+            alertDialog.show();
             return true;
         }
 
