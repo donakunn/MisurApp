@@ -28,8 +28,6 @@
     <string name="noValue">Nessun valore salvato</string>
     <string name="title_activity_login" translatable="false">LoginActivity</string>
 
-
-
     <string name="LoginRequest">Login necessario per procedere</string>
     <string name="LoginComplete">Login effettuato con successo</string>
     <string name="LogoutComplete">Logout completato con successo</string>
@@ -54,8 +52,18 @@
     <string name="conferma_invio_dati">Sei sicuro di voler inviare i dati a:</string>
     <string name="Si">Sì</string>
     <string name="No">No</string>
-    <string name="bluetoothNotAvailable">Bluetooth not available</string>
-    <string name="not_connected">not connected</string>
+
+    <string name="Azzera">Azzera</string>
+    <string name="mail" translatable="false">E-mail</string>
+    <string name="data">Data</string>
+    <string name="strumento">Strumento</string>
+    <string name="misura">Misura</string>
+
+    <string name="conferma_google_drive">Vuoi salvare le misure su Google Drive?</string>
+    <string name="logout">Disconnettersi</string>
+    <string name="bluetoothNotAvailable">Bluetooth non disponibile</string>
+    <string name="not_connected">Non collegato</string>
+
 
 </resources>
 

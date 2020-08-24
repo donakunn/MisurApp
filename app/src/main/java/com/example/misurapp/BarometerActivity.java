@@ -58,7 +58,6 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
-        setContentView(R.layout.activity_barometer);
 
         imageView = (ImageView) findViewById(R.id.img_animazione);
         misura = (TextView) findViewById(R.id.misura);
