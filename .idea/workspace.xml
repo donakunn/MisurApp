@@ -10,38 +10,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dda4b96e-7579-40a4-8c33-2ee5f230644e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/SaveAndFeedback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/ScoutMasterInstrumentRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/api-versions-0-30.0.4.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/appcompat/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/constraintlayout/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/drawerlayout/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/gridlayout/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/legacy/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/navigation/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/recyclerview/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/test/ext/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/com/android/support/test/espresso/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/com/android/support/test/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/com/google/android/gms/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/com/google/android/material/group-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/master-index.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/sdk-registry.xml/sdk-registry.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/typos-en.txt-2.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/typos-es.txt-2.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/typos-it.txt-2.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_constraintlayout_constraintlayout_1_1_3_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_constraintlayout_constraintlayout_2_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_constraintlayout_constraintlayout_solver_1_1_3_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_constraintlayout_constraintlayout_solver_2_0_0_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_core_core_1_3_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_core_core_1_3_1_aar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/app.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/AltimeterActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/AltimeterActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BarometerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BarometerActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothChatFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothConnectionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothConnectionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/DeviceListActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/CompassActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/CompassActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/HygrometerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/HygrometerActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/LightActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/LightActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/StepActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/StepActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/ThermometerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/ThermometerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/BoyscoutsInstrumentRecords.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/InstrumentRecordsWithEmail.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/InstrumentsDBSchema.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/InstrumentsDBSchema.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/RecordedValuesBaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/RecordedValuesBaseHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/InstrumentRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/InstrumentRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="1215fc3cbb322903" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="c9e1249a" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -70,6 +94,12 @@
                 <item name="My Application" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build setup" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="My Application" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="cleanup" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -120,8 +150,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_3a_API_29" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-07-22T15:22:12.997Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="c9e1249a" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-08-24T16:49:26.407Z" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$PROJECT_DIR$/../AppData/Local/Android/Sdk" />
@@ -131,7 +161,7 @@
     <property name="project.structure.last.edited" value="SDK Location" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="debugger.stepping" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="PsdUISettings">
     <option name="MODULE_TAB" value="Default Config" />
@@ -292,10 +322,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.Sensori [lintFix]" />
         <item itemvalue="Gradle.Sensori [init]" />
         <item itemvalue="Gradle.Sensori [uninstallAll]" />
         <item itemvalue="Gradle.Sensori [signingReport]" />
-        <item itemvalue="Gradle.Sensori [lintFix]" />
       </list>
     </recent_temporary>
   </component>
@@ -356,11 +386,12 @@
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="736" y="360" key="#com.intellij.execution.impl.EditConfigurationsDialog/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594219966339" />
-    <state x="549" y="79" width="312" height="231" key="#com.intellij.ide.util.MemberChooser" timestamp="1597330306876">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state x="915" y="133" width="312" height="231" key="#com.intellij.ide.util.MemberChooser" timestamp="1598279955194">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="488" y="72" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1594120798072" />
     <state x="549" y="79" width="312" height="231" key="#com.intellij.ide.util.MemberChooser/0.0.1536.834@0.0.1536.834" timestamp="1597330306876" />
+    <state x="915" y="133" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1409@0.0.2560.1409" timestamp="1598279955194" />
     <state x="686" y="131" width="374" height="582" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1595261471627" />
     <state x="1372" y="254" key="#com.intellij.ide.util.MemberChooser/0.54.3840.2106@0.54.3840.2106" timestamp="1595951794254" />
     <state x="768" y="296" width="1049" height="851" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1597677024690">
@@ -407,90 +438,90 @@
       <screen x="0" y="54" width="3840" height="2106" />
     </state>
     <state x="1203" y="383" width="1424" height="1459" key="CommitChangelistDialog2/0.54.3840.2106@0.54.3840.2106" timestamp="1594547050747" />
-    <state x="463" y="118" width="848" height="990" key="FileChooserDialogImpl" timestamp="1597830909344">
+    <state x="463" y="118" width="848" height="990" key="FileChooserDialogImpl" timestamp="1598198144702">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1597830909344" />
+    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1598198144702" />
     <state x="521" y="119" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1597767833394" />
     <state x="1302" y="355" width="848" height="990" key="FileChooserDialogImpl/0.54.3840.2106@0.54.3840.2106" timestamp="1595609139360" />
     <state x="868" y="228" key="FileChooserDialogImpl/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594286393332" />
     <state x="868" y="201" key="FileChooserDialogImpl/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596790187859" />
-    <state width="1256" height="287" key="GridCell.Tab.0.bottom" timestamp="1598020327337">
+    <state width="1258" height="341" key="GridCell.Tab.0.bottom" timestamp="1598287791495">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="738" height="144" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1597767618416" />
-    <state width="1256" height="287" key="GridCell.Tab.0.bottom/0.0.2560.1409@0.0.2560.1409" timestamp="1598020327337" />
+    <state width="1258" height="341" key="GridCell.Tab.0.bottom/0.0.2560.1409@0.0.2560.1409" timestamp="1598287791495" />
     <state width="939" height="68" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446787" />
     <state width="1869" height="489" key="GridCell.Tab.0.bottom/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635366" />
     <state width="1258" height="211" key="GridCell.Tab.0.bottom/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901737" />
     <state width="2516" height="287" key="GridCell.Tab.0.bottom/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736860" />
-    <state width="1256" height="287" key="GridCell.Tab.0.center" timestamp="1598020327336">
+    <state width="1258" height="341" key="GridCell.Tab.0.center" timestamp="1598287791495">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="738" height="144" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1597767618416" />
-    <state width="1256" height="287" key="GridCell.Tab.0.center/0.0.2560.1409@0.0.2560.1409" timestamp="1598020327336" />
+    <state width="1258" height="341" key="GridCell.Tab.0.center/0.0.2560.1409@0.0.2560.1409" timestamp="1598287791495" />
     <state width="939" height="68" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446786" />
     <state width="1869" height="489" key="GridCell.Tab.0.center/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635364" />
     <state width="1258" height="211" key="GridCell.Tab.0.center/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901736" />
     <state width="2516" height="287" key="GridCell.Tab.0.center/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736859" />
-    <state width="1256" height="287" key="GridCell.Tab.0.left" timestamp="1598020327336">
+    <state width="1258" height="341" key="GridCell.Tab.0.left" timestamp="1598287791495">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="738" height="144" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1597767618415" />
-    <state width="1256" height="287" key="GridCell.Tab.0.left/0.0.2560.1409@0.0.2560.1409" timestamp="1598020327336" />
+    <state width="1258" height="341" key="GridCell.Tab.0.left/0.0.2560.1409@0.0.2560.1409" timestamp="1598287791495" />
     <state width="939" height="68" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446786" />
     <state width="1869" height="489" key="GridCell.Tab.0.left/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635363" />
     <state width="1258" height="211" key="GridCell.Tab.0.left/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901736" />
     <state width="2516" height="287" key="GridCell.Tab.0.left/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736859" />
-    <state width="1256" height="287" key="GridCell.Tab.0.right" timestamp="1598020327336">
+    <state width="1258" height="341" key="GridCell.Tab.0.right" timestamp="1598287791495">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="738" height="144" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1597767618416" />
-    <state width="1256" height="287" key="GridCell.Tab.0.right/0.0.2560.1409@0.0.2560.1409" timestamp="1598020327336" />
+    <state width="1258" height="341" key="GridCell.Tab.0.right/0.0.2560.1409@0.0.2560.1409" timestamp="1598287791495" />
     <state width="939" height="68" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446787" />
     <state width="1869" height="489" key="GridCell.Tab.0.right/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635365" />
     <state width="1258" height="211" key="GridCell.Tab.0.right/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901736" />
     <state width="2516" height="287" key="GridCell.Tab.0.right/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736860" />
-    <state width="738" height="144" key="GridCell.Tab.1.bottom" timestamp="1597767656486">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1258" height="341" key="GridCell.Tab.1.bottom" timestamp="1598287807695">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="738" height="144" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1597767656486" />
-    <state width="1235" height="285" key="GridCell.Tab.1.bottom/0.0.2560.1409@0.0.2560.1409" timestamp="1597678371744" />
+    <state width="1258" height="341" key="GridCell.Tab.1.bottom/0.0.2560.1409@0.0.2560.1409" timestamp="1598287807695" />
     <state width="917" height="36" key="GridCell.Tab.1.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561562" />
     <state width="1869" height="489" key="GridCell.Tab.1.bottom/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635368" />
     <state width="1258" height="266" key="GridCell.Tab.1.bottom/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
     <state width="1258" height="137" key="GridCell.Tab.1.bottom/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596881654739" />
-    <state width="738" height="144" key="GridCell.Tab.1.center" timestamp="1597767656485">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1258" height="341" key="GridCell.Tab.1.center" timestamp="1598287807695">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="738" height="144" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1597767656485" />
-    <state width="1235" height="285" key="GridCell.Tab.1.center/0.0.2560.1409@0.0.2560.1409" timestamp="1597678371744" />
+    <state width="1258" height="341" key="GridCell.Tab.1.center/0.0.2560.1409@0.0.2560.1409" timestamp="1598287807695" />
     <state width="917" height="36" key="GridCell.Tab.1.center/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561561" />
     <state width="1869" height="489" key="GridCell.Tab.1.center/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635367" />
     <state width="1258" height="266" key="GridCell.Tab.1.center/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
     <state width="1258" height="137" key="GridCell.Tab.1.center/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596881654739" />
-    <state width="738" height="144" key="GridCell.Tab.1.left" timestamp="1597767656485">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1258" height="341" key="GridCell.Tab.1.left" timestamp="1598287807695">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="738" height="144" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1597767656485" />
-    <state width="1235" height="285" key="GridCell.Tab.1.left/0.0.2560.1409@0.0.2560.1409" timestamp="1597678371744" />
+    <state width="1258" height="341" key="GridCell.Tab.1.left/0.0.2560.1409@0.0.2560.1409" timestamp="1598287807695" />
     <state width="917" height="36" key="GridCell.Tab.1.left/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561561" />
     <state width="1869" height="489" key="GridCell.Tab.1.left/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635366" />
     <state width="1258" height="266" key="GridCell.Tab.1.left/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
     <state width="1258" height="137" key="GridCell.Tab.1.left/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596881654739" />
-    <state width="738" height="144" key="GridCell.Tab.1.right" timestamp="1597767656485">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1258" height="341" key="GridCell.Tab.1.right" timestamp="1598287807695">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="738" height="144" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1597767656485" />
-    <state width="1235" height="285" key="GridCell.Tab.1.right/0.0.2560.1409@0.0.2560.1409" timestamp="1597678371744" />
+    <state width="1258" height="341" key="GridCell.Tab.1.right/0.0.2560.1409@0.0.2560.1409" timestamp="1598287807695" />
     <state width="917" height="36" key="GridCell.Tab.1.right/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561561" />
     <state width="1869" height="489" key="GridCell.Tab.1.right/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635368" />
     <state width="1258" height="266" key="GridCell.Tab.1.right/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
@@ -499,11 +530,11 @@
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="861" y="447" key="IDE.errors.dialog/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596209915631" />
-    <state x="107" y="0" width="1978" height="1409" key="SettingsEditor" timestamp="1597677103719">
+    <state x="107" y="0" width="1978" height="1409" key="SettingsEditor" timestamp="1598277334338">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="277" y="59" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1594140930093" />
-    <state x="107" y="0" width="1978" height="1409" key="SettingsEditor/0.0.2560.1409@0.0.2560.1409" timestamp="1597677103719" />
+    <state x="107" y="0" width="1978" height="1409" key="SettingsEditor/0.0.2560.1409@0.0.2560.1409" timestamp="1598277334338" />
     <state x="80" y="215" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1595259446473" />
     <state x="160" y="413" width="1978" height="1482" key="SettingsEditor/0.54.3840.2106@0.54.3840.2106" timestamp="1595347195520" />
     <state x="462" y="100" key="SettingsEditor/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594198473308" />
@@ -524,12 +555,12 @@
     </state>
     <state x="1924" y="54" width="1908" height="2098" key="com.android.tools.idea.avdmanager.AvdListDialog/0.54.3840.2106@0.54.3840.2106" timestamp="1595086125331" />
     <state x="32" y="0" width="883" height="605" key="com.android.tools.idea.avdmanager.AvdListDialog/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596271967307" />
-    <state x="710" y="254" key="com.intellij.ide.util.TipDialog" timestamp="1598015985969">
+    <state x="710" y="254" key="com.intellij.ide.util.TipDialog" timestamp="1598277347984">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
-    <state x="379" y="187" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1594110271978" />
+    <state x="379" y="187" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1598194755889" />
     <state x="426" y="214" key="com.intellij.ide.util.TipDialog/0.0.1536.834@0.0.1536.834" timestamp="1597908647461" />
-    <state x="710" y="254" key="com.intellij.ide.util.TipDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1598015985969" />
+    <state x="710" y="254" key="com.intellij.ide.util.TipDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1598277347984" />
     <state x="533" y="261" key="com.intellij.ide.util.TipDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1595256246970" />
     <state x="1065" y="434" key="com.intellij.ide.util.TipDialog/0.54.3840.2106@0.54.3840.2106" timestamp="1596008482455" />
     <state x="710" y="362" key="com.intellij.ide.util.TipDialog/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594280513647" />
@@ -572,23 +603,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java</url>
-          <line>107</line>
+          <line>114</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java</url>
-          <line>108</line>
+          <line>115</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java</url>
-          <line>110</line>
+          <line>117</line>
           <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
-          <line>225</line>
-          <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/CompassActivity.java</url>
@@ -600,28 +626,113 @@
           <line>76</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java</url>
+          <line>92</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java</url>
+          <line>177</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java</url>
+          <line>178</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java</url>
+          <line>169</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java</url>
+          <line>171</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothConnectionService.java</url>
+          <line>514</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/BluetoothConnectionService.java</url>
+          <line>515</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>387</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>389</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>399</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>407</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>308</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>309</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BluetoothConnection/ClientActivity.java</url>
+          <line>310</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java</url>
+          <line>113</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java</url>
+          <line>114</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java</url>
-          <line>98</line>
+          <line>99</line>
           <properties class="com.example.misurapp.BoyscoutDBValuesActivity" />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java</url>
-          <line>118</line>
+          <line>119</line>
           <properties class="com.example.misurapp.BoyscoutDBValuesActivity" />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/BoyscoutDBValuesActivity.java</url>
-          <line>134</line>
+          <line>135</line>
           <properties class="com.example.misurapp.BoyscoutDBValuesActivity" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java</url>
-          <line>101</line>
-          <properties class="com.example.misurapp.db.DbManager" method="backupDB" />
+          <line>108</line>
+          <properties class="com.example.misurapp.db.DbManager" />
           <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>

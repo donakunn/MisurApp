@@ -14,13 +14,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
-import static android.content.Context.MODE_PRIVATE;
 
 //da implementare metodi tabella caposcout
 public class DbManager {
@@ -176,10 +173,10 @@ public class DbManager {
         return listaQueryLette;
     }
 
-    public BoyscoutsInstrumentRecords readValuesFromDBWithEmail
+    public InstrumentRecordsWithEmail readValuesFromDBWithEmail
             (String tableName,String instrumentNameToRead) {
         List<InstrumentRecord> valueRead = readValuesFromDB(tableName,instrumentNameToRead);
-        return new BoyscoutsInstrumentRecords(getEmail(context),valueRead);
+        return new InstrumentRecordsWithEmail(getEmail(context),instrumentNameToRead,valueRead);
     }
 
     private static SharedPreferences getPrefs(Context context) {

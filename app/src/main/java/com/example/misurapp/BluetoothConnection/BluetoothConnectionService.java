@@ -77,11 +77,10 @@ public class BluetoothConnectionService {
     /**
      * Constructor. Prepares a new BluetoothChat session.
      *
-     * @param context The UI Activity Context
      * @param handler A Handler to send messages back to the UI Activity
      */
 
-    public BluetoothConnectionService(Context context, Handler handler) {
+    public BluetoothConnectionService(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
@@ -99,7 +98,7 @@ public class BluetoothConnectionService {
         mNewState = mState;
 
         // Give the new state to the Handler so the UI Activity can update
-        //mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
+        mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
     }
 
 
@@ -523,9 +522,9 @@ public class BluetoothConnectionService {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
 
-                    // Send the obtained bytes to the UI Activity
-                    //mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
-                    //          .sendToTarget();
+                    //Send the obtained bytes to the UI Activity
+                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
+                              .sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
@@ -546,8 +545,8 @@ public class BluetoothConnectionService {
                 mmOutStream.write(buffer);
 
                 // Share the sent message back to the UI Activity
-                //mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
-                //  .sendToTarget();
+                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
+                  .sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

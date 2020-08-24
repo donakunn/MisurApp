@@ -34,6 +34,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -54,10 +56,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.misurapp.LightActivity;
-import com.example.misurapp.ListaStrumentiActivity;
 import com.example.misurapp.R;
-import com.example.misurapp.db.BoyscoutsInstrumentRecords;
+import com.example.misurapp.db.InstrumentRecordsWithEmail;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentsDBSchema;
 
@@ -205,10 +205,44 @@ public class ClientActivity extends AppCompatActivity {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             // Otherwise, setup the chat session
-        } /*else if (btConnectionHandler == null) {
-            //setupChat();
-        }*/
+        } else if (btConnectionHandler == null) {
+            btConnectionHandler = new BluetoothConnectionService(mHandler);        }
     }
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothConnectionService.STATE_CONNECTED:
+                            break;
+                        case BluetoothConnectionService.STATE_CONNECTING:
+                            break;
+                        case BluetoothConnectionService.STATE_LISTEN:
+                        case BluetoothConnectionService.STATE_NONE:
+                            break;
+                    }
+                    break;
+                case Constants.MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    break;
+                case Constants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    try {
+                        InstrumentRecordsWithEmail recordsReceived=
+                                InstrumentRecordsWithEmail.deserialize(readBuf);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
 
 
     @Override
@@ -219,7 +253,9 @@ public class ClientActivity extends AppCompatActivity {
         if (mBtAdapter != null) {
             mBtAdapter.cancelDiscovery();
         }
-
+        if (btConnectionHandler != null) {
+            btConnectionHandler.stop();
+        }
         // Unregister broadcast listeners
         this.unregisterReceiver(mReceiver);
     }
@@ -258,20 +294,19 @@ public class ClientActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> av, final View v, int arg2, long arg3) {
 
             final String info = ((TextView) v).getText().toString();
-
+            //0 Name, 1 Address
+            final String [] nameAndAddress = info.split("\n");
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ClientActivity.this);
-            alertDialog.setMessage(R.string.conferma_invio_dati + info);//info dovrebbe essere il nome del Device
+            alertDialog.setMessage(R.string.conferma_invio_dati + nameAndAddress[0]);
             alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     //Qui va il codice che avvia la connessione Bluetooth
                     // User clicked OK button
                     // Cancel discovery because it's costly and we're about to connect
                     mBtAdapter.cancelDiscovery();
-                    // Get the device MAC address, which is the last 17 chars in the View
-                    String info = ((TextView) v).getText().toString();
-                    String address = info.substring(info.length() - 17);
+
                     // Create the result Intent and include the MAC address
-                    connectDevice(address, true); //check se corretto
+                    connectDevice(nameAndAddress[1], true); //check se corretto
                     try {
                         sendData(dbManager.readValuesFromDBWithEmail
                                 (InstrumentsDBSchema.BoyscoutTable.TABLENAME,sensorName));
@@ -360,7 +395,7 @@ public class ClientActivity extends AppCompatActivity {
      *
      * @param records
      */
-    private void sendData(BoyscoutsInstrumentRecords records) throws IOException {
+    private void sendData(InstrumentRecordsWithEmail records) throws IOException {
         // Check that we're actually connected before trying anything
         if (btConnectionHandler.getState() != BluetoothConnectionService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();

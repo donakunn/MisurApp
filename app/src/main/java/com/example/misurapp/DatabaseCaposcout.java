@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,24 +13,80 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
+import com.example.misurapp.BluetoothConnection.Constants;
+import com.example.misurapp.db.InstrumentRecordsWithEmail;
+import com.example.misurapp.db.InstrumentRecord;
+
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 public class DatabaseCaposcout extends AppCompatActivity {
 
-    String [] listItems;
+    String[] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
+
+    //BluetoothClass members
+    private static final String TAG = "BluetoothChatFragment";
+
+    // Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    private static final int REQUEST_ENABLE_BT = 3;
+
+    /**
+     * Name of the connected device
+     */
+
+    private String mConnectedDeviceName = null;
+
+
+    /**
+     * Array adapter for the conversation thread
+     */
+
+    private ArrayAdapter<String> mConversationArrayAdapter;
+
+
+    /**
+     * String buffer for outgoing messages
+     */
+
+    private StringBuffer mOutStringBuffer;
+
+
+    /**
+     * Local Bluetooth adapter
+     */
+
+    private BluetoothAdapter mBluetoothAdapter = null;
+
+
+    /**
+     * Member object for the chat services
+     */
+
+    private BluetoothConnectionService btConnectionHandler = null;
+
+    TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +100,118 @@ public class DatabaseCaposcout extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        // If the adapter is null, then Bluetooth is not supported
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // If BT is not on, request that it be enabled.
+        // startServer() will then be called during onActivityResult
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        } else if (btConnectionHandler == null) {
+            startServer();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (btConnectionHandler != null) {
+            btConnectionHandler.stop();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Performing this check in onResume() covers the case in which BT was
+        // not enabled during onStart(), so we were paused to enable it...
+        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+        if (btConnectionHandler != null) {
+            // Only if the state is STATE_NONE, do we know that we haven't started already
+            if (btConnectionHandler.getState() == BluetoothConnectionService.STATE_NONE) {
+                // Start the Bluetooth chat services
+                btConnectionHandler.start();
+            }
+        }
+    }
+
+    private void ensureDiscoverable() {
+        if (mBluetoothAdapter.getScanMode() !=
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+        }
+    }
+
+    private void startServer() {
+        //SERVER IN ASCOLTO PER 300 SECONDI, SI PUO COLLEGARE A BOTTONE
+    ensureDiscoverable();
+        btConnectionHandler = new BluetoothConnectionService(mHandler);
+        btConnectionHandler.start();
+
+    }
+    //LEGGERE RISULTATO ACTIVITY PER CONTROLLARE CHE SIA STATO ACCETTATO
+
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothConnectionService.STATE_CONNECTED:
+                            break;
+                        case BluetoothConnectionService.STATE_CONNECTING:
+                            break;
+                        case BluetoothConnectionService.STATE_LISTEN:
+                        case BluetoothConnectionService.STATE_NONE:
+                            break;
+                    }
+                    break;
+                case Constants.MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    mConversationArrayAdapter.add("Me:  " + writeMessage);
+                    break;
+                case Constants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    try {
+                        InstrumentRecordsWithEmail recordsReceived =
+                                InstrumentRecordsWithEmail.deserialize(readBuf);
+                        showRecordsOnScoutMasterActivity(recordsReceived);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
+
+
+    private void showRecordsOnScoutMasterActivity(InstrumentRecordsWithEmail records) {
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        List<InstrumentRecord> receivedRecords = records.getBoyscoutRecords();
         TableRow query;
-        TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-
 
         TextView nickname, data, strumento, valore;
 
         ImageButton cancella;
-
-        int num_query = 3;
-
-        for (int i = 0; i < num_query; i++) {
+        for (final InstrumentRecord record : receivedRecords) {
             query = new TableRow(DatabaseCaposcout.this);
             query.setPadding(20, 20, 5, 20);
 
@@ -111,17 +267,16 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
             query.addView(cancella);
             linearLayout.addView(query);
-
         }
     }
 
-    private void setAppLocale(String localCode){
+    private void setAppLocale(String localCode) {
         Resources res = getResources();
-        DisplayMetrics dm =res.getDisplayMetrics();
+        DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             conf.setLocale(new Locale(localCode.toLowerCase()));
-        }else{
+        } else {
             conf.locale = new Locale(localCode.toLowerCase());
         }
         res.updateConfiguration(conf, dm);
@@ -135,10 +290,13 @@ public class DatabaseCaposcout extends AppCompatActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem condividi = menu.findItem(R.id.action_condividi);
+        condividi.setVisible(true);
+
         MenuItem googleDrive = menu.findItem(R.id.action_google_drive);
         googleDrive.setVisible(true);
+
         return true;
     }
 
@@ -150,7 +308,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(DatabaseCaposcout.this);
             mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override
@@ -158,7 +316,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
                     Intent intent = getIntent();
 
 
-                    switch (which){
+                    switch (which) {
 
                         case 0:
                             setAppLocale("en");
@@ -200,6 +358,10 @@ public class DatabaseCaposcout extends AppCompatActivity {
         }
 
         if (id == R.id.action_backup) {
+            return true;
+        }
+
+        if (id == R.id.action_condividi) {
             return true;
         }
 
