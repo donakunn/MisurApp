@@ -1,13 +1,5 @@
 package com.example.misurapp.clientServer;
 
-import com.example.misurapp.db.BoyscoutsInstrumentRecords;
-
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.List;
-
 public class Client {
 
     /*public static void sendBoyscoutsRecords(

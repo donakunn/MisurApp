@@ -52,8 +52,8 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sensorName = Objects.requireNonNull(getIntent().getExtras()).getString("sensorName");
         appDb = new DbManager(this);
-        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readValuesFromDB(
-                InstrumentsDBSchema.BoyscoutTable.TABLENAME,sensorName);
+        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB
+                (sensorName);
         setContentView(R.layout.activity_database_boyscout);
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();

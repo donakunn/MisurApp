@@ -1,6 +1,8 @@
 package com.example.misurapp.db;
 
-public class InstrumentRecord {
+import java.io.Serializable;
+
+public class InstrumentRecord implements Serializable {
     private long id;
     private String date;
     private float value;
