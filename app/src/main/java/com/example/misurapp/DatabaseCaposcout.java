@@ -164,10 +164,13 @@ public class DatabaseCaposcout extends AppCompatActivity {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothConnectionService.STATE_CONNECTED:
+                            setTitle("Connected");
                             break;
                         case BluetoothConnectionService.STATE_CONNECTING:
+                            setTitle("Connecting");
                             break;
                         case BluetoothConnectionService.STATE_LISTEN:
+                            setTitle("Listening");
                         case BluetoothConnectionService.STATE_NONE:
                             break;
                     }
@@ -177,6 +180,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
                     // construct a string from the buffer
                     break;
                 case Constants.MESSAGE_READ:
+                    setTitle("Downloading queries");
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     try {

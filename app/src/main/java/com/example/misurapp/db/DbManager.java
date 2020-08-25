@@ -195,7 +195,7 @@ public class DbManager {
 
     public List<ScoutMasterInstrumentRecord> readScoutMasterValuesFromDB() {
         List<ScoutMasterInstrumentRecord> readQueryList = new LinkedList<>();
-        String selectQuery = "SELECT * FROM " + InstrumentsDBSchema.BoyscoutTable.TABLENAME + ";";
+        String selectQuery = "SELECT * FROM " + InstrumentsDBSchema.ScoutMasterTable.TABLENAME + ";";
         this.open();
         Cursor cursor = database.rawQuery(selectQuery, null);
 
@@ -210,7 +210,7 @@ public class DbManager {
                     // Adding query to list
                     readQueryList.add(queryRead);
                 } while (cursor.moveToNext());
-            }
+        }
         this.close();
         return readQueryList;
     }
