@@ -30,10 +30,14 @@ import android.widget.Toast;
 
 import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
 import com.example.misurapp.BluetoothConnection.Constants;
-import com.example.misurapp.db.InstrumentRecordsWithEmail;
+import com.example.misurapp.db.DbManager;
+import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
 import com.example.misurapp.db.InstrumentRecord;
+import com.example.misurapp.db.InstrumentsDBSchema;
+import com.example.misurapp.db.ScoutMasterInstrumentRecord;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,21 +61,6 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
     private String mConnectedDeviceName = null;
 
-
-    /**
-     * Array adapter for the conversation thread
-     */
-
-    private ArrayAdapter<String> mConversationArrayAdapter;
-
-
-    /**
-     * String buffer for outgoing messages
-     */
-
-    private StringBuffer mOutStringBuffer;
-
-
     /**
      * Local Bluetooth adapter
      */
@@ -85,8 +74,11 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
     private BluetoothConnectionService btConnectionHandler = null;
 
-    TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-    LinearLayout linearLayout;
+    private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+    private LinearLayout linearLayout;
+
+    private DbManager dbManager = new DbManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +136,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
                 btConnectionHandler.start();
             }
         }
+        showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
     }
 
     private void ensureDiscoverable() {
@@ -157,7 +150,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
     private void startServer() {
         //SERVER IN ASCOLTO PER 300 SECONDI, SI PUO COLLEGARE A BOTTONE
-    ensureDiscoverable();
+        ensureDiscoverable();
         btConnectionHandler = new BluetoothConnectionService(mHandler);
         btConnectionHandler.start();
 
@@ -182,16 +175,16 @@ public class DatabaseCaposcout extends AppCompatActivity {
                 case Constants.MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     try {
-                        InstrumentRecordsWithEmail recordsReceived =
-                                InstrumentRecordsWithEmail.deserialize(readBuf);
-                        showRecordsOnScoutMasterActivity(recordsReceived);
+                        List<ScoutMasterInstrumentRecord> receivedValues =
+                                scoutMasterRecordListMaker
+                                        (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
+                        saveReceivedRecordsOnDB(receivedValues);
+                        showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
@@ -202,16 +195,34 @@ public class DatabaseCaposcout extends AppCompatActivity {
         }
     };
 
+    //trasforma l'oggetto contenente lista record, email e strumento in una lista di record con
+    //schema uguale a tabella scout master che conterrà i valori
+    private List<ScoutMasterInstrumentRecord> scoutMasterRecordListMaker
+            (RecordsWithEmailAndInstrumentName recordsWithEmail) {
+        List<ScoutMasterInstrumentRecord> scoutMasterRecordsList = new LinkedList<>();
+        List<InstrumentRecord> recordList = recordsWithEmail.getBoyscoutRecords();
+        for (InstrumentRecord record : recordList) {
+            ScoutMasterInstrumentRecord recordToSave = new ScoutMasterInstrumentRecord
+                    (record.getId(),record.getDate(),record.getValue(),
+                            recordsWithEmail.getBoyScoutEmail(),
+                            recordsWithEmail.getInstrumentName());
+            scoutMasterRecordsList.add(recordToSave);
+        }
+        return scoutMasterRecordsList;
+    }
+    //salva la lista su db
+    private void saveReceivedRecordsOnDB(List<ScoutMasterInstrumentRecord> records) {
+        dbManager.multipleInsert(records);
+    }
 
-    private void showRecordsOnScoutMasterActivity(InstrumentRecordsWithEmail records) {
+    private void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        List<InstrumentRecord> receivedRecords = records.getBoyscoutRecords();
         TableRow query;
 
         TextView nickname, data, strumento, valore;
 
         ImageButton cancella;
-        for (final InstrumentRecord record : receivedRecords) {
+        for (final ScoutMasterInstrumentRecord record : records) {
             query = new TableRow(DatabaseCaposcout.this);
             query.setPadding(20, 20, 5, 20);
 
@@ -221,7 +232,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
             nickname.setGravity(Gravity.CENTER_VERTICAL);
             nickname.setPadding(10, 10, 10, 10);
             nickname.setTypeface(null, Typeface.BOLD);
-            nickname.setText("nickname");
+            nickname.setText(record.getEmail());
 
             query.addView(nickname);
 
@@ -231,7 +242,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
             data.setGravity(Gravity.CENTER_VERTICAL);
             data.setPadding(10, 10, 10, 10);
             data.setTypeface(null, Typeface.BOLD);
-            data.setText("data");
+            data.setText(record.getDate());
 
             query.addView(data);
 
@@ -241,7 +252,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
             strumento.setGravity(Gravity.CENTER_VERTICAL);
             strumento.setPadding(10, 10, 10, 10);
             strumento.setTypeface(null, Typeface.BOLD);
-            strumento.setText("strumento");
+            strumento.setText(record.getInstrumentName());
 
             query.addView(strumento);
 
@@ -250,7 +261,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
             valore.setLayoutParams(tableRowPar);
             valore.setGravity(Gravity.CENTER_VERTICAL);
             valore.setTypeface(null, Typeface.BOLD);
-            valore.setText("valore");
+            valore.setText(String.valueOf(record.getValue()));
 
             query.addView(valore);
 

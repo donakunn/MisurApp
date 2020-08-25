@@ -8,20 +8,27 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
-public class InstrumentRecordsWithEmail implements Serializable {
+public class RecordsWithEmailAndInstrumentName implements Serializable {
 
     private String email;
+    private String instrumentName;
     private List<InstrumentRecord> boyscoutRecords;
 
-    public InstrumentRecordsWithEmail(String email, String instrumentName,
-                                      List<InstrumentRecord> boyscoutRecords) {
+    public RecordsWithEmailAndInstrumentName(String email, String instrumentName,
+                                             List<InstrumentRecord> boyscoutRecords) {
         this.email = email;
+        this.instrumentName = instrumentName;
         this.boyscoutRecords = boyscoutRecords;
     }
 
     public String getBoyScoutEmail() {
         return email;
     }
+
+    public String getInstrumentName() {
+        return instrumentName;
+    }
+
     public List<InstrumentRecord> getBoyscoutRecords() {
         return this.boyscoutRecords;
     }
@@ -33,10 +40,10 @@ public class InstrumentRecordsWithEmail implements Serializable {
         return byteArray.toByteArray();
     }
 
-    public static InstrumentRecordsWithEmail deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+    public static RecordsWithEmailAndInstrumentName deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArray);
-        return (InstrumentRecordsWithEmail) objectInputStream.readObject();
+        return (RecordsWithEmailAndInstrumentName) objectInputStream.readObject();
     }
 }
 

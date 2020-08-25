@@ -57,7 +57,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.misurapp.R;
-import com.example.misurapp.db.InstrumentRecordsWithEmail;
+import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentsDBSchema;
 
@@ -232,8 +232,8 @@ public class ClientActivity extends AppCompatActivity {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     try {
-                        InstrumentRecordsWithEmail recordsReceived=
-                                InstrumentRecordsWithEmail.deserialize(readBuf);
+                        RecordsWithEmailAndInstrumentName recordsReceived=
+                                RecordsWithEmailAndInstrumentName.deserialize(readBuf);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
@@ -297,7 +297,7 @@ public class ClientActivity extends AppCompatActivity {
             //0 Name, 1 Address
             final String [] nameAndAddress = info.split("\n");
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ClientActivity.this);
-            alertDialog.setMessage(R.string.conferma_invio_dati + nameAndAddress[0]);
+            alertDialog.setMessage(R.string.conferma_invio_dati + " " + nameAndAddress[0]);
             alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     //Qui va il codice che avvia la connessione Bluetooth
@@ -308,8 +308,7 @@ public class ClientActivity extends AppCompatActivity {
                     // Create the result Intent and include the MAC address
                     connectDevice(nameAndAddress[1], true); //check se corretto
                     try {
-                        sendData(dbManager.readValuesFromDBWithEmail
-                                (InstrumentsDBSchema.BoyscoutTable.TABLENAME,sensorName));
+                        sendData(dbManager.recordsToSendBuilder(sensorName));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -395,7 +394,7 @@ public class ClientActivity extends AppCompatActivity {
      *
      * @param records
      */
-    private void sendData(InstrumentRecordsWithEmail records) throws IOException {
+    private void sendData(RecordsWithEmailAndInstrumentName records) throws IOException {
         // Check that we're actually connected before trying anything
         if (btConnectionHandler.getState() != BluetoothConnectionService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
