@@ -141,11 +141,12 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-            toastMaker(getResources().getString(R.string.LoginComplete));
             if (account != null) {
+                toastMaker(getResources().getString(R.string.LoginComplete));
                 saveLoginPropertiesInPreferences(account.getEmail(), true);
                 setLogoutVisible();
             }
+            else toastMaker(getResources().getString(R.string.loginNotSucceded));
         }
     }
 

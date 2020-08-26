@@ -49,4 +49,5 @@
     <string name="logout">Disconnettersi</string>
     <string name="bluetoothNotAvailable">Bluetooth non disponibile</string>
     <string name="not_connected">Non collegato</string>
+    <string name="loginNotSucceded">Login non riuscito</string>
 </resources>
