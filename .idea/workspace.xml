@@ -9,17 +9,13 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dda4b96e-7579-40a4-8c33-2ee5f230644e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/DatabaseCaposcout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/misurapp/db/DbManager.java" afterDir="false" />
-    </list>
+    <list default="true" id="dda4b96e-7579-40a4-8c33-2ee5f230644e" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="192.168.1.101:5555" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="c9e1249a" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -47,13 +43,13 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="My Application" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build setup" type="c8890929:TasksNode$1" />
+                <item name="android" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="My Application" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="cleanup" type="c8890929:TasksNode$1" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -65,12 +61,7 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="My Application" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="verification" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="My Application" type="f1a62948:ProjectNode" />
-                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -90,6 +81,12 @@
       </list>
     </option>
   </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="C:\Users\Donato\Documents\MisurAppKEYSTORE.jks" />
+    <option name="KEY_ALIAS" value="key0" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+    <option name="BUILD_TARGET_KEY" value="apk" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -104,22 +101,28 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ApkExportedModule" value="app" />
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="c9e1249a" />
     <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-08-24T16:49:26.407Z" />
+    <property name="ExportApk.ApkPath" value="C:\Users\Donato\OneDrive\Desktop\Sensori-master\app" />
+    <property name="ExportApk.BuildVariants" value="release" />
+    <property name="ExportApk.SignV1" value="true" />
+    <property name="ExportApk.SignV2" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$PROJECT_DIR$/../AppData/Local/Android/Sdk" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/java/com/example/misurapp" />
-    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive/Desktop" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/MisurAppKEYSTORE.jks" />
     <property name="memory.settings.postsync.last.time.stamp" value="1595674471803" />
-    <property name="project.structure.last.edited" value="SDK Location" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="PsdUISettings">
-    <option name="MODULE_TAB" value="Default Config" />
-    <option name="BUILD_VARIANTS_TAB" value="Flavors" />
+    <option name="MODULE_TAB" value="Signing Configs" />
+    <option name="BUILD_VARIANTS_TAB" value="Build Types" />
+    <option name="LAST_EDITED_SIGNING_CONFIG" value="release" />
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RecentsManager">
@@ -139,7 +142,7 @@
       <recent name="com.example.misurapp.BluetoothConnection" />
     </key>
   </component>
-  <component name="RunManager" selected="Android App.app">
+  <component name="RunManager" selected="Gradle.Sensori-master [signingReport]">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -198,7 +201,7 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Sensori [init]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="Sensori-master [assembleDebug]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -209,7 +212,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="init" />
+            <option value="assembleDebug" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -217,7 +220,7 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="Sensori [lintFix]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="Sensori-master [assembleRelease]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -228,7 +231,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="lintFix" />
+            <option value="assembleRelease" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -236,7 +239,45 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="Sensori [signingReport]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="Sensori-master [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Sensori-master [installRelease]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="installRelease" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Sensori-master [signingReport]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -255,31 +296,13 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="Sensori [uninstallAll]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="uninstallAll" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Sensori [lintFix]" />
-        <item itemvalue="Gradle.Sensori [init]" />
-        <item itemvalue="Gradle.Sensori [uninstallAll]" />
-        <item itemvalue="Gradle.Sensori [signingReport]" />
+        <item itemvalue="Gradle.Sensori-master [installRelease]" />
+        <item itemvalue="Gradle.Sensori-master [signingReport]" />
+        <item itemvalue="Gradle.Sensori-master [build]" />
+        <item itemvalue="Gradle.Sensori-master [assembleRelease]" />
+        <item itemvalue="Gradle.Sensori-master [assembleDebug]" />
       </list>
     </recent_temporary>
   </component>
@@ -310,10 +333,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="fixed timezone" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="479" y="255" width="914" height="434" key="#PSD" timestamp="1597142727210">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state x="948" y="311" width="914" height="434" key="#PSD" timestamp="1598386415993">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="479" y="255" width="914" height="434" key="#PSD/0.0.1536.834@0.0.1536.834" timestamp="1597142727210" />
+    <state x="948" y="311" key="#PSD/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598386415993" />
     <state x="1197" y="699" width="1900" height="1082" key="#PSD/0.54.3840.2106@0.54.3840.2106" timestamp="1594544508504" />
     <state x="798" y="437" key="#PSD/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594195317225" />
     <state x="1109" y="451" width="1600" height="1376" key="#Updates" timestamp="1594826915546">
@@ -340,6 +364,10 @@
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="736" y="360" key="#com.intellij.execution.impl.EditConfigurationsDialog/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594219966339" />
+    <state x="1644" y="507" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1598385223123">
+      <screen x="0" y="0" width="2560" height="1409" />
+    </state>
+    <state x="1644" y="507" key="#com.intellij.fileTypes.FileTypeChooser/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598385223123" />
     <state x="915" y="133" width="312" height="231" key="#com.intellij.ide.util.MemberChooser" timestamp="1598279955194">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
@@ -361,9 +389,10 @@
       <screen x="0" y="54" width="3840" height="2106" />
     </state>
     <state x="1086" y="444" width="1648" height="1390" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.54.3840.2106@0.54.3840.2106" timestamp="1595674100273" />
-    <state x="1051" y="480" width="638" height="542" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1596701070228">
+    <state x="1051" y="480" width="638" height="542" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1598369445511">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
+    <state x="1051" y="480" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598369445511" />
     <state x="1577" y="772" width="675" height="698" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.54.3840.2106@0.54.3840.2106" timestamp="1595921094590" />
     <state x="1051" y="480" width="638" height="542" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596701070228" />
     <state x="2371" y="46" width="1412" height="2114" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1596033297055">
@@ -379,10 +408,11 @@
     </state>
     <state x="517" y="272" key="AndroidCreateResourceFileDialog/0.0.1536.834@0.0.1536.834" timestamp="1597764265734" />
     <state x="861" y="460" width="838" height="482" key="AndroidCreateResourceFileDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1597672973151" />
-    <state x="1045" y="389" key="AndroidCreateXmlResourceDialog" timestamp="1597941980781">
+    <state x="1045" y="389" key="AndroidCreateXmlResourceDialog" timestamp="1598373923756">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="627" y="230" key="AndroidCreateXmlResourceDialog/0.0.1536.834@0.0.1536.834" timestamp="1597764311154" />
+    <state x="1045" y="389" key="AndroidCreateXmlResourceDialog/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598373923756" />
     <state x="1045" y="389" key="AndroidCreateXmlResourceDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1597941980781" />
     <state x="496" y="470" key="AndroidProcessChooserDialog" timestamp="1597677793965">
       <screen x="0" y="0" width="2560" height="1409" />
@@ -392,90 +422,99 @@
       <screen x="0" y="54" width="3840" height="2106" />
     </state>
     <state x="1203" y="383" width="1424" height="1459" key="CommitChangelistDialog2/0.54.3840.2106@0.54.3840.2106" timestamp="1594547050747" />
-    <state x="868" y="0" width="1590" height="1409" key="FileChooserDialogImpl" timestamp="1598351153069">
+    <state x="868" y="0" width="1590" height="1409" key="FileChooserDialogImpl" timestamp="1598373388857">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1598198144702" />
     <state x="521" y="119" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1597767833394" />
+    <state x="868" y="0" key="FileChooserDialogImpl/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598373388857" />
     <state x="868" y="0" width="1590" height="1409" key="FileChooserDialogImpl/0.0.2560.1409@0.0.2560.1409" timestamp="1598351153069" />
     <state x="1302" y="355" width="848" height="990" key="FileChooserDialogImpl/0.54.3840.2106@0.54.3840.2106" timestamp="1595609139360" />
     <state x="868" y="228" key="FileChooserDialogImpl/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594286393332" />
     <state x="868" y="201" key="FileChooserDialogImpl/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596790187859" />
-    <state width="2516" height="313" key="GridCell.Tab.0.bottom" timestamp="1598368502706">
+    <state width="1000" height="401" key="GridCell.Tab.0.bottom" timestamp="1598430834524">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="1258" height="391" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="1000" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598430834524" />
     <state width="2516" height="313" key="GridCell.Tab.0.bottom/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502706" />
     <state width="939" height="68" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446787" />
     <state width="1869" height="489" key="GridCell.Tab.0.bottom/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635366" />
     <state width="1258" height="211" key="GridCell.Tab.0.bottom/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901737" />
     <state width="2516" height="287" key="GridCell.Tab.0.bottom/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736860" />
-    <state width="2516" height="313" key="GridCell.Tab.0.center" timestamp="1598368502705">
+    <state width="1000" height="401" key="GridCell.Tab.0.center" timestamp="1598430834524">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="1258" height="391" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="1000" height="401" key="GridCell.Tab.0.center/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598430834524" />
     <state width="2516" height="313" key="GridCell.Tab.0.center/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502705" />
     <state width="939" height="68" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446786" />
     <state width="1869" height="489" key="GridCell.Tab.0.center/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635364" />
     <state width="1258" height="211" key="GridCell.Tab.0.center/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901736" />
     <state width="2516" height="287" key="GridCell.Tab.0.center/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736859" />
-    <state width="2516" height="313" key="GridCell.Tab.0.left" timestamp="1598368502705">
+    <state width="1000" height="401" key="GridCell.Tab.0.left" timestamp="1598430834524">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="1258" height="391" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1598353221025" />
+    <state width="1000" height="401" key="GridCell.Tab.0.left/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598430834524" />
     <state width="2516" height="313" key="GridCell.Tab.0.left/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502705" />
     <state width="939" height="68" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446786" />
     <state width="1869" height="489" key="GridCell.Tab.0.left/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635363" />
     <state width="1258" height="211" key="GridCell.Tab.0.left/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901736" />
     <state width="2516" height="287" key="GridCell.Tab.0.left/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736859" />
-    <state width="2516" height="313" key="GridCell.Tab.0.right" timestamp="1598368502706">
+    <state width="1000" height="401" key="GridCell.Tab.0.right" timestamp="1598430834524">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1367" height="185" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1597835311791" />
     <state width="1258" height="391" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="1000" height="401" key="GridCell.Tab.0.right/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598430834524" />
     <state width="2516" height="313" key="GridCell.Tab.0.right/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502706" />
     <state width="939" height="68" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1595265446787" />
     <state width="1869" height="489" key="GridCell.Tab.0.right/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635365" />
     <state width="1258" height="211" key="GridCell.Tab.0.right/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901736" />
     <state width="2516" height="287" key="GridCell.Tab.0.right/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1597409736860" />
-    <state width="2516" height="313" key="GridCell.Tab.1.bottom" timestamp="1598368502706">
+    <state width="618" height="275" key="GridCell.Tab.1.bottom" timestamp="1598386947201">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="1258" height="391" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="618" height="275" key="GridCell.Tab.1.bottom/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598386947201" />
     <state width="2516" height="313" key="GridCell.Tab.1.bottom/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502706" />
     <state width="917" height="36" key="GridCell.Tab.1.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561562" />
     <state width="1869" height="489" key="GridCell.Tab.1.bottom/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635368" />
     <state width="1258" height="266" key="GridCell.Tab.1.bottom/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
     <state width="1258" height="137" key="GridCell.Tab.1.bottom/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596881654739" />
-    <state width="2516" height="313" key="GridCell.Tab.1.center" timestamp="1598368502706">
+    <state width="618" height="275" key="GridCell.Tab.1.center" timestamp="1598386947201">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="1258" height="391" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="618" height="275" key="GridCell.Tab.1.center/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598386947201" />
     <state width="2516" height="313" key="GridCell.Tab.1.center/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502706" />
     <state width="917" height="36" key="GridCell.Tab.1.center/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561561" />
     <state width="1869" height="489" key="GridCell.Tab.1.center/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635367" />
     <state width="1258" height="266" key="GridCell.Tab.1.center/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
     <state width="1258" height="137" key="GridCell.Tab.1.center/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596881654739" />
-    <state width="2516" height="313" key="GridCell.Tab.1.left" timestamp="1598368502706">
+    <state width="618" height="275" key="GridCell.Tab.1.left" timestamp="1598386947201">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="1258" height="391" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="618" height="275" key="GridCell.Tab.1.left/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598386947201" />
     <state width="2516" height="313" key="GridCell.Tab.1.left/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502706" />
     <state width="917" height="36" key="GridCell.Tab.1.left/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561561" />
     <state width="1869" height="489" key="GridCell.Tab.1.left/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635366" />
     <state width="1258" height="266" key="GridCell.Tab.1.left/3840.1075.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1594224901733" />
     <state width="1258" height="137" key="GridCell.Tab.1.left/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596881654739" />
-    <state width="2516" height="313" key="GridCell.Tab.1.right" timestamp="1598368502706">
+    <state width="618" height="275" key="GridCell.Tab.1.right" timestamp="1598386947201">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state width="1323" height="2" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1593364379722" />
     <state width="1258" height="391" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1598353221026" />
+    <state width="618" height="275" key="GridCell.Tab.1.right/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598386947201" />
     <state width="2516" height="313" key="GridCell.Tab.1.right/0.0.2560.1409@0.0.2560.1409" timestamp="1598368502706" />
     <state width="917" height="36" key="GridCell.Tab.1.right/0.27.1920.1053@0.27.1920.1053" timestamp="1595088561561" />
     <state width="1869" height="489" key="GridCell.Tab.1.right/0.54.3840.2106@0.54.3840.2106" timestamp="1595608635368" />
@@ -510,11 +549,12 @@
     </state>
     <state x="1924" y="54" width="1908" height="2098" key="com.android.tools.idea.avdmanager.AvdListDialog/0.54.3840.2106@0.54.3840.2106" timestamp="1595086125331" />
     <state x="32" y="0" width="883" height="605" key="com.android.tools.idea.avdmanager.AvdListDialog/3840.1076.1536.827/0.0.2560.1409@0.0.2560.1409" timestamp="1596271967307" />
-    <state x="710" y="254" key="com.intellij.ide.util.TipDialog" timestamp="1598365223542">
+    <state x="710" y="254" key="com.intellij.ide.util.TipDialog" timestamp="1598428712174">
       <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="379" y="187" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1598194755889" />
     <state x="426" y="214" key="com.intellij.ide.util.TipDialog/0.0.1536.834@0.0.1536.834" timestamp="1597908647461" />
+    <state x="710" y="254" key="com.intellij.ide.util.TipDialog/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598428712174" />
     <state x="710" y="254" key="com.intellij.ide.util.TipDialog/0.0.2560.1409@0.0.2560.1409" timestamp="1598365223542" />
     <state x="533" y="261" key="com.intellij.ide.util.TipDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1595256246970" />
     <state x="1065" y="434" key="com.intellij.ide.util.TipDialog/0.54.3840.2106@0.54.3840.2106" timestamp="1596008482455" />
@@ -528,10 +568,11 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="463" y="15" width="611" height="804" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1597308175436" />
-    <state x="425" y="0" key="refactoring.ChangeSignatureDialog" timestamp="1594116040521">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="796" y="0" key="refactoring.ChangeSignatureDialog" timestamp="1598373937609">
+      <screen x="0" y="0" width="2560" height="1409" />
     </state>
     <state x="425" y="0" key="refactoring.ChangeSignatureDialog/0.0.1366.728@0.0.1366.728" timestamp="1594116040521" />
+    <state x="796" y="0" key="refactoring.ChangeSignatureDialog/0.0.2560.1409/3840.0.1920.1050@0.0.2560.1409" timestamp="1598373937609" />
     <state x="953" y="523" key="run.anything.popup" timestamp="1595405451857">
       <screen x="0" y="54" width="3840" height="2106" />
     </state>

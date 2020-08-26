@@ -48,5 +48,6 @@
     <string name="logout">Cerrar sesión</string>
     <string name="bluetoothNotAvailable">Bluetooth no disponible</string>
     <string name="not_connected">No conectado</string>
+    <string name="loginNotSucceded">error de inicio de sesion</string>
 
 </resources>
