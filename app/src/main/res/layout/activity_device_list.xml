@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".BluetoothConnection.ClientActivity">
+    tools:context=".BluetoothConnectionActivity">
     >
 
     <com.google.android.material.appbar.AppBarLayout

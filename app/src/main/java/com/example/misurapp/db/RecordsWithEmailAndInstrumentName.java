@@ -35,7 +35,7 @@ public class RecordsWithEmailAndInstrumentName implements Serializable {
 
     public byte[] serialize() throws IOException {
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArray);
         objectOutputStream.writeObject(this);
         return byteArray.toByteArray();
     }

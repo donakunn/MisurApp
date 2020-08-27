@@ -64,6 +64,7 @@
     <string name="bluetoothNotAvailable">Bluetooth non disponibile</string>
     <string name="not_connected">Non collegato</string>
     <string name="loginNotSucceded">Login non riuscito</string>
+    <string name="no_data">Nessun dato da inviare</string>
 
 
 </resources>

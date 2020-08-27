@@ -27,7 +27,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.misurapp.BluetoothConnection.ClientActivity;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
@@ -262,7 +261,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
         //pulsante condividi
         if (id == R.id.action_condividi) {
-            Intent intent = new Intent(BoyscoutDBValuesActivity.this, ClientActivity.class);
+            Intent intent = new Intent(BoyscoutDBValuesActivity.this, BluetoothConnectionActivity.class);
             intent.putExtra("sensorName", sensorName);
             startActivity(intent);
             return true;
