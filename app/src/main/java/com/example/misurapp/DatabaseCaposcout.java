@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
+import com.example.misurapp.BluetoothConnection.BluetoothServer;
 import com.example.misurapp.BluetoothConnection.Constants;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
@@ -72,7 +73,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
      * Member object for the chat services
      */
 
-    private BluetoothConnectionService btConnectionHandler = null;
+    private BluetoothServer btConnectionHandler = null;
 
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -151,7 +152,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
     private void startServer() {
         //SERVER IN ASCOLTO PER 300 SECONDI, SI PUO COLLEGARE A BOTTONE
         ensureDiscoverable();
-        btConnectionHandler = new BluetoothConnectionService(mHandler);
+        btConnectionHandler = new BluetoothServer(mHandler);
         btConnectionHandler.start();
 
     }

@@ -49,5 +49,6 @@
     <string name="bluetoothNotAvailable">Bluetooth no disponible</string>
     <string name="not_connected">No conectado</string>
     <string name="loginNotSucceded">error de inicio de sesion</string>
+    <string name="no_data">"No hay datos para enviar "</string>
 
 </resources>
