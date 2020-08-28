@@ -17,19 +17,15 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
+import com.example.misurapp.utility.DeleteRowActions;
 
 import java.util.List;
 import java.util.Locale;
@@ -60,7 +56,6 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
 
-        //da cambiare con il sensore relativo
         if (instrumentRecordsReadFromDB.isEmpty()) {
             final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage(R.string.noValue);
@@ -110,57 +105,16 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    actionsOnDeleteButtonPress(v, record);
+                 DeleteRowActions deleteRowActions = new DeleteRowActions
+                         (BoyscoutDBValuesActivity.this,appDb,
+                                 linearLayout,InstrumentsDBSchema.BoyscoutTable.TABLENAME);
+                    deleteRowActions.actionsOnDeleteButtonPress(v, record);
                 }
             });
 
             dbBoyScoutQuery.addView(deleteButton);
             linearLayout.addView(dbBoyScoutQuery);
         }
-    }
-
-    private void actionsOnDeleteButtonPress(View v, InstrumentRecord record) {
-        v.startAnimation(AnimationUtils.loadAnimation
-                (BoyscoutDBValuesActivity.this, R.anim.button_click));
-        appDb.deleteARow(InstrumentsDBSchema.BoyscoutTable.TABLENAME,record.getId());
-        Toast toast = Toast.makeText(getApplicationContext(),
-                getResources().getString(R.string.cancellato), Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, 50);
-        toast.show();
-        deleteAndRedraw(v);
-    }
-
-    private void deleteAndRedraw(View v) {
-        final View row = (View) v.getParent();
-        onDeleteAnimation(row);
-        linearLayout.postDelayed(new Runnable() {
-            public void run() {
-                ViewGroup container = ((ViewGroup) row.getParent());
-                container.removeView(row);
-                container.invalidate();
-            }
-        }, 500);
-    }
-
-    private void onDeleteAnimation(final View row) {
-        Animation fadeout = new AlphaAnimation(1.f, 0.f);
-        fadeout.setDuration(500);
-        fadeout.setAnimationListener(new Animation.AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                row.setVisibility(View.GONE);
-            }
-        });
-        row.startAnimation(fadeout);
     }
 
     private void setAppLocale(String localCode) {

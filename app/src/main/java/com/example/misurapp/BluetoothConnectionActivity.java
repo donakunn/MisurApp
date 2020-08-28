@@ -231,21 +231,19 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-                case Constants.MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                        Toast.makeText(BluetoothConnectionActivity.this,
-                                getApplicationContext().getString(R.string.connectedTo)
-                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                    break;
                 case Constants.MESSAGE_TOAST:
                     if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
                         Toast.makeText(BluetoothConnectionActivity.this,
                                 getApplicationContext().getString(R.string.connectionLost),
                                 Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if (msg.getData().getString(Constants.TOAST)
+                            .equals(Constants.CONNECTIONFAILED)){
                         Toast.makeText(BluetoothConnectionActivity.this,
                                 getApplicationContext().getString(R.string.connectionFailed),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(BluetoothConnectionActivity.this,
+                                getApplicationContext().getString(R.string.dataSendComplete),
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;
@@ -322,9 +320,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                     if (dataReady) {
                         // Create the result Intent and include the MAC address
                         connectDevice(nameAndAddress[1], true); //check se corretto
-                        Toast.makeText(BluetoothConnectionActivity.this,
-                                R.string.dataSendComplete,
-                                Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(BluetoothConnectionActivity.this,
                                 R.string.no_data,

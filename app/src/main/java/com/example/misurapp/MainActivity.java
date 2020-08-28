@@ -43,7 +43,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
-    TextView lblInfo, lblHeader;
     SignInButton btnLogin;
     Button btnLogout;
     GoogleSignInOptions gso;

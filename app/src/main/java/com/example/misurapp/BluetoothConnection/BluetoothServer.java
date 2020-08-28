@@ -92,11 +92,9 @@ public final class BluetoothServer extends BluetoothConnectionService {
      * Start the ConnectedThread to begin managing a Bluetooth connection
      *
      * @param socket The BluetoothSocket on which the connection was made
-     * @param device The BluetoothDevice that has been connected
      */
 
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
-            device) {
+    public synchronized void connected(BluetoothSocket socket) {
         Log.d(TAG, "connected");
 
         // Cancel any thread currently running a connection
@@ -116,7 +114,6 @@ public final class BluetoothServer extends BluetoothConnectionService {
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        sendDeviceNameToHandler(device);
         updateUserInterfaceTitle();
     }
 
@@ -171,7 +168,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
                                 // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice());
+                                connected(socket);
                                 break;
                             case STATE_NONE:
                             case STATE_CONNECTED:
@@ -209,6 +206,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
 
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
         private final DataInputStream dataInputStream;
 
         public ConnectedThread(BluetoothSocket socket) {
@@ -223,7 +221,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
                 Log.e(TAG, "temp sockets not created", e);
             }
 
-            InputStream mmInStream = tmpIn;
+            mmInStream = tmpIn;
             dataInputStream = new DataInputStream(mmInStream);
             setStateAndUpdateTitle(STATE_CONNECTED);
         }
