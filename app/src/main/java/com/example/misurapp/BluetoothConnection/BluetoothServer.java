@@ -3,15 +3,12 @@ package com.example.misurapp.BluetoothConnection;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public final class BluetoothServer extends BluetoothConnectionService {
 
@@ -27,11 +24,11 @@ public final class BluetoothServer extends BluetoothConnectionService {
         super(handler);
     }
 
+
     /**
      * Start the chat service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
-
     public synchronized void start() {
         Log.d(TAG, "start");
 
@@ -66,9 +63,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
             mAcceptThread = null;
         }
 
-        mState = STATE_NONE;
-        // Update UI title
-        updateUserInterfaceTitle();
+        setStateAndUpdateTitle(STATE_NONE);
     }
 
     /**
@@ -89,7 +84,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
     protected void connectionLost() {
         super.connectionLost();
 
-// Start the service over to restart listening mode
+        // Start the service over to restart listening mode
         BluetoothServer.this.start();
     }
 
@@ -101,8 +96,8 @@ public final class BluetoothServer extends BluetoothConnectionService {
      */
 
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice
-            device, final String socketType) {
-        Log.d(TAG, "connected, Socket Type:" + socketType);
+            device) {
+        Log.d(TAG, "connected");
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
@@ -117,16 +112,11 @@ public final class BluetoothServer extends BluetoothConnectionService {
         }
 
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket, socketType);
+        mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        //Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-        //Bundle bundle = new Bundle();
-        //bundle.putString(Constants.DEVICE_NAME, device.getName());
-        //msg.setData(bundle);
-        //mHandler.sendMessage(msg);
-        // Update UI title
+        sendDeviceNameToHandler(device);
         updateUserInterfaceTitle();
     }
 
@@ -139,7 +129,6 @@ public final class BluetoothServer extends BluetoothConnectionService {
     private class AcceptThread extends Thread {
         // The local server socket
         private final BluetoothServerSocket mmServerSocket;
-        private String mSocketType;
 
         public AcceptThread() {
             BluetoothServerSocket tmp = null;
@@ -149,16 +138,16 @@ public final class BluetoothServer extends BluetoothConnectionService {
                 tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME,
                         MY_UUID);
             } catch (IOException e) {
-                Log.e(TAG, "Socket Type: " + mSocketType + "listen() failed", e);
+                Log.e(TAG, "listen() failed", e);
             }
             mmServerSocket = tmp;
-            mState = STATE_LISTEN;
+
+            setStateAndUpdateTitle(STATE_LISTEN);
         }
 
         public void run() {
-            Log.d(TAG, "Socket Type: " + mSocketType +
-                    "BEGIN mAcceptThread" + this);
-            setName("AcceptThread" + mSocketType);
+            Log.d(TAG, "BEGIN mAcceptThread" + this);
+            setName("AcceptThread");
 
             BluetoothSocket socket;
 
@@ -168,9 +157,10 @@ public final class BluetoothServer extends BluetoothConnectionService {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
-                    mState = STATE_CONNECTING;
+
+                    setStateAndUpdateTitle(STATE_CONNECTING);
                 } catch (IOException e) {
-                    Log.e(TAG, "Socket Type: " + mSocketType + "accept() failed", e);
+                    Log.e(TAG, "accept() failed", e);
                     break;
                 }
 
@@ -181,8 +171,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
                                 // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice(),
-                                        mSocketType);
+                                connected(socket, socket.getRemoteDevice());
                                 break;
                             case STATE_NONE:
                             case STATE_CONNECTED:
@@ -197,16 +186,18 @@ public final class BluetoothServer extends BluetoothConnectionService {
                     }
                 }
             }
-            Log.i(TAG, "END mAcceptThread, socket Type: " + mSocketType);
+            Log.i(TAG, "END mAcceptThread");
 
         }
 
         public void cancel() {
-            Log.d(TAG, "Socket Type" + mSocketType + "cancel " + this);
+            Log.d(TAG, "cancel " + this);
             try {
                 mmServerSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "Socket Type" + mSocketType + "close() of server failed", e);
+                Log.e(TAG, "close() of server failed", e);
+            } finally {
+                setStateAndUpdateTitle(STATE_NONE);
             }
         }
     }
@@ -218,11 +209,10 @@ public final class BluetoothServer extends BluetoothConnectionService {
 
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
         private final DataInputStream dataInputStream;
 
-        public ConnectedThread(BluetoothSocket socket, String socketType) {
-            Log.d(TAG, "create ConnectedThread: " + socketType);
+        public ConnectedThread(BluetoothSocket socket) {
+            Log.d(TAG, "create ConnectedThread");
             mmSocket = socket;
             InputStream tmpIn = null;
 
@@ -233,9 +223,9 @@ public final class BluetoothServer extends BluetoothConnectionService {
                 Log.e(TAG, "temp sockets not created", e);
             }
 
-            mmInStream = tmpIn;
+            InputStream mmInStream = tmpIn;
             dataInputStream = new DataInputStream(mmInStream);
-            mState = STATE_CONNECTED;
+            setStateAndUpdateTitle(STATE_CONNECTED);
         }
 
         public void run() {
@@ -244,17 +234,14 @@ public final class BluetoothServer extends BluetoothConnectionService {
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
-                    int length = dataInputStream.readInt();          // read length of incoming message
-                    if(length>0) {
+                    int length = dataInputStream.readInt();      // read length of incoming message
+                    if (length > 0) {
                         byte[] data = new byte[length];
                         dataInputStream.readFully(data, 0, data.length); // read the message
-                        mHandler.obtainMessage(Constants.MESSAGE_READ,data.length, -1, data)
+                        mHandler.obtainMessage(Constants.MESSAGE_READ, data.length, -1, data)
                                 .sendToTarget();
+                        setStateAndUpdateTitle(STATE_NONE);
                     }
-                    /*// Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-*/
-                    //Send the obtained bytes to the UI Activity
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
@@ -268,6 +255,8 @@ public final class BluetoothServer extends BluetoothConnectionService {
                 mmSocket.close();
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
+            } finally {
+                setStateAndUpdateTitle(STATE_NONE);
             }
         }
     }

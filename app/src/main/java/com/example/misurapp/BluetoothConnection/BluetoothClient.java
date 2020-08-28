@@ -2,18 +2,18 @@ package com.example.misurapp.BluetoothConnection;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
-public class BluetoothClient extends BluetoothConnectionService{
+
+/**
+ * This class manage bluetooth connection on client-side
+ */
+public class BluetoothClient extends BluetoothConnectionService {
 
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
@@ -56,9 +56,13 @@ public class BluetoothClient extends BluetoothConnectionService{
         updateUserInterfaceTitle();
     }
 
+    /**
+     * Set data to send over bluetooth
+     *
+     * @param data bytes array to send
+     */
     public void setData(byte[] data) {
-int c = data.length;
-        System.arraycopy(data,0,this.data,0,data.length);
+        System.arraycopy(data, 0, this.data, 0, data.length);
     }
 
     /**
@@ -86,40 +90,15 @@ int c = data.length;
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
 
-        // Send the name of the connected device back to the UI Activity
-        //Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        //bundle.putString(Constants.DEVICE_NAME, device.getName());
-        //msg.setData(bundle);
-        //mHandler.sendMessage(msg);
+        sendDeviceNameToHandler(device);
         // Update UI title
         updateUserInterfaceTitle();
     }
 
     /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
-     */
-
-            public void write(byte[] out) {
-                // Create temporary object
-                ConnectedThread r;
-                // Synchronize a copy of the ConnectedThread
-                synchronized (this) {
-                    if (mState != STATE_CONNECTED) return;
-                    r = mConnectedThread;
-                }
-                // Perform the write unsynchronized
-                r.write(out);
-            }
-
-
-    /**
      * Stop all threads
      */
-    public synchronized void stop() {       //da copiare nel client
+    public synchronized void stop() {
         Log.d(TAG, "stop");
 
         if (mConnectThread != null) {
@@ -132,11 +111,9 @@ int c = data.length;
             mConnectedThread = null;
         }
 
-        mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+        setStateAndUpdateTitle(STATE_NONE);
     }
-
 
 
     /**
@@ -162,15 +139,16 @@ int c = data.length;
                 Log.e(TAG, "Socket create() failed", e);
             }
             mmSocket = tmp;
-            mState = STATE_CONNECTING;
+            setStateAndUpdateTitle(STATE_CONNECTING);
+
         }
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectThread SocketType:");
-            setName("ConnectThread" );
+            setName("ConnectThread");
 
             // Always cancel discovery because it will slow down a connection
-             mAdapter.cancelDiscovery();
+            mAdapter.cancelDiscovery();
 
             // Make a connection to the BluetoothSocket
             try {
@@ -213,8 +191,8 @@ int c = data.length;
 
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
-        private final OutputStream mmOutStream;
-private final DataOutputStream out;
+        private final DataOutputStream out;
+
         public ConnectedThread(BluetoothSocket socket) {
             Log.d(TAG, "create ConnectedThread: ");
             mmSocket = socket;
@@ -227,15 +205,15 @@ private final DataOutputStream out;
                 Log.e(TAG, "temp sockets not created", e);
             }
 
-            mmOutStream = tmpOut;
+            OutputStream mmOutStream = tmpOut;
             out = new DataOutputStream(mmOutStream);
-            mState = STATE_CONNECTED;
+
+            setStateAndUpdateTitle(STATE_CONNECTED);
         }
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread and sending Data");
-                write(data);
-
+            write(data);
         }
 
 
@@ -244,14 +222,16 @@ private final DataOutputStream out;
          *
          * @param buffer The bytes to write
          */
-
         public void write(byte[] buffer) {
             try {
-                out.writeInt(buffer.length); // write length of the message
-                out.write(buffer);           // write the message
+                out.writeInt(buffer.length);
+                out.write(buffer);
 
+                setStateAndUpdateTitle(STATE_NONE);
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
+
+                setStateAndUpdateTitle(STATE_NONE);
             }
         }
 
@@ -260,7 +240,11 @@ private final DataOutputStream out;
                 mmSocket.close();
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
+
+                setStateAndUpdateTitle(STATE_NONE);
             }
         }
+
+
     }
 }

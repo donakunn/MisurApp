@@ -51,4 +51,13 @@
     <string name="not_connected">Non collegato</string>
     <string name="loginNotSucceded">Login non riuscito</string>
     <string name="no_data">Nessun dato da inviare</string>
+    <string name="connectionFailed">Connessione fallita</string>
+    <string name="connectionLost">Connessione persa</string>
+    <string name="connected">Connesso</string>
+    <string name="connecting">Connessione in corso</string>
+    <string name="listen">In attesa di connessione</string>
+    <string name="connectedTo">Connesso con</string>
+    <string name="dataDownload">Ricezione dati..</string>
+    <string name="dataSendComplete">Invio dati riuscito</string>
+    <string name="newData">Nuovi dati ricevuti</string>
 </resources>

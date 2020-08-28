@@ -136,8 +136,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         setResult(Activity.RESULT_CANCELED);
 
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -219,29 +221,32 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothConnectionService.STATE_CONNECTED:
+                            setTitle(getApplicationContext().getString(R.string.connected));
                             break;
                         case BluetoothConnectionService.STATE_CONNECTING:
+                            setTitle(getApplicationContext().getString(R.string.connecting));
                             break;
-                        case BluetoothConnectionService.STATE_LISTEN:
                         case BluetoothConnectionService.STATE_NONE:
+                            setTitle(getApplicationContext().getString(R.string.not_connected));
                             break;
                     }
                     break;
-                case Constants.MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
+                case Constants.MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                        Toast.makeText(BluetoothConnectionActivity.this,
+                                getApplicationContext().getString(R.string.connectedTo)
+                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
-                case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    try {
-                        RecordsWithEmailAndInstrumentName recordsReceived =
-                                RecordsWithEmailAndInstrumentName.deserialize(readBuf);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                case Constants.MESSAGE_TOAST:
+                    if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
+                        Toast.makeText(BluetoothConnectionActivity.this,
+                                getApplicationContext().getString(R.string.connectionLost),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(BluetoothConnectionActivity.this,
+                                getApplicationContext().getString(R.string.connectionFailed),
+                                Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -274,7 +279,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
-        setTitle(R.string.scanning);
+        setTitle(getApplicationContext().getString(R.string.scanning));
 
         // Turn on sub-title for new devices
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
@@ -303,7 +308,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder
                     (BluetoothConnectionActivity.this);
             alertDialog.setMessage
-                    (R.string.conferma_invio_dati + " " + nameAndAddress[0]);
+                    (getApplicationContext().getString(R.string.conferma_invio_dati)
+                            + " " + nameAndAddress[0]);
             alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
@@ -316,15 +322,14 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                     if (dataReady) {
                         // Create the result Intent and include the MAC address
                         connectDevice(nameAndAddress[1], true); //check se corretto
+                        Toast.makeText(BluetoothConnectionActivity.this,
+                                R.string.dataSendComplete,
+                                Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BluetoothConnectionActivity.this, R.string.no_data,
+                        Toast.makeText(BluetoothConnectionActivity.this,
+                                R.string.no_data,
                                 Toast.LENGTH_SHORT).show();
                     }
-                   /* Intent intent = new Intent();
-                    intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-                    // Set result and finish this Activity
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();*/
                 }
             });
 
@@ -335,21 +340,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 }
             });
             alertDialog.create().show();
-
-            // Cancel discovery because it's costly and we're about to connect
-            // mBtAdapter.cancelDiscovery();
-
-            // Get the device MAC address, which is the last 17 chars in the View
-            /*String info = ((TextView) v).getText().toString();
-            String address = info.substring(info.length() - 17);*/
-
-            // Create the result Intent and include the MAC address
-           /* Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);*/
-
-            // Set result and finish this Activity
-           /* setResult(Activity.RESULT_OK, intent);
-            finish();*/
         }
     };
 
@@ -403,12 +393,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * @param records
      */
     private void setDataToSend(RecordsWithEmailAndInstrumentName records) throws IOException {
-        // Check that we're actually connected before trying anything
-        /*if (btConnectionHandler.getState() != BluetoothConnectionService.STATE_CONNECTED) {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
-        }*/
-
         // Check that there's actually something to send
         if (records != null) {
             // Get the message bytes and tell the BluetoothChatService to write
@@ -452,8 +436,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
             listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(BluetoothConnectionActivity.this);
-            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder
+                    (BluetoothConnectionActivity.this);
+            mBuilder.setSingleChoiceItems(listItems, -1,
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = getIntent();
