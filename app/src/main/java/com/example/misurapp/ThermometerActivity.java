@@ -16,7 +16,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +23,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
@@ -39,7 +38,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
     private float valore;
     private TextView misura;
     private ImageButton dati;
-    private static final String sensorUsed="thermometer";
+    private static final String instrumentName ="thermometer";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -68,7 +67,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
             }
         });
     }
@@ -227,7 +226,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(ThermometerActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }

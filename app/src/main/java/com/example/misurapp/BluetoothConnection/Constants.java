@@ -33,5 +33,5 @@ public interface Constants {
     String TOAST = "toast";
     String CONNECTIONLOST= "connection_lost";
     String CONNECTIONFAILED= "connection_failed";
-
+    String DATASENDCOMPLETE= "data_send_complete";
 }

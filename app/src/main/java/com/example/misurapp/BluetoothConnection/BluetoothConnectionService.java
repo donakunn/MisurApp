@@ -97,44 +97,29 @@
 
             protected void connectionFailed() {
                 // Send a failure message back to the Activity
-                Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.TOAST,Constants.CONNECTIONFAILED);
-                msg.setData(bundle);
-                mHandler.sendMessage(msg);
-
-                // Update UI title
-                setStateAndUpdateTitle(STATE_NONE);
-
+                sendStringToastToHandler(Constants.CONNECTIONFAILED);
             }
-
-            /**
-             * Send the name of the connected device back to the UI Activity
-             *
-             * @param device object of the connected device
-             */
-            protected void sendDeviceNameToHandler(BluetoothDevice device) {
-                Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.DEVICE_NAME, device.getName());
-                msg.setData(bundle);
-                mHandler.sendMessage(msg);
-            }
-
 
             /**
              * Indicate that the connection was lost and notify the UI Activity.
              */
             protected void connectionLost() {
                 // Send a failure message back to the Activity
+                sendStringToastToHandler(Constants.CONNECTIONLOST);
+            }
+
+            /**
+             * Send a state message to be shown on a Toast to the Handler.
+             * @param message
+             */
+            protected void sendStringToastToHandler (String message) {
                 Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.TOAST, Constants.CONNECTIONLOST);
+                bundle.putString(Constants.TOAST, message);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
 
                 setStateAndUpdateTitle(STATE_NONE);
-
             }
 
             /**

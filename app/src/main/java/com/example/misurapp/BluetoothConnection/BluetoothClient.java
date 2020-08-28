@@ -69,9 +69,8 @@ public class BluetoothClient extends BluetoothConnectionService {
      * Start the ConnectedThread to begin managing a Bluetooth connection
      *
      * @param socket The BluetoothSocket on which the connection was made
-     * @param device The BluetoothDevice that has been connected
      */
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+    public synchronized void connected(BluetoothSocket socket) {
         Log.d(TAG, "connected");
 
         // Cancel the thread that completed the connection
@@ -90,7 +89,6 @@ public class BluetoothClient extends BluetoothConnectionService {
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
 
-        sendDeviceNameToHandler(device);
         // Update UI title
         updateUserInterfaceTitle();
     }
@@ -172,7 +170,7 @@ public class BluetoothClient extends BluetoothConnectionService {
             }
 
             // Start the connected thread
-            connected(mmSocket, mmDevice);
+            connected(mmSocket);
         }
 
         public void cancel() {
@@ -227,7 +225,7 @@ public class BluetoothClient extends BluetoothConnectionService {
                 out.writeInt(buffer.length);
                 out.write(buffer);
 
-                setStateAndUpdateTitle(STATE_NONE);
+                sendStringToastToHandler(Constants.DATASENDCOMPLETE);
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
 

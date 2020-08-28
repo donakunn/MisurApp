@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -31,9 +30,11 @@ import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
 import com.example.misurapp.BluetoothConnection.BluetoothServer;
 import com.example.misurapp.BluetoothConnection.Constants;
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.ScoutMasterInstrumentRecord;
+import com.example.misurapp.utility.DeleteRowActions;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -50,15 +51,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
     private static final String TAG = "BluetoothChatFragment";
 
     // Intent request codes
-    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
-
-    /**
-     * Name of the connected device
-     */
-
-    private String mConnectedDeviceName = null;
 
     /**
      * Local Bluetooth adapter
@@ -185,23 +178,18 @@ public class DatabaseCaposcout extends AppCompatActivity {
                                 scoutMasterRecordListMaker
                                         (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
                         saveReceivedRecordsOnDB(receivedValues);
-                        linearLayout.invalidate();
                         Toast.makeText(DatabaseCaposcout.this,
                                 getApplicationContext().getString(R.string.newData),
                                 Toast.LENGTH_SHORT).show();
 
+                        //refresh data list
+                        linearLayout.removeAllViews();
+                        showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-                    break;
-                case Constants.MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                    Toast.makeText(DatabaseCaposcout.this,
-                            getApplicationContext().getString(R.string.connectedTo)
-                                    + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
                 case Constants.MESSAGE_TOAST:
                     if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
@@ -294,7 +282,10 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
             cancella.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    v.startAnimation(AnimationUtils.loadAnimation(DatabaseCaposcout.this, R.anim.button_click));
+                    DeleteRowActions deleteRowActions = new DeleteRowActions
+                            (DatabaseCaposcout.this,dbManager,
+                                    linearLayout, InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
+                    deleteRowActions.actionsOnDeleteButtonPress(v, record);
 
                 }
             });

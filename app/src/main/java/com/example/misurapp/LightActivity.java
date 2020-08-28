@@ -16,7 +16,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +23,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
     private ImageButton salva;
     private ImageButton dati;
     private DbManager dbManager = new DbManager(this);
-    private static final String sensorUsed="Sensor.TYPE_LIGHT";
+    private static final String instrumentName ="photometer";
     String [] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -67,7 +67,7 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
             }
         });
     }
@@ -217,7 +217,7 @@ public class LightActivity extends AppCompatActivity implements SensorEventListe
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(LightActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }

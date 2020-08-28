@@ -16,17 +16,15 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
@@ -39,7 +37,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
     private float valore;
     private TextView misura;
     float angle;
-    private static final String sensorUsed="hygrometer";
+    private static final String instrumentName ="hygrometer";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -67,7 +65,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
             }
         });
 
@@ -188,7 +186,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(HygrometerActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }
