@@ -31,7 +31,7 @@
     <string name="LoginRequest">Login necessario per procedere</string>
     <string name="LoginComplete">Login effettuato con successo</string>
     <string name="LogoutComplete">Logout completato con successo</string>
-
+    <string name="logout">Disconnettersi</string>
 
     <string name="dialog_annulla">Annulla</string>
     <string name="title_paired_devices">Dispositivi accoppiati</string>
@@ -60,13 +60,20 @@
     <string name="misura">Misura</string>
 
     <string name="conferma_google_drive">Vuoi salvare le misure su Google Drive?</string>
-    <string name="logout">Disconnettersi</string>
+
     <string name="bluetoothNotAvailable">Bluetooth non disponibile</string>
     <string name="not_connected">Non collegato</string>
     <string name="loginNotSucceded">Login non riuscito</string>
     <string name="no_data">Nessun dato da inviare</string>
-
-
+    <string name="connectionFailed">Connessione fallita</string>
+    <string name="connectionLost">Connessione persa</string>
+    <string name="connected">Connesso</string>
+    <string name="connecting">Connessione in corso</string>
+    <string name="listen">In attesa di connessione</string>
+    <string name="connectedTo">Connesso con</string>
+    <string name="dataDownload">Ricezione dati..</string>
+    <string name="dataSendComplete">Invio dati riuscito</string>
+    <string name="newData">Nuovi dati ricevuti</string>
 </resources>
 
 

@@ -19,10 +19,12 @@
         package com.example.misurapp.BluetoothConnection;
 
         import android.bluetooth.BluetoothAdapter;
+        import android.bluetooth.BluetoothDevice;
         import android.os.Bundle;
         import android.os.Handler;
         import android.os.Message;
         import android.util.Log;
+
         import java.util.UUID;
 
 
@@ -81,7 +83,8 @@
                 mNewState = mState;
 
                 // Give the new state to the Handler so the UI Activity can update
-                mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
+                mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1)
+                        .sendToTarget();
             }
 
             /**
@@ -96,33 +99,52 @@
                 // Send a failure message back to the Activity
                 Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.TOAST, "Unable to connect device"); //da creare stringa
+                bundle.putString(Constants.TOAST,Constants.CONNECTIONFAILED);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
 
-                mState = STATE_NONE;
                 // Update UI title
-                updateUserInterfaceTitle();
+                setStateAndUpdateTitle(STATE_NONE);
 
+            }
+
+            /**
+             * Send the name of the connected device back to the UI Activity
+             *
+             * @param device object of the connected device
+             */
+            protected void sendDeviceNameToHandler(BluetoothDevice device) {
+                Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.DEVICE_NAME, device.getName());
+                msg.setData(bundle);
+                mHandler.sendMessage(msg);
             }
 
 
             /**
              * Indicate that the connection was lost and notify the UI Activity.
              */
-
             protected void connectionLost() {
                 // Send a failure message back to the Activity
                 Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.TOAST, "Device connection was lost");
+                bundle.putString(Constants.TOAST, Constants.CONNECTIONLOST);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
 
-                mState = STATE_NONE;
-                // Update UI title
-                updateUserInterfaceTitle();
+                setStateAndUpdateTitle(STATE_NONE);
 
+            }
+
+            /**
+             * Change connection state and call updateUserInterfaceTitle()
+             *
+             * @param state new state of the connection
+             */
+            protected void setStateAndUpdateTitle(int state) {
+                mState = state;
+                updateUserInterfaceTitle();
             }
         }
 

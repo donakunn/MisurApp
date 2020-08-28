@@ -50,5 +50,14 @@
     <string name="not_connected">Not connected</string>
     <string name="loginNotSucceded">" login failed"</string>
     <string name="no_data">No data to send</string>
+    <string name="connectionFailed">Connection failed</string>
+    <string name="connectionLost">Connection Lost</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connection in progress</string>
+    <string name="listen">Waiting for connection</string>
+    <string name="connectedTo">Connected to</string>
+    <string name="dataDownload">Downloading data..</string>
+    <string name="dataSendComplete">Sending data successful</string>
+    <string name="newData">New data received</string>
 
 </resources>

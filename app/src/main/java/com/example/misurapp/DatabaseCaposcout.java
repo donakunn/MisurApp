@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -34,7 +33,6 @@ import com.example.misurapp.BluetoothConnection.Constants;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
 import com.example.misurapp.db.InstrumentRecord;
-import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.db.ScoutMasterInstrumentRecord;
 
 import java.io.IOException;
@@ -165,23 +163,21 @@ public class DatabaseCaposcout extends AppCompatActivity {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothConnectionService.STATE_CONNECTED:
-                            setTitle("Connected");
+                            setTitle(getApplicationContext().getString(R.string.connected));
                             break;
                         case BluetoothConnectionService.STATE_CONNECTING:
-                            setTitle("Connecting");
+                            setTitle(getApplicationContext().getString(R.string.connecting));
+                            break;
+                        case BluetoothConnectionService.STATE_NONE:
+                            setTitle(getApplicationContext().getString(R.string.not_connected));
                             break;
                         case BluetoothConnectionService.STATE_LISTEN:
-                            setTitle("Listening");
-                        case BluetoothConnectionService.STATE_NONE:
-                            break;
+                            setTitle(getApplicationContext().getString(R.string.listen));
+
                     }
                     break;
-                case Constants.MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    break;
                 case Constants.MESSAGE_READ:
-                    setTitle("Downloading queries");
+                    setTitle(getApplicationContext().getString(R.string.dataDownload));
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     try {
@@ -189,11 +185,33 @@ public class DatabaseCaposcout extends AppCompatActivity {
                                 scoutMasterRecordListMaker
                                         (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
                         saveReceivedRecordsOnDB(receivedValues);
-                        showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
+                        linearLayout.invalidate();
+                        Toast.makeText(DatabaseCaposcout.this,
+                                getApplicationContext().getString(R.string.newData),
+                                Toast.LENGTH_SHORT).show();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                    }
+                    break;
+                case Constants.MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                    Toast.makeText(DatabaseCaposcout.this,
+                            getApplicationContext().getString(R.string.connectedTo)
+                                    + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
+                        Toast.makeText(DatabaseCaposcout.this,
+                                getApplicationContext().getString(R.string.connectionLost),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(DatabaseCaposcout.this,
+                                getApplicationContext().getString(R.string.connectionFailed),
+                                Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
