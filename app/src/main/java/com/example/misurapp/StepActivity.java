@@ -38,7 +38,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private Sensor sensor;
     private TextView misura;
     private ImageView imageView;
-    private static final String sensorUsed="lastStepsRegister";
+    private static final String instrumentName ="lastStepsRegister";
     private DbManager dbManager = new DbManager(this);
     private int stepsRegister = 0;
     private int stepsShow;
@@ -97,7 +97,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,(float)stepsShow);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,(float)stepsShow);
 
 
                 //feedback
@@ -240,7 +240,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(StepActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }

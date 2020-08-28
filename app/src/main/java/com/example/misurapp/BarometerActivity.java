@@ -37,7 +37,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
     private float valore;
     private TextView misura;
     private float angle;
-    private static final String sensorUsed = "barometer";
+    private static final String instrumentName = "barometer";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -65,7 +65,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
             }
         });
 
@@ -191,7 +191,7 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(BarometerActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }

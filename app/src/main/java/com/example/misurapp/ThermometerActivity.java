@@ -38,7 +38,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
     private float valore;
     private TextView misura;
     private ImageButton dati;
-    private static final String sensorUsed="thermometer";
+    private static final String instrumentName ="thermometer";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -67,7 +67,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
             }
         });
     }
@@ -226,7 +226,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(ThermometerActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }

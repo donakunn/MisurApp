@@ -39,7 +39,7 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
     private TextView misura;
     private float angle;
     private float altitude;
-    private static final String sensorUsed = "altimeter";
+    private static final String instrumentName = "altimeter";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -67,7 +67,7 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),instrumentName,valore);
             }
         });
     }
@@ -207,7 +207,7 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(AltimeterActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName",instrumentName);
             startActivity(intent);
             return true;
         }

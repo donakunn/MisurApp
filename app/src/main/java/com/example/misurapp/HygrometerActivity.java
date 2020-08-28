@@ -37,7 +37,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
     private float valore;
     private TextView misura;
     float angle;
-    private static final String sensorUsed="hygrometer";
+    private static final String instrumentName ="hygrometer";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -65,7 +65,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed,valore);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
             }
         });
 
@@ -186,7 +186,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(HygrometerActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }

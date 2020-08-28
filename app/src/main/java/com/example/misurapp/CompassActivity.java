@@ -46,7 +46,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
     private float[] mLastMagnetometer = new float[3];
     private boolean mLastAccelerometerSet = false;
     private boolean mLastMagnetometerSet = false;
-    private static final String sensorUsed = "compass";
+    private static final String instrumentName = "compass";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
@@ -72,7 +72,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             @Override
             public void onClick(View v) {
                 v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),sensorUsed, (float) mAzimuth);
+                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName, (float) mAzimuth);
             }
         });
 
@@ -261,7 +261,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         }
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(CompassActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName",sensorUsed);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }
