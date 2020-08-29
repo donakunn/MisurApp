@@ -63,6 +63,7 @@ import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
 import com.example.misurapp.db.DbManager;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
@@ -210,47 +211,66 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             // Otherwise, setup the chat session
         } else if (btConnectionHandler == null) {
-            btConnectionHandler = new BluetoothClient(mHandler);
+            btConnectionHandler = new BluetoothClient(getClientHandler());
+        }
+    }
+    private class ClientHandler extends Handler {
+        //Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<BluetoothConnectionActivity> clientWeakReference;
+
+        public ClientHandler(BluetoothConnectionActivity clientIstance) {
+            clientWeakReference = new WeakReference<>(clientIstance);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            BluetoothConnectionActivity handler = clientWeakReference.get();
+            if (handler != null) {
+                switch (msg.what) {
+                    case Constants.MESSAGE_STATE_CHANGE:
+                        switch (msg.arg1) {
+                            case BluetoothConnectionService.STATE_CONNECTED:
+                                setTitle(getApplicationContext().getString(R.string.connected));
+                                break;
+                            case BluetoothConnectionService.STATE_CONNECTING:
+                                setTitle(getApplicationContext().getString(R.string.connecting));
+                                break;
+                            case BluetoothConnectionService.STATE_NONE:
+                                setTitle(getApplicationContext().getString(R.string.not_connected));
+                                break;
+                        }
+                        break;
+                    case Constants.MESSAGE_TOAST:
+                        if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
+                            Toast.makeText(BluetoothConnectionActivity.this,
+                                    getApplicationContext().getString(R.string.connectionLost),
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (msg.getData().getString(Constants.TOAST)
+                                .equals(Constants.CONNECTIONFAILED)){
+                            Toast.makeText(BluetoothConnectionActivity.this,
+                                    getApplicationContext().getString(R.string.connectionFailed),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BluetoothConnectionActivity.this,
+                                    getApplicationContext().getString(R.string.dataSendComplete),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+
+            }
         }
     }
 
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothConnectionService.STATE_CONNECTED:
-                            setTitle(getApplicationContext().getString(R.string.connected));
-                            break;
-                        case BluetoothConnectionService.STATE_CONNECTING:
-                            setTitle(getApplicationContext().getString(R.string.connecting));
-                            break;
-                        case BluetoothConnectionService.STATE_NONE:
-                            setTitle(getApplicationContext().getString(R.string.not_connected));
-                            break;
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
-                        Toast.makeText(BluetoothConnectionActivity.this,
-                                getApplicationContext().getString(R.string.connectionLost),
-                                Toast.LENGTH_SHORT).show();
-                    } else if (msg.getData().getString(Constants.TOAST)
-                            .equals(Constants.CONNECTIONFAILED)){
-                        Toast.makeText(BluetoothConnectionActivity.this,
-                                getApplicationContext().getString(R.string.connectionFailed),
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(BluetoothConnectionActivity.this,
-                                getApplicationContext().getString(R.string.dataSendComplete),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-            }
-        }
-    };
-
+    /**
+     * An example getter to provide it to some external class
+     * or just use 'new MyHandler(this)' if you are using it internally.
+     * If you only use it internally you might even want it as final member:
+     * private final MyHandler mHandler = new MyHandler(this);
+     */
+    private Handler getClientHandler() {
+        return new ClientHandler(this);
+    }
 
     @Override
     protected void onDestroy() {

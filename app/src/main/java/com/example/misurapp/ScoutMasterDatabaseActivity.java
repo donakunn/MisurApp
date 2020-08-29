@@ -41,6 +41,7 @@ import com.example.misurapp.db.ScoutMasterInstrumentRecord;
 import com.example.misurapp.utility.DeleteRowActions;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -189,68 +190,89 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
     private void startServer() {
 
-        btConnectionHandler = new BluetoothServer(mHandler);
+        btConnectionHandler = new BluetoothServer(getServerHandler());
         btConnectionHandler.start();
 
     }
-    //LEGGERE RISULTATO ACTIVITY PER CONTROLLARE CHE SIA STATO ACCETTATO
 
-    private final Handler mHandler = new Handler() {
+    private class ServerHandler extends Handler {
+        //Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<ScoutMasterDatabaseActivity> serverWeakReference;
+
+        public ServerHandler(ScoutMasterDatabaseActivity serverIstance) {
+            serverWeakReference = new WeakReference<>(serverIstance);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothConnectionService.STATE_CONNECTED:
-                            setTitle(getApplicationContext().getString(R.string.connected));
-                            break;
-                        case BluetoothConnectionService.STATE_CONNECTING:
-                            setTitle(getApplicationContext().getString(R.string.connecting));
-                            break;
-                        case BluetoothConnectionService.STATE_NONE:
-                            setTitle(getApplicationContext().getString(R.string.not_connected));
-                            break;
-                        case BluetoothConnectionService.STATE_LISTEN:
-                            setTitle(getApplicationContext().getString(R.string.listen));
+            ScoutMasterDatabaseActivity handler = serverWeakReference.get();
+            if (handler != null) {
+                switch (msg.what) {
+                    case Constants.MESSAGE_STATE_CHANGE:
+                        switch (msg.arg1) {
+                            case BluetoothConnectionService.STATE_CONNECTED:
+                                setTitle(getApplicationContext().getString(R.string.connected));
+                                break;
+                            case BluetoothConnectionService.STATE_CONNECTING:
+                                setTitle(getApplicationContext().getString(R.string.connecting));
+                                break;
+                            case BluetoothConnectionService.STATE_NONE:
+                                setTitle(getApplicationContext().getString(R.string.not_connected));
+                                break;
+                            case BluetoothConnectionService.STATE_LISTEN:
+                                setTitle(getApplicationContext().getString(R.string.listen));
 
-                    }
-                    break;
-                case Constants.MESSAGE_READ:
-                    setTitle(getApplicationContext().getString(R.string.dataDownload));
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    try {
-                        List<ScoutMasterInstrumentRecord> receivedValues =
-                                scoutMasterRecordListMaker
-                                        (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
-                        saveReceivedRecordsOnDB(receivedValues);
-                        Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                getApplicationContext().getString(R.string.newData),
-                                Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case Constants.MESSAGE_READ:
+                        setTitle(getApplicationContext().getString(R.string.dataDownload));
+                        byte[] readBuf = (byte[]) msg.obj;
+                        // construct a string from the valid bytes in the buffer
+                        try {
+                            List<ScoutMasterInstrumentRecord> receivedValues =
+                                    scoutMasterRecordListMaker
+                                            (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
+                            saveReceivedRecordsOnDB(receivedValues);
+                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                                    getApplicationContext().getString(R.string.newData),
+                                    Toast.LENGTH_SHORT).show();
 
-                        //refresh data list
-                        linearLayout.removeAllViews();
-                        showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
-                        Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                getApplicationContext().getString(R.string.connectionLost),
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                getApplicationContext().getString(R.string.connectionFailed),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    break;
+                            //refresh data list
+                            linearLayout.removeAllViews();
+                            showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Constants.MESSAGE_TOAST:
+                        if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
+                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                                    getApplicationContext().getString(R.string.connectionLost),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                                    getApplicationContext().getString(R.string.connectionFailed),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+
             }
         }
-    };
+    }
+
+    /**
+     * An example getter to provide it to some external class
+     * or just use 'new MyHandler(this)' if you are using it internally.
+     * If you only use it internally you might even want it as final member:
+     * private final MyHandler mHandler = new MyHandler(this);
+     */
+    private Handler getServerHandler() {
+        return new ServerHandler(this);
+    }
+
+
+
 
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
