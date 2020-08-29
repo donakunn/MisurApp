@@ -4,10 +4,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -38,15 +42,15 @@ import com.example.misurapp.db.ScoutMasterInstrumentRecord;
 import com.example.misurapp.utility.DeleteRowActions;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
     public static final int DISCOVERY_DURATION = 300;
-    private String[] listItems;
-    private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
     /**
@@ -54,10 +58,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
      */
 
     private BluetoothAdapter mBluetoothAdapter = null;
-
-    /**
-     * Member object for the bluetooth connection services
-     */
 
     /**
      * Intent request Code
@@ -73,14 +73,17 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
     private DbManager dbManager = new DbManager(this);
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_caposcout);
 
-        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
+        IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mBroadcastReceiver, bluetoothStateFilter);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,6 +118,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
         }
+
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
@@ -139,7 +144,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERY_DURATION);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
+                    DISCOVERY_DURATION);
             startActivityForResult(discoverableIntent, REQUEST_ACTION_DISCOVERABLE);
 
         }
@@ -166,7 +172,7 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                 startServer();
             } else {
                 final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage("Without bluetooth  on you cant receive new values."); //da cambiare
+                dlgAlert.setMessage(getResources().getString(R.string.bluetoothNeeded));
                 dlgAlert.setTitle("MisurApp");
                 dlgAlert.setCancelable(false);
                 dlgAlert.setPositiveButton("Ok",
@@ -182,65 +188,115 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
     private void startServer() {
 
-        btConnectionHandler = new BluetoothServer(mHandler);
+        btConnectionHandler = new BluetoothServer(getServerHandler());
         btConnectionHandler.start();
 
     }
-    //LEGGERE RISULTATO ACTIVITY PER CONTROLLARE CHE SIA STATO ACCETTATO
 
-    private final Handler mHandler = new Handler() {
+    @SuppressLint("HandlerLeak")
+    private class ServerHandler extends Handler {
+        //Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<ScoutMasterDatabaseActivity> serverWeakReference;
+
+        public ServerHandler(ScoutMasterDatabaseActivity serverIstance) {
+            serverWeakReference = new WeakReference<>(serverIstance);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothConnectionService.STATE_CONNECTED:
-                            setTitle(getApplicationContext().getString(R.string.connected));
-                            break;
-                        case BluetoothConnectionService.STATE_CONNECTING:
-                            setTitle(getApplicationContext().getString(R.string.connecting));
-                            break;
-                        case BluetoothConnectionService.STATE_NONE:
-                            setTitle(getApplicationContext().getString(R.string.not_connected));
-                            break;
-                        case BluetoothConnectionService.STATE_LISTEN:
-                            setTitle(getApplicationContext().getString(R.string.listen));
+            ScoutMasterDatabaseActivity handler = serverWeakReference.get();
+            if (handler != null) {
+                switch (msg.what) {
+                    case Constants.MESSAGE_STATE_CHANGE:
+                        switch (msg.arg1) {
+                            case BluetoothConnectionService.STATE_CONNECTED:
+                                setTitle(getApplicationContext().getString(R.string.connected));
+                                break;
+                            case BluetoothConnectionService.STATE_CONNECTING:
+                                setTitle(getApplicationContext().getString(R.string.connecting));
+                                break;
+                            case BluetoothConnectionService.STATE_NONE:
+                                setTitle(getApplicationContext().getString(R.string.not_connected));
+                                break;
+                            case BluetoothConnectionService.STATE_LISTEN:
+                                setTitle(getApplicationContext().getString(R.string.listen));
 
-                    }
-                    break;
-                case Constants.MESSAGE_READ:
-                    setTitle(getApplicationContext().getString(R.string.dataDownload));
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    try {
-                        List<ScoutMasterInstrumentRecord> receivedValues =
-                                scoutMasterRecordListMaker
-                                        (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
-                        saveReceivedRecordsOnDB(receivedValues);
-                        Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                getApplicationContext().getString(R.string.newData),
-                                Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case Constants.MESSAGE_READ:
+                        setTitle(getApplicationContext().getString(R.string.dataDownload));
+                        byte[] readBuf = (byte[]) msg.obj;
+                        // construct a string from the valid bytes in the buffer
+                        try {
+                            List<ScoutMasterInstrumentRecord> receivedValues =
+                                    scoutMasterRecordListMaker
+                                            (RecordsWithEmailAndInstrumentName
+                                                    .deserialize(readBuf));
+                            saveReceivedRecordsOnDB(receivedValues);
+                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                                    getApplicationContext().getString(R.string.newData),
+                                    Toast.LENGTH_SHORT).show();
 
-                        //refresh data list
-                        linearLayout.removeAllViews();
-                        showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
-                        Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                getApplicationContext().getString(R.string.connectionLost),
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                getApplicationContext().getString(R.string.connectionFailed),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    break;
+                            //refresh data list
+                            linearLayout.removeAllViews();
+                            showRecordsOnScoutMasterActivity(dbManager.
+                                    readScoutMasterValuesFromDB());
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Constants.MESSAGE_TOAST:
+                        if (Objects.equals(msg.getData().getString(Constants.TOAST),
+                                Constants.CONNECTIONLOST)) {
+                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                                    getApplicationContext().getString(R.string.connectionLost),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                                    getApplicationContext().getString(R.string.connectionFailed),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+
+            }
+        }
+    }
+
+    /**
+     * An example getter to provide it to some external class
+     * or just use 'new MyHandler(this)' if you are using it internally.
+     * If you only use it internally you might even want it as final member:
+     * private final MyHandler mHandler = new MyHandler(this);
+     */
+    private Handler getServerHandler() {
+        return new ServerHandler(this);
+    }
+
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch(state) {
+                    case BluetoothAdapter.STATE_OFF:
+                    setTitle(getResources().getString(R.string.disconnected));
+                    btConnectionHandler.stop();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        setTitle(getResources().getString(R.string.disconnecting));
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                    startServer();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        setTitle(getResources().getString(R.string.connecting));
+                        break;
+                }
+
             }
         }
     };
@@ -267,7 +323,7 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
     }
 
     private void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
-        linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        linearLayout = findViewById(R.id.linearLayout);
         linearLayout.removeAllViews();
         TableRow query;
 
@@ -278,7 +334,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
             query = new TableRow(ScoutMasterDatabaseActivity.this);
             query.setPadding(20, 20, 5, 20);
 
-            nickname = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
+            nickname = new TextView(ScoutMasterDatabaseActivity.this, null,
+                    R.style.textstyle);
             tableRowPar.weight = 1;
             nickname.setLayoutParams(tableRowPar);
             nickname.setGravity(Gravity.CENTER_VERTICAL);
@@ -288,7 +345,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
             query.addView(nickname);
 
-            data = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
+            data = new TextView(ScoutMasterDatabaseActivity.this, null,
+                    R.style.textstyle);
             tableRowPar.weight = 1;
             data.setLayoutParams(tableRowPar);
             data.setGravity(Gravity.CENTER_VERTICAL);
@@ -298,7 +356,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
             query.addView(data);
 
-            strumento = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
+            strumento = new TextView(ScoutMasterDatabaseActivity.this, null,
+                    R.style.textstyle);
             tableRowPar.weight = 1;
             strumento.setLayoutParams(tableRowPar);
             strumento.setGravity(Gravity.CENTER_VERTICAL);
@@ -308,7 +367,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
             query.addView(strumento);
 
-            valore = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
+            valore = new TextView(ScoutMasterDatabaseActivity.this, null,
+                    R.style.textstyle);
             tableRowPar.weight = 1;
             valore.setLayoutParams(tableRowPar);
             valore.setGravity(Gravity.CENTER_VERTICAL);
@@ -374,7 +434,7 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override

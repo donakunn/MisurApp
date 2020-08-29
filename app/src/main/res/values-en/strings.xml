@@ -59,5 +59,8 @@
     <string name="dataDownload">Downloading data..</string>
     <string name="dataSendComplete">Sending data successful</string>
     <string name="newData">New data received</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="disconnecting">Disconnection in progress</string>
+    <string name="bluetoothNeeded">" Bluetooth must be enabled for this feature"</string>
 
 </resources>
