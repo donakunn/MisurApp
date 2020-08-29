@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (prefs.getBoolean("hasLogin", false)) {
                     v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
-                    Intent intent = new Intent(MainActivity.this, DatabaseCaposcout.class);
+                    Intent intent = new Intent(MainActivity.this, ScoutMasterDatabaseActivity.class);
                     startActivity(intent);
                 } else {
                     toastMaker(getResources().getString(R.string.LoginRequest));

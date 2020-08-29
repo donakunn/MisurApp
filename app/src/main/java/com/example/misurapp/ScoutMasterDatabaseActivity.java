@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,17 +42,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-public class DatabaseCaposcout extends AppCompatActivity {
+public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
-    String[] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
-
-    //BluetoothClass members
-    private static final String TAG = "BluetoothChatFragment";
-
-    // Intent request codes
-    private static final int REQUEST_ENABLE_BT = 3;
+    public static final int DISCOVERY_DURATION = 300;
+    private String[] listItems;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
     /**
      * Local Bluetooth adapter
@@ -59,10 +55,15 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter = null;
 
+    /**
+     * Member object for the bluetooth connection services
+     */
 
     /**
-     * Member object for the chat services
+     * Intent request Code
      */
+    private static final int REQUEST_ACTION_DISCOVERABLE = 3;
+    private static final int REQUEST_ENABLE_BT = 2;
 
     private BluetoothServer btConnectionHandler = null;
 
@@ -88,7 +89,8 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.bluetoothNotAvailable),
+                    Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -99,11 +101,12 @@ public class DatabaseCaposcout extends AppCompatActivity {
         // If BT is not on, request that it be enabled.
         // startServer() will then be called during onActivityResult
         if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        } else if (btConnectionHandler == null) {
+            ensureDiscoverable();
+        } else {
             startServer();
         }
+
+
     }
 
     @Override
@@ -124,10 +127,11 @@ public class DatabaseCaposcout extends AppCompatActivity {
         if (btConnectionHandler != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (btConnectionHandler.getState() == BluetoothConnectionService.STATE_NONE) {
-                // Start the Bluetooth chat services
+                // Start the Bluetooth services
                 btConnectionHandler.start();
             }
         }
+
         showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
     }
 
@@ -135,14 +139,49 @@ public class DatabaseCaposcout extends AppCompatActivity {
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERY_DURATION);
+            startActivityForResult(discoverableIntent, REQUEST_ACTION_DISCOVERABLE);
+
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ACTION_DISCOVERABLE) {
+            if (resultCode == DISCOVERY_DURATION) {
+                startServer();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                if (mBluetoothAdapter.isEnabled()) {
+                    startServer();
+                } else {
+                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                }
+            }
+        } else if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                startServer();
+            } else {
+                final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+                dlgAlert.setMessage("Without bluetooth  on you cant receive new values."); //da cambiare
+                dlgAlert.setTitle("MisurApp");
+                dlgAlert.setCancelable(false);
+                dlgAlert.setPositiveButton("Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                dlgAlert.create().show();
+            }
         }
     }
 
+
     private void startServer() {
-        //SERVER IN ASCOLTO PER 300 SECONDI, SI PUO COLLEGARE A BOTTONE
-        ensureDiscoverable();
+
         btConnectionHandler = new BluetoothServer(mHandler);
         btConnectionHandler.start();
 
@@ -178,7 +217,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
                                 scoutMasterRecordListMaker
                                         (RecordsWithEmailAndInstrumentName.deserialize(readBuf));
                         saveReceivedRecordsOnDB(receivedValues);
-                        Toast.makeText(DatabaseCaposcout.this,
+                        Toast.makeText(ScoutMasterDatabaseActivity.this,
                                 getApplicationContext().getString(R.string.newData),
                                 Toast.LENGTH_SHORT).show();
 
@@ -193,11 +232,11 @@ public class DatabaseCaposcout extends AppCompatActivity {
                     break;
                 case Constants.MESSAGE_TOAST:
                     if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
-                        Toast.makeText(DatabaseCaposcout.this,
+                        Toast.makeText(ScoutMasterDatabaseActivity.this,
                                 getApplicationContext().getString(R.string.connectionLost),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(DatabaseCaposcout.this,
+                        Toast.makeText(ScoutMasterDatabaseActivity.this,
                                 getApplicationContext().getString(R.string.connectionFailed),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -209,18 +248,19 @@ public class DatabaseCaposcout extends AppCompatActivity {
     //trasforma l'oggetto contenente lista record, email e strumento in una lista di record con
     //schema uguale a tabella scout master che conterrà i valori
     private List<ScoutMasterInstrumentRecord> scoutMasterRecordListMaker
-            (RecordsWithEmailAndInstrumentName recordsWithEmail) {
+    (RecordsWithEmailAndInstrumentName recordsWithEmail) {
         List<ScoutMasterInstrumentRecord> scoutMasterRecordsList = new LinkedList<>();
         List<InstrumentRecord> recordList = recordsWithEmail.getBoyscoutRecords();
         for (InstrumentRecord record : recordList) {
             ScoutMasterInstrumentRecord recordToSave = new ScoutMasterInstrumentRecord
-                    (record.getId(),record.getDate(),record.getValue(),
+                    (record.getId(), record.getDate(), record.getValue(),
                             recordsWithEmail.getBoyScoutEmail(),
                             recordsWithEmail.getInstrumentName());
             scoutMasterRecordsList.add(recordToSave);
         }
         return scoutMasterRecordsList;
     }
+
     //salva la lista su db
     private void saveReceivedRecordsOnDB(List<ScoutMasterInstrumentRecord> records) {
         dbManager.multipleInsert(records);
@@ -228,16 +268,17 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
     private void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        linearLayout.removeAllViews();
         TableRow query;
 
         TextView nickname, data, strumento, valore;
 
         ImageButton cancella;
         for (final ScoutMasterInstrumentRecord record : records) {
-            query = new TableRow(DatabaseCaposcout.this);
+            query = new TableRow(ScoutMasterDatabaseActivity.this);
             query.setPadding(20, 20, 5, 20);
 
-            nickname = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
+            nickname = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             nickname.setLayoutParams(tableRowPar);
             nickname.setGravity(Gravity.CENTER_VERTICAL);
@@ -247,7 +288,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
             query.addView(nickname);
 
-            data = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
+            data = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             data.setLayoutParams(tableRowPar);
             data.setGravity(Gravity.CENTER_VERTICAL);
@@ -257,7 +298,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
             query.addView(data);
 
-            strumento = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
+            strumento = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             strumento.setLayoutParams(tableRowPar);
             strumento.setGravity(Gravity.CENTER_VERTICAL);
@@ -267,7 +308,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
             query.addView(strumento);
 
-            valore = new TextView(DatabaseCaposcout.this, null, R.style.textstyle);
+            valore = new TextView(ScoutMasterDatabaseActivity.this, null, R.style.textstyle);
             tableRowPar.weight = 1;
             valore.setLayoutParams(tableRowPar);
             valore.setGravity(Gravity.CENTER_VERTICAL);
@@ -276,14 +317,14 @@ public class DatabaseCaposcout extends AppCompatActivity {
 
             query.addView(valore);
 
-            cancella = new ImageButton(DatabaseCaposcout.this, null, R.style.buttondeletestyle);
+            cancella = new ImageButton(ScoutMasterDatabaseActivity.this, null, R.style.buttondeletestyle);
             cancella.setLayoutParams(tableRowPar);
             cancella.setImageResource(R.drawable.ic_baseline_delete_24);
 
             cancella.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     DeleteRowActions deleteRowActions = new DeleteRowActions
-                            (DatabaseCaposcout.this,dbManager,
+                            (ScoutMasterDatabaseActivity.this, dbManager,
                                     linearLayout, InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
                     deleteRowActions.actionsOnDeleteButtonPress(v, record);
 
@@ -334,7 +375,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
             listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(DatabaseCaposcout.this);
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -391,7 +432,7 @@ public class DatabaseCaposcout extends AppCompatActivity {
         }
 
         if (id == R.id.action_google_drive) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DatabaseCaposcout.this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
             alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
