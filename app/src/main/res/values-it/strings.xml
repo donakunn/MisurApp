@@ -60,4 +60,6 @@
     <string name="dataDownload">Ricezione dati..</string>
     <string name="dataSendComplete">Invio dati riuscito</string>
     <string name="newData">Nuovi dati ricevuti</string>
+    <string name="disconnected">Disconnesso</string>
+    <string name="disconnecting">Disconnessione in corso</string>
 </resources>

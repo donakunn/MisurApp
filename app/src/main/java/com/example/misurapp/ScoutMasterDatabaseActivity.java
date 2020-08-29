@@ -6,8 +6,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -81,6 +84,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
+        IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mBroadcastReceiver, bluetoothStateFilter);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,6 +120,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
         }
+
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
@@ -241,6 +248,34 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;
+            }
+        }
+    };
+
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch(state) {
+                    case BluetoothAdapter.STATE_OFF:
+                    setTitle(getResources().getString(R.string.disconnected));
+                    btConnectionHandler.stop();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        setTitle(getResources().getString(R.string.disconnecting));
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                    startServer();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        setTitle(getResources().getString(R.string.connecting));
+                        break;
+                }
+
             }
         }
     };

@@ -59,5 +59,7 @@
     <string name="dataDownload">" Descargando datos.."</string>
     <string name="dataSendComplete">" Envío de datos exitoso"</string>
     <string name="newData">" Nuevos datos recibidos"</string>
+    <string name="disconnecting">Desconectando en progreso</string>
+    <string name="disconnected">Desconectado</string>
 
 </resources>
