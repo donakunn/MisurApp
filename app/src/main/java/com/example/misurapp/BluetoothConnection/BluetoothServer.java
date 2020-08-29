@@ -195,6 +195,7 @@ public final class BluetoothServer extends BluetoothConnectionService {
                 Log.e(TAG, "close() of server failed", e);
             } finally {
                 setStateAndUpdateTitle(STATE_NONE);
+
             }
         }
     }
@@ -239,10 +240,12 @@ public final class BluetoothServer extends BluetoothConnectionService {
                         mHandler.obtainMessage(Constants.MESSAGE_READ, data.length, -1, data)
                                 .sendToTarget();
                         setStateAndUpdateTitle(STATE_NONE);
+                        BluetoothServer.this.start();
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
+                    BluetoothServer.this.start();
                     break;
                 }
             }
