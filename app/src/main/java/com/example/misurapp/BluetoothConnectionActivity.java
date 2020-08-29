@@ -20,6 +20,7 @@
 package com.example.misurapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -48,7 +49,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -82,10 +82,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     // Intent request codes
-    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
-    private String sensorName;
+
+    private String instrumentName;
     private DbManager dbManager = new DbManager(this);
 
     /**
@@ -116,6 +115,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      */
     boolean dataReady = false;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,10 +127,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
-        sensorName = Objects.requireNonNull
+        instrumentName = Objects.requireNonNull
                 (getIntent().getExtras()).getString("sensorName");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Set result CANCELED in case the user backs out
@@ -151,7 +151,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         }
 
         // Initialize the button to perform device discovery
-        Button scanButton = (Button) findViewById(R.id.button_scan);
+        Button scanButton = findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 doDiscovery();
@@ -166,12 +166,12 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_name);
 
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+        ListView pairedListView = findViewById(R.id.paired_devices);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
+        ListView newDevicesListView = findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -214,6 +214,27 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             btConnectionHandler = new BluetoothClient(getClientHandler());
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_CANCELED) {
+            final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.setMessage(getResources().getString(R.string.bluetoothNeeded));
+            dlgAlert.setTitle("MisurApp");
+            dlgAlert.setCancelable(false);
+            dlgAlert.setPositiveButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            BluetoothConnectionActivity.this.finish();
+                        }
+                    });
+            dlgAlert.create().show();
+        }
+    }
+
+    @SuppressLint("HandlerLeak")
     private class ClientHandler extends Handler {
         //Using a weak reference means you won't prevent garbage collection
         private final WeakReference<BluetoothConnectionActivity> clientWeakReference;
@@ -241,12 +262,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                         }
                         break;
                     case Constants.MESSAGE_TOAST:
-                        if (msg.getData().getString(Constants.TOAST).equals(Constants.CONNECTIONLOST)) {
+                        if (Objects.equals(msg.getData().getString(Constants.TOAST),
+                                Constants.CONNECTIONLOST)) {
                             Toast.makeText(BluetoothConnectionActivity.this,
                                     getApplicationContext().getString(R.string.connectionLost),
                                     Toast.LENGTH_SHORT).show();
-                        } else if (msg.getData().getString(Constants.TOAST)
-                                .equals(Constants.CONNECTIONFAILED)){
+                        } else if (Objects.equals(msg.getData().getString(Constants.TOAST),
+                                Constants.CONNECTIONFAILED)) {
                             Toast.makeText(BluetoothConnectionActivity.this,
                                     getApplicationContext().getString(R.string.connectionFailed),
                                     Toast.LENGTH_SHORT).show();
@@ -332,14 +354,14 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
 
                     try {
-                        setDataToSend(dbManager.recordsToSendBuilder(sensorName));
+                        setDataToSend(dbManager.recordsToSendBuilder(instrumentName));
                     } catch (IOException e) {
                         e.printStackTrace(); //da gestire
                     }
                     mBtAdapter.cancelDiscovery();
                     if (dataReady) {
                         // Create the result Intent and include the MAC address
-                        connectDevice(nameAndAddress[1], true); //check se corretto
+                        connectDevice(nameAndAddress[1]); //check se corretto
                     } else {
                         Toast.makeText(BluetoothConnectionActivity.this,
                                 R.string.no_data,
@@ -374,7 +396,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (Objects.requireNonNull(device).getBondState() != BluetoothDevice.BOND_BONDED) {
                     mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
                 // When discovery is finished, change the Activity title
@@ -393,9 +415,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * Establish connection with other device
      *
      * @param address Address of the device we're connecting
-     * @param secure  Socket Security type - Secure (true) , Insecure (false)
      */
-    private void connectDevice(String address, boolean secure) {
+    private void connectDevice(String address) {
         // Get the BluetoothDevice object
         BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
@@ -405,14 +426,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     /**
      * Set data to send.
      *
-     * @param records
+     * @param records data to be send over bluetooth
      */
     private void setDataToSend(RecordsWithEmailAndInstrumentName records) throws IOException {
         // Check that there's actually something to send
         if (records != null) {
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] bytesToSend = records.serialize();
-            int c = bytesToSend.length;
             btConnectionHandler.setData(bytesToSend);
             dataReady = true;
         } else {
@@ -455,42 +475,42 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                     (BluetoothConnectionActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1,
                     new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = getIntent();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = getIntent();
 
-                    switch (which) {
+                            switch (which) {
 
-                        case 0:
-                            setAppLocale("en");
-                            finish();
-                            startActivity(intent);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
-                            break;
+                                case 0:
+                                    setAppLocale("en");
+                                    finish();
+                                    startActivity(intent);
+                                    editor.putBoolean("flagStrumenti", true);
+                                    editor.putBoolean("flagMain", true);
+                                    editor.apply();
+                                    break;
 
-                        case 1:
-                            setAppLocale("es");
-                            finish();
-                            startActivity(intent);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
-                            break;
+                                case 1:
+                                    setAppLocale("es");
+                                    finish();
+                                    startActivity(intent);
+                                    editor.putBoolean("flagStrumenti", true);
+                                    editor.putBoolean("flagMain", true);
+                                    editor.apply();
+                                    break;
 
-                        case 2:
-                            setAppLocale("it");
-                            finish();
-                            startActivity(intent);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
-                            break;
-                    }
+                                case 2:
+                                    setAppLocale("it");
+                                    finish();
+                                    startActivity(intent);
+                                    editor.putBoolean("flagStrumenti", true);
+                                    editor.putBoolean("flagMain", true);
+                                    editor.apply();
+                                    break;
+                            }
 
-                }
-            });
+                        }
+                    });
             mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

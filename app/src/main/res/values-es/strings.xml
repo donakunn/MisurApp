@@ -61,5 +61,6 @@
     <string name="newData">" Nuevos datos recibidos"</string>
     <string name="disconnecting">Desconectando en progreso</string>
     <string name="disconnected">Desconectado</string>
+    <string name="bluetoothNeeded">Bluetooth debe estar activo para esta función</string>
 
 </resources>
