@@ -12,12 +12,6 @@ public class RecordedValuesBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "misurapp.db";
     private static final int DATABASE_VERSION = 1;
 
-    // Lo statement SQL di creazione del database
-    private static final String DATABASE_CREATE = "create table valoriRegistrati" +
-            "(_id integer primary key autoincrement,NomeSensore text not null,DataOra date," +
-            "valore0 float(24),valore1 float(24), valore2 float(24), valore3 float(24), " +
-            "valore4 float(24), valore5 float(24));";
-
     // Costruttore
     public RecordedValuesBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
