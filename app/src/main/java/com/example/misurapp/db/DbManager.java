@@ -26,8 +26,6 @@ public class DbManager {
     private Context context;
     private SQLiteDatabase database;
     private RecordedValuesBaseHelper dbHelper;
-    private SharedPreferences prefs;
-    private static String PREF_NAME = "shared_pref_name";
 
     //Costruttore
     public DbManager(Context context) {
@@ -36,10 +34,9 @@ public class DbManager {
     /*open() e close() sono metodi che useremo ogni volta che dovremmo comunicare con il database:
     sarà sufficiente chiamare questi metodi per lavorare con il database.*/
 
-    public DbManager open() throws SQLException {
+    public void open() throws SQLException {
         dbHelper = new RecordedValuesBaseHelper(context);
         database = dbHelper.getWritableDatabase();
-        return this;
     }
 
     public void close() {
@@ -78,11 +75,11 @@ public class DbManager {
 
     //impacchetta valori in un oggetto di ContentValues e li salva sul db
 
-    private long insertIntoTable(String tableName, String email, String timestamp,
+    private void insertIntoTable(String tableName, String email, String timestamp,
                                  String instrumentName, float valueRead) {
         ContentValues valuesToSave = createContentValues(tableName, email, timestamp,
                 instrumentName, valueRead);
-        return database.insertOrThrow(tableName, null, valuesToSave);
+        database.insertOrThrow(tableName, null, valuesToSave);
     }
 
     public void multipleInsert(List<ScoutMasterInstrumentRecord> recordList) {
@@ -189,6 +186,7 @@ public class DbManager {
             } while (cursor.moveToNext());
 
         }
+        cursor.close();
         this.close();
         return readQueryList;
     }
@@ -211,6 +209,7 @@ public class DbManager {
                     readQueryList.add(queryRead);
                 } while (cursor.moveToNext());
         }
+        cursor.close();
         this.close();
         return readQueryList;
     }
@@ -222,10 +221,18 @@ public class DbManager {
     }
 
     private static SharedPreferences getPrefs(Context context) {
+        String PREF_NAME = "shared_pref_name";
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
     private static String getEmail(Context context) {
         return getPrefs(context).getString("email", "");
+    }
+
+    public void dropTables() {
+        this.open();
+        database.execSQL("DELETE FROM " + InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
+        database.execSQL("DELETE FROM " + InstrumentsDBSchema.BoyscoutTable.TABLENAME);
+        this.close();
     }
 }

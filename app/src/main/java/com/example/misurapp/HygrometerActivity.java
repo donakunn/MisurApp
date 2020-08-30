@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -94,7 +95,7 @@ public class HygrometerActivity extends AppCompatActivity implements SensorEvent
         angle = (((valore - 50)*360)/120);
         imageView.setRotation((int) angle);
 
-        misura.setText(valore+" %");
+        misura.setText(RoundOffUtility.roundOffNumber(valore) +" %");
     }
 
     @Override

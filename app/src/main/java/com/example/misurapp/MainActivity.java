@@ -1,7 +1,6 @@
 package com.example.misurapp;
 
-import android.Manifest;
-
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,8 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 
+import com.example.misurapp.db.DbManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,17 +38,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    GoogleSignInClient mGoogleSignInClient;
-    SignInButton btnLogin;
-    Button btnLogout;
-    GoogleSignInOptions gso;
-    GoogleSignInAccount account;
-    String[] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    private GoogleSignInClient mGoogleSignInClient;
+    private SignInButton btnLogin;
+    private Button btnLogout;
+    private GoogleSignInAccount account;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Button boyscoutButton = findViewById(R.id.Boyscout);
-        Button scoutMasterButton = (Button) findViewById(R.id.Caposcout);
+        Button scoutMasterButton = findViewById(R.id.Caposcout);
 
         boyscoutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -91,24 +90,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ActivityCompat.requestPermissions(MainActivity.this, //da spostare
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                1);
-
-        ActivityCompat.requestPermissions(MainActivity.this, //da spostare
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                1);
         btnLogin = findViewById(R.id.btnLogin);
         btnLogout = findViewById(R.id.btnLogout);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, gso);
 
         account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-        if (account != null)
+        if (prefs.getBoolean("hasLogin",false))
             btnLogin.setVisibility(View.GONE);
         else
             btnLogout.setVisibility(View.GONE);
@@ -141,6 +133,10 @@ public class MainActivity extends AppCompatActivity {
             handleSignInResult(task);
             if (account != null) {
                 toastMaker(getResources().getString(R.string.LoginComplete));
+
+                if (!Objects.equals(account.getEmail(), prefs.getString("email", ""))) {
+                    new DbManager(this).dropTables();
+                }
                 saveLoginPropertiesInPreferences(account.getEmail(), true);
                 setLogoutVisible();
             }
@@ -230,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override

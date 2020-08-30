@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,13 +39,13 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
     private ImageView termometro;
     private float valore;
     private TextView misura;
-    private ImageButton dati;
     private static final String instrumentName ="thermometer";
     private DbManager dbManager = new DbManager(this);
     String [] listItems;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,8 +135,7 @@ public class ThermometerActivity extends AppCompatActivity implements SensorEven
             termometro.setImageResource(R.drawable.termometro9);
         }
 
-
-        misura.setText(valore+" °C");
+        misura.setText(RoundOffUtility.roundOffNumber(valore) +" °C");
     }
 
     @Override
