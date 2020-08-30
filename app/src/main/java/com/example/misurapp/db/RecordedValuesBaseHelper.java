@@ -24,13 +24,13 @@ public class RecordedValuesBaseHelper extends SQLiteOpenHelper {
                 " ("+ " _id integer primary key autoincrement, " +
                 InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME + " text not null, " +
                 InstrumentsDBSchema.ScoutMasterTable.cols.TIMESTAMP + " date, "+
-                InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD + " float(24));" );
+                InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD + " float(12));" );
         database.execSQL("create table " + InstrumentsDBSchema.ScoutMasterTable.TABLENAME +
                 " ("+ " _id integer primary key autoincrement, " +
                 InstrumentsDBSchema.ScoutMasterTable.cols.EMAIL + " text not null, "+
                 InstrumentsDBSchema.ScoutMasterTable.cols.TIMESTAMP + " date, "+
                 InstrumentsDBSchema.ScoutMasterTable.cols.INSTRUMENTNAME + " text not null, " +
-                InstrumentsDBSchema.ScoutMasterTable.cols.VALUEREAD + " float(24));" );
+                InstrumentsDBSchema.ScoutMasterTable.cols.VALUEREAD + " float(12));" );
     }
 
     // Questo metodo viene chiamato durante l'upgrade del database, ad esempio quando viene

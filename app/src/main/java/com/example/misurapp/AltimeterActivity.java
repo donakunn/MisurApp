@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,14 +39,13 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
     private ImageView imageView;
     private float valore;
     private TextView misura;
-    private float angle;
-    private float altitude;
     private static final String instrumentName = "altimeter";
     private DbManager dbManager = new DbManager(this);
-    String [] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    private String [] listItems;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
     
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,19 +91,20 @@ public class AltimeterActivity extends AppCompatActivity implements SensorEventL
         mSensorManager.unregisterListener(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onSensorChanged(SensorEvent event) {
         valore = event.values[0];
 
-        altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, valore);
+        float altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, valore);
 
         if (altitude > 6000 || altitude < 0) {
             imageView.setRotation(0);
         } else {
-            angle = ((altitude * 360) / 6000);
+            float angle = ((altitude * 360) / 6000);
             imageView.setRotation(angle);
         }
-        misura.setText(altitude + " m");
+        misura.setText(RoundOffUtility.roundOffNumber(altitude) + " m");
     }
 
     @Override

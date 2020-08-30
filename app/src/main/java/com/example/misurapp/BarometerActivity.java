@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.misurapp.db.DbManager;
+import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,12 +37,11 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
     private ImageView imageView;
     private float valore;
     private TextView misura;
-    private float angle;
     private static final String instrumentName = "barometer";
     private DbManager dbManager = new DbManager(this);
-    String [] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    private String [] listItems;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +96,10 @@ public class BarometerActivity extends AppCompatActivity implements SensorEventL
         if (valore < 970 || valore > 1050) {
             imageView.setRotation(0);
         } else {
-            angle = (((valore - 1010) * 360) / 80);
+            float angle = (((valore - 1010) * 360) / 80);
             imageView.setRotation((int) angle);
         }
-        misura.setText(valore + " hPa");
+        misura.setText(RoundOffUtility.roundOffNumber(valore) + " hPa");
     }
 
     @Override
