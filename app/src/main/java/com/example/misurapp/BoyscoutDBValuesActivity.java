@@ -98,13 +98,14 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
             dbBoyScoutQuery.addView(value);
 
-            ImageButton deleteButton = new ImageButton
+            final ImageButton deleteButton = new ImageButton
                     (BoyscoutDBValuesActivity.this, null, R.style.buttondeletestyle);
             deleteButton.setLayoutParams(tableRowPar);
             deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    deleteButton.setClickable(false);
                  DeleteRowActions deleteRowActions = new DeleteRowActions
                          (BoyscoutDBValuesActivity.this,appDb,
                                  linearLayout,InstrumentsDBSchema.BoyscoutTable.TABLENAME);

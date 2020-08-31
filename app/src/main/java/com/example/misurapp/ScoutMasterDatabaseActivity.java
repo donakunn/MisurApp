@@ -327,9 +327,8 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         linearLayout.removeAllViews();
         TableRow query;
 
-        TextView nickname, data, strumento, valore;
+        TextView nickname, timestamp, strumento, value;
 
-        ImageButton cancella;
         for (final ScoutMasterInstrumentRecord record : records) {
             query = new TableRow(ScoutMasterDatabaseActivity.this);
             query.setPadding(20, 20, 5, 20);
@@ -345,16 +344,16 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
             query.addView(nickname);
 
-            data = new TextView(ScoutMasterDatabaseActivity.this, null,
+            timestamp = new TextView(ScoutMasterDatabaseActivity.this, null,
                     R.style.textstyle);
             tableRowPar.weight = 1;
-            data.setLayoutParams(tableRowPar);
-            data.setGravity(Gravity.CENTER_VERTICAL);
-            data.setPadding(10, 10, 10, 10);
-            data.setTypeface(null, Typeface.BOLD);
-            data.setText(record.getDate());
+            timestamp.setLayoutParams(tableRowPar);
+            timestamp.setGravity(Gravity.CENTER_VERTICAL);
+            timestamp.setPadding(10, 10, 10, 10);
+            timestamp.setTypeface(null, Typeface.BOLD);
+            timestamp.setText(record.getDate());
 
-            query.addView(data);
+            query.addView(timestamp);
 
             strumento = new TextView(ScoutMasterDatabaseActivity.this, null,
                     R.style.textstyle);
@@ -367,22 +366,23 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
 
             query.addView(strumento);
 
-            valore = new TextView(ScoutMasterDatabaseActivity.this, null,
+            value = new TextView(ScoutMasterDatabaseActivity.this, null,
                     R.style.textstyle);
             tableRowPar.weight = 1;
-            valore.setLayoutParams(tableRowPar);
-            valore.setGravity(Gravity.CENTER_VERTICAL);
-            valore.setTypeface(null, Typeface.BOLD);
-            valore.setText(String.valueOf(record.getValue()));
+            value.setLayoutParams(tableRowPar);
+            value.setGravity(Gravity.CENTER_VERTICAL);
+            value.setTypeface(null, Typeface.BOLD);
+            value.setText(String.valueOf(record.getValue()));
 
-            query.addView(valore);
+            query.addView(value);
 
-            cancella = new ImageButton(ScoutMasterDatabaseActivity.this, null, R.style.buttondeletestyle);
-            cancella.setLayoutParams(tableRowPar);
-            cancella.setImageResource(R.drawable.ic_baseline_delete_24);
+            final ImageButton deleteButton = new ImageButton(ScoutMasterDatabaseActivity.this, null, R.style.buttondeletestyle);
+            deleteButton.setLayoutParams(tableRowPar);
+            deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
-            cancella.setOnClickListener(new View.OnClickListener() {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    deleteButton.setClickable(false);
                     DeleteRowActions deleteRowActions = new DeleteRowActions
                             (ScoutMasterDatabaseActivity.this, dbManager,
                                     linearLayout, InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
@@ -391,7 +391,7 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                 }
             });
 
-            query.addView(cancella);
+            query.addView(deleteButton);
             linearLayout.addView(query);
         }
     }

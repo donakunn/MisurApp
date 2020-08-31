@@ -61,6 +61,6 @@
     <string name="newData">New data received</string>
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnection in progress</string>
-    <string name="bluetoothNeeded">" Bluetooth must be enabled for this feature"</string>
+    <string name="bluetoothNeeded">" Bluetooth must be active to be able to exchange data"</string>
 
 </resources>

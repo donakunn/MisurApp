@@ -76,7 +76,7 @@
     <string name="newData">Nuovi dati ricevuti</string>
     <string name="disconnected">Disconnesso</string>
     <string name="disconnecting">Disconnessione in corso</string>
-    <string name="bluetoothNeeded">Bluetooth deve essere attivo per questa funzione</string>
+    <string name="bluetoothNeeded">Bluetooth deve essere attivo per poter scambiare dati</string>
 </resources>
 
 
