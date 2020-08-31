@@ -1,24 +1,14 @@
 package com.example.misurapp;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -26,25 +16,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Locale;
-
-public class StepActivity extends AppCompatActivity implements SensorEventListener {
+public class StepActivity extends MisurAppInstrumentBaseActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor sensor;
     private TextView misura;
     private ImageView imageView;
-    private static final String instrumentName ="lastStepsRegister";
     private DbManager dbManager = new DbManager(this);
     private int stepsRegister = 0;
     private int stepsShow;
-    String [] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
 
     SharedPreferences lastStepRegister;
     SharedPreferences.Editor editorLastStepRegister;
@@ -52,6 +38,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     SharedPreferences stepDisplay;
     SharedPreferences.Editor editorStepDisplay;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +51,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepDisplay = getSharedPreferences("stepsDisplay", MODE_PRIVATE);
         editorStepDisplay = stepDisplay.edit();
 
-        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
-        editor = prefs.edit();
+        instrumentName ="lastStepsRegister";
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -155,104 +141,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    private void setAppLocale(String localCode){
-        Resources res = getResources();
-        DisplayMetrics dm =res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            conf.setLocale(new Locale(localCode.toLowerCase()));
-        }else{
-            conf.locale = new Locale(localCode.toLowerCase());
-        }
-        res.updateConfiguration(conf, dm);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Gestisci i clic sugli elementi della barra delle azioni qui.
-        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
-        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_cambio_lingua) {
-            listItems = new String[] {getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(StepActivity.this);
-            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = getIntent();
-                    switch (which){
-
-                        case 0:
-                            setAppLocale("en");
-                            finish();
-                            startActivity(intent);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
-                            break;
-
-                        case 1:
-                            setAppLocale("es");
-                            finish();
-                            startActivity(intent);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
-                            break;
-
-                        case 2:
-                            setAppLocale("it");
-                            finish();
-                            startActivity(intent);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
-                            break;
-                    }
-
-                }
-            });
-            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-            AlertDialog mDialog = mBuilder.create();
-            mDialog.show();
-            return true;
-        }
-
-        if (id == R.id.action_backup) {
-            return true;
-        }
-
-        if (id == R.id.action_archivio) {
-            Intent intent = new Intent(StepActivity.this,BoyscoutDBValuesActivity.class);
-            intent.putExtra("sensorName", instrumentName);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem condividi = menu.findItem(R.id.action_archivio);
-        condividi.setVisible(true);
-        return true;
     }
 
     //plurals

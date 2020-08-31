@@ -1,20 +1,11 @@
 package com.example.misurapp;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -22,9 +13,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.misurapp.db.DbManager;
@@ -37,23 +25,18 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.Locale;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MisurAppBaseActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton btnLogin;
     private Button btnLogout;
     private GoogleSignInAccount account;
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor editor;
 
-    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
-        editor = prefs.edit();
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -100,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, gso);
 
         account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-        if (prefs.getBoolean("hasLogin",false))
+        if (prefs.getBoolean("hasLogin", false))
             btnLogin.setVisibility(View.GONE);
         else
             btnLogout.setVisibility(View.GONE);
@@ -139,8 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 saveLoginPropertiesInPreferences(account.getEmail(), true);
                 setLogoutVisible();
-            }
-            else toastMaker(getResources().getString(R.string.loginNotSucceded));
+            } else toastMaker(getResources().getString(R.string.loginNotSucceded));
         }
     }
 
@@ -194,96 +176,5 @@ public class MainActivity extends AppCompatActivity {
     private void setLogoutVisible() {
         btnLogin.setVisibility(View.GONE);
         btnLogout.setVisibility(View.VISIBLE);
-    }
-
-
-    private void setAppLocale(String localCode) {
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            conf.setLocale(new Locale(localCode.toLowerCase()));
-        } else {
-            conf.locale = new Locale(localCode.toLowerCase());
-        }
-        res.updateConfiguration(conf, dm);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Gestisci i clic sugli elementi della barra delle azioni qui.
-        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
-        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
-        int id = item.getItemId();
-
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_cambio_lingua) {
-            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = getIntent();
-
-                    switch (which) {
-
-                        case 0:
-                            setAppLocale("en");
-                            finish();
-                            startActivity(intent);
-                            break;
-
-                        case 1:
-                            setAppLocale("es");
-                            finish();
-                            startActivity(intent);
-                            break;
-
-                        case 2:
-                            setAppLocale("it");
-                            finish();
-                            startActivity(intent);
-                            break;
-                    }
-
-                }
-            });
-            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-            AlertDialog mDialog = mBuilder.create();
-            mDialog.show();
-            return true;
-        }
-
-        if (id == R.id.action_backup) {
-            Intent intent = new Intent(MainActivity.this,ListaStrumentiActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    protected void onResume() {
-        super.onResume();
-        if (prefs.getBoolean("flagMain", false)) {
-            editor.putBoolean("flagMain", false);
-            editor.apply();
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
     }
 }
