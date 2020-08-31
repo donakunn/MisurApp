@@ -77,15 +77,16 @@ import java.util.Set;
  */
 
 public class BluetoothConnectionActivity extends AppCompatActivity {
-    String[] listItems;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
     // Intent request codes
     private static final int REQUEST_ENABLE_BT = 3;
 
     private String instrumentName;
     private DbManager dbManager = new DbManager(this);
+
+    private ListView newDevicesListView;
 
     /**
      * Tag for Log
@@ -168,12 +169,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // Find and set up the ListView for paired devices
         ListView pairedListView = findViewById(R.id.paired_devices);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = findViewById(R.id.new_devices);
+        newDevicesListView = findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
-        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -195,11 +194,18 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             for (BluetoothDevice device : pairedDevices) {
                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
+
+            //add listener only if there are paired devices
+            pairedListView.setOnItemClickListener(mDeviceClickListener);
+
         } else {
             String noDevices = getResources().getText(R.string.none_paired).toString();
             pairedDevicesArrayAdapter.add(noDevices);
+
+            pairedListView.setOnItemClickListener(null);
         }
     }
+
 
     @Override
     public void onStart() {
@@ -403,9 +409,12 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.select_device);
+                newDevicesListView.setOnItemClickListener(mDeviceClickListener);
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
                     String noDevices = getResources().getText(R.string.none_found).toString();
                     mNewDevicesArrayAdapter.add(noDevices);
+                    newDevicesListView.setOnItemClickListener(null);
+
                 }
             }
         }
@@ -470,7 +479,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
+            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder
                     (BluetoothConnectionActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1,

@@ -61,6 +61,7 @@
     <string name="newData">" Nuevos datos recibidos"</string>
     <string name="disconnecting">Desconectando en progreso</string>
     <string name="disconnected">Desconectado</string>
-    <string name="bluetoothNeeded">Bluetooth debe estar activo para esta función</string>
+    <string name="bluetoothNeeded">"Bluetooth debe estar activo para poder intercambiar datos "</string>
+    <string name="discoverableNeeded">" Atención, al hacer esto no serás visible para nuevos dispositivos, ¿quieres seguir adelante sin hacer visible el dispositivo?"</string>
 
 </resources>
