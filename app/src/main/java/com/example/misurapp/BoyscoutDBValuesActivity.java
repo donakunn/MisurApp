@@ -1,18 +1,9 @@
 package com.example.misurapp;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,24 +13,23 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.utility.DeleteRowActions;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
-public class BoyscoutDBValuesActivity extends AppCompatActivity {
+public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
 
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private DbManager appDb;
     private LinearLayout linearLayout;
-    private String[] listItems;
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor editor;
     private String sensorName;
 
     @Override
@@ -50,8 +40,7 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB
                 (sensorName);
         setContentView(R.layout.activity_database_boyscout);
-        prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
-        editor = prefs.edit();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
@@ -79,7 +68,8 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
             TableRow dbBoyScoutQuery = new TableRow(BoyscoutDBValuesActivity.this);
             dbBoyScoutQuery.setPadding(20, 20, 5, 20);
 
-            TextView date = new TextView(BoyscoutDBValuesActivity.this, null, R.style.textstyle);
+            TextView date = new TextView(BoyscoutDBValuesActivity.this, null,
+                    R.style.textstyle);
             tableRowPar.weight = 1;
             date.setLayoutParams(tableRowPar);
             date.setGravity(Gravity.CENTER_VERTICAL);
@@ -118,25 +108,6 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         }
     }
 
-    private void setAppLocale(String localCode) {
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            conf.setLocale(new Locale(localCode.toLowerCase()));
-        } else {
-            conf.locale = new Locale(localCode.toLowerCase());
-        }
-        res.updateConfiguration(conf, dm);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem condividi = menu.findItem(R.id.action_condividi);
@@ -155,9 +126,13 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
-            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese),
+                    getResources().getString(R.string.lingua_spagnola), getResources()
+                    .getString(R.string.lingua_italiana)};
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder
+                    (BoyscoutDBValuesActivity.this);
+            mBuilder.setSingleChoiceItems(listItems, -1,
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = getIntent();
@@ -169,37 +144,26 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
                             setAppLocale("en");
                             finish();
                             startActivity(intent);
-                            editor.putBoolean("flagMain", true);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagStrumento", true);
-                            editor.apply();
                             break;
 
                         case 1:
                             setAppLocale("es");
                             finish();
                             startActivity(intent);
-                            editor.putBoolean("flagMain", true);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagStrumento", true);
-                            editor.apply();
                             break;
 
                         case 2:
                             setAppLocale("it");
                             finish();
                             startActivity(intent);
-                            editor.putBoolean("flagMain", true);
-                            editor.putBoolean("flagStrumenti", true);
-                            editor.putBoolean("flagStrumento", true);
-                            editor.apply();
                             break;
                     }
 
                 }
             });
 
-            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
+            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla),
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -216,14 +180,16 @@ public class BoyscoutDBValuesActivity extends AppCompatActivity {
 
         //pulsante condividi
         if (id == R.id.action_condividi) {
-            Intent intent = new Intent(BoyscoutDBValuesActivity.this, BluetoothConnectionActivity.class);
+            Intent intent = new Intent(BoyscoutDBValuesActivity.this,
+                    BluetoothConnectionActivity.class);
             intent.putExtra("sensorName", sensorName);
             startActivity(intent);
             return true;
         }
 
         if (id == R.id.action_google_drive) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                    (BoyscoutDBValuesActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
             alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {

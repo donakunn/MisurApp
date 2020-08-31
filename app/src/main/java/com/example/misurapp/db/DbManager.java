@@ -53,8 +53,12 @@ public class DbManager {
             SimpleDateFormat dateFormat = new SimpleDateFormat(
                     "dd-MM-yyyy HH:mm:ss", Locale.ITALIAN);
             values.put(InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME, instrumentName);
-            values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP,
-                    dateFormat.format(new Date()));
+            if (timestamp.equals(null)) {
+                values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP,
+                        dateFormat.format(new Date()));
+            } else {
+                values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP, timestamp);
+            }
             values.put(InstrumentsDBSchema.BoyscoutTable.cols.VALUEREAD, valueToSave);
         } else if (tableName.equals(InstrumentsDBSchema.ScoutMasterTable.TABLENAME)) {
             values.put(InstrumentsDBSchema.ScoutMasterTable.cols.EMAIL, email);
@@ -199,15 +203,15 @@ public class DbManager {
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-                do {
-                    ScoutMasterInstrumentRecord queryRead = new ScoutMasterInstrumentRecord
-                            (cursor.getLong(0), cursor.getString(2),
-                                    Float.parseFloat(cursor.getString(4)), cursor.getString(1),
-                                    cursor.getString(3));
+            do {
+                ScoutMasterInstrumentRecord queryRead = new ScoutMasterInstrumentRecord
+                        (cursor.getLong(0), cursor.getString(2),
+                                Float.parseFloat(cursor.getString(4)), cursor.getString(1),
+                                cursor.getString(3));
 
-                    // Adding query to list
-                    readQueryList.add(queryRead);
-                } while (cursor.moveToNext());
+                // Adding query to list
+                readQueryList.add(queryRead);
+            } while (cursor.moveToNext());
         }
         cursor.close();
         this.close();

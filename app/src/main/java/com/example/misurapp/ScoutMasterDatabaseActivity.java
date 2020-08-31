@@ -1,9 +1,5 @@
 package com.example.misurapp;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -13,14 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,13 +23,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
 import com.example.misurapp.BluetoothConnection.BluetoothServer;
 import com.example.misurapp.BluetoothConnection.Constants;
-import com.example.misurapp.db.DbManager;
+import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
-import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.ScoutMasterInstrumentRecord;
 import com.example.misurapp.utility.DeleteRowActions;
 
@@ -45,10 +39,9 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
-public class ScoutMasterDatabaseActivity extends AppCompatActivity {
+public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity {
 
     public static final int DISCOVERY_DURATION = 300;
     private SharedPreferences.Editor editor;
@@ -71,16 +64,11 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
             TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private LinearLayout linearLayout;
 
-    private DbManager dbManager = new DbManager(this);
-
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_caposcout);
-
-        SharedPreferences prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
-        editor = prefs.edit();
 
         IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mBroadcastReceiver, bluetoothStateFilter);
@@ -104,8 +92,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         // If BT is not on, request that it be enabled.
         // startServer() will then be called during onActivityResult
             ensureDiscoverable();
-
-
     }
 
     @Override
@@ -114,14 +100,12 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
         }
-
         unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
@@ -132,7 +116,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                 btConnectionHandler.start();
             }
         }
-
         showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
     }
 
@@ -143,9 +126,7 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
                     DISCOVERY_DURATION);
             startActivityForResult(discoverableIntent, REQUEST_ACTION_DISCOVERABLE);
-
         }
-
     }
 
     @Override
@@ -198,12 +179,9 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         }
     }
 
-
     private void startServer() {
-
         btConnectionHandler = new BluetoothServer(getServerHandler());
         btConnectionHandler.start();
-
     }
 
     @SuppressLint("HandlerLeak")
@@ -233,7 +211,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                                 break;
                             case BluetoothConnectionService.STATE_LISTEN:
                                 setTitle(getApplicationContext().getString(R.string.listen));
-
                         }
                         break;
                     case Constants.MESSAGE_READ:
@@ -271,7 +248,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                         }
                         break;
                 }
-
             }
         }
     }
@@ -309,7 +285,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                         setTitle(getResources().getString(R.string.connecting));
                         break;
                 }
-
             }
         }
     };
@@ -409,33 +384,10 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         }
     }
 
-    private void setAppLocale(String localCode) {
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            conf.setLocale(new Locale(localCode.toLowerCase()));
-        } else {
-            conf.locale = new Locale(localCode.toLowerCase());
-        }
-        res.updateConfiguration(conf, dm);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem condividi = menu.findItem(R.id.action_condividi);
-        condividi.setVisible(true);
-
         MenuItem googleDrive = menu.findItem(R.id.action_google_drive);
         googleDrive.setVisible(true);
-
         return true;
     }
 
@@ -500,10 +452,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_condividi) {
-            return true;
-        }
-
         if (id == R.id.action_google_drive) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
@@ -523,8 +471,6 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
             alertDialog.show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }
