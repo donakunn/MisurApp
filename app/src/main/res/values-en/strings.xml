@@ -62,5 +62,6 @@
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnection in progress</string>
     <string name="bluetoothNeeded">" Bluetooth must be active to be able to exchange data"</string>
+    <string name="discoverableNeeded">" Attention, by doing this you will not be visible to new devices, do you want to go ahead without making the device visible?"</string>
 
 </resources>

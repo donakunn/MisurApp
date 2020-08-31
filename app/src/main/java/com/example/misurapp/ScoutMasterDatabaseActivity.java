@@ -103,11 +103,7 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
         super.onStart();
         // If BT is not on, request that it be enabled.
         // startServer() will then be called during onActivityResult
-        if (!mBluetoothAdapter.isEnabled()) {
             ensureDiscoverable();
-        } else {
-            startServer();
-        }
 
 
     }
@@ -160,12 +156,29 @@ public class ScoutMasterDatabaseActivity extends AppCompatActivity {
                 startServer();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                if (mBluetoothAdapter.isEnabled()) {
-                    startServer();
-                } else {
-                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-                }
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                        (ScoutMasterDatabaseActivity.this);
+                alertDialog.setMessage
+                        (getApplicationContext().getString(R.string.discoverableNeeded));
+                alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (mBluetoothAdapter.isEnabled()) {
+                            startServer();
+                        } else {
+                            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                        }
+                    }
+                });
+
+                alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        ensureDiscoverable();
+                    }
+                });
+
+                alertDialog.create().show();
             }
         } else if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == RESULT_OK) {
