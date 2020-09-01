@@ -7,7 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,8 +23,8 @@ public class ThermometerActivity extends MisurAppInstrumentBaseActivity implemen
     private SensorManager mSensorManager;
     private Sensor sensor;
     private ImageView termometro;
-    private float valore;
-    private TextView misura;
+    private float value;
+    private TextView measure;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -43,16 +42,15 @@ public class ThermometerActivity extends MisurAppInstrumentBaseActivity implemen
 
 
         termometro = findViewById(R.id.img_animazione);
-        misura = findViewById(R.id.misura);
+        measure = findViewById(R.id.misura);
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
-            }
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(ThermometerActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
+                    instrumentName, value);
         });
     }
 
@@ -75,49 +73,50 @@ public class ThermometerActivity extends MisurAppInstrumentBaseActivity implemen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        valore = event.values[0];
+        value = event.values[0];
 
-        if (valore<= -10){
+        if (value <= -10){
             termometro.setImageResource(R.drawable.termometro0);
         }
 
-        if (valore > -10 && valore <= -5){
+        if (value > -10 && value <= -5){
             termometro.setImageResource(R.drawable.termometro1);
         }
 
-        if (valore > -5 && valore <= 0){
+        if (value > -5 && value <= 0){
             termometro.setImageResource(R.drawable.termometro2);
         }
 
-        if (valore > 0 && valore <= 5){
+        if (value > 0 && value <= 5){
             termometro.setImageResource(R.drawable.termometro3);
         }
 
-        if (valore > 5 && valore <= 10){
+        if (value > 5 && value <= 10){
             termometro.setImageResource(R.drawable.termometro4);
         }
 
-        if (valore > 10 && valore <= 15){
+        if (value > 10 && value <= 15){
             termometro.setImageResource(R.drawable.termometro5);
         }
 
-        if (valore > 15 && valore <= 20){
+        if (value > 15 && value <= 20){
             termometro.setImageResource(R.drawable.termometro6);
         }
 
-        if (valore > 20 && valore <= 25){
+        if (value > 20 && value <= 25){
             termometro.setImageResource(R.drawable.termometro7);
         }
 
-        if (valore > 25 && valore <= 30){
+        if (value > 25 && value <= 30){
             termometro.setImageResource(R.drawable.termometro8);
         }
 
-        if (valore > 30){
+        if (value > 30){
             termometro.setImageResource(R.drawable.termometro9);
         }
 
-        misura.setText(RoundOffUtility.roundOffNumber(valore) +" °C");
+        measure.setText(getString(R.string.thermometer_textViewContent,
+                RoundOffUtility.roundOffNumber(value)));
     }
 
     @Override

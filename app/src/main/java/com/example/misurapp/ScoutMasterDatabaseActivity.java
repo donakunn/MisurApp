@@ -115,6 +115,10 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                 // Start the Bluetooth services
                 btConnectionHandler.start();
             }
+        } else {
+            if (mBluetoothAdapter.getScanMode() ==
+                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            }
         }
         showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
     }
@@ -152,13 +156,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                     }
                 });
 
-                alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        ensureDiscoverable();
-                    }
-                });
-
+                alertDialog.setNegativeButton(R.string.No, (dialog, id) -> ensureDiscoverable());
                 alertDialog.create().show();
             }
         } else if (requestCode == REQUEST_ENABLE_BT) {
@@ -170,9 +168,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                 dlgAlert.setTitle("MisurApp");
                 dlgAlert.setCancelable(false);
                 dlgAlert.setPositiveButton("Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
+                        (dialog, which) -> {
                         });
                 dlgAlert.create().show();
             }
@@ -201,20 +197,20 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                     case Constants.MESSAGE_STATE_CHANGE:
                         switch (msg.arg1) {
                             case BluetoothConnectionService.STATE_CONNECTED:
-                                setTitle(getApplicationContext().getString(R.string.connected));
+                                setTitle(getResources().getString(R.string.connected));
                                 break;
                             case BluetoothConnectionService.STATE_CONNECTING:
-                                setTitle(getApplicationContext().getString(R.string.connecting));
+                                setTitle(getResources().getString(R.string.connecting));
                                 break;
                             case BluetoothConnectionService.STATE_NONE:
-                                setTitle(getApplicationContext().getString(R.string.not_connected));
+                                setTitle(getResources().getString(R.string.not_connected));
                                 break;
                             case BluetoothConnectionService.STATE_LISTEN:
-                                setTitle(getApplicationContext().getString(R.string.listen));
+                                setTitle(getResources().getString(R.string.listen));
                         }
                         break;
                     case Constants.MESSAGE_READ:
-                        setTitle(getApplicationContext().getString(R.string.dataDownload));
+                        setTitle(getResources().getString(R.string.dataDownload));
                         byte[] readBuf = (byte[]) msg.obj;
                         // construct a string from the valid bytes in the buffer
                         try {
@@ -224,7 +220,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                                                     .deserialize(readBuf));
                             saveReceivedRecordsOnDB(receivedValues);
                             Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                    getApplicationContext().getString(R.string.newData),
+                                    getResources().getString(R.string.newData),
                                     Toast.LENGTH_SHORT).show();
 
                             //refresh data list
@@ -239,11 +235,11 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                         if (Objects.equals(msg.getData().getString(Constants.TOAST),
                                 Constants.CONNECTIONLOST)) {
                             Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                    getApplicationContext().getString(R.string.connectionLost),
+                                    getResources().getString(R.string.connectionLost),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(ScoutMasterDatabaseActivity.this,
-                                    getApplicationContext().getString(R.string.connectionFailed),
+                                    getResources().getString(R.string.connectionFailed),
                                     Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -405,35 +401,26 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = getIntent();
-
-
                     switch (which) {
-
                         case 0:
-                            setAppLocale("en");
+                            changeLang("en");
+                            currentLangCode = "en";
                             finish();
                             startActivity(intent);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
                             break;
-
                         case 1:
-                            setAppLocale("es");
+                            changeLang("es");
+                            currentLangCode = "es";
                             finish();
                             startActivity(intent);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
                             break;
-
                         case 2:
-                            setAppLocale("it");
+                            changeLang("it");
+                            currentLangCode = "it";
                             finish();
                             startActivity(intent);
-                            editor.putBoolean("flagMain", true);
-                            editor.apply();
                             break;
                     }
-
                 }
             });
 
@@ -448,9 +435,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
             return true;
         }
 
-        if (id == R.id.action_backup) {
-            return true;
-        }
+
 
         if (id == R.id.action_google_drive) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);

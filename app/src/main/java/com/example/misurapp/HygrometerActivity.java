@@ -1,34 +1,19 @@
 package com.example.misurapp;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.misurapp.db.DbManager;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.Locale;
 
 public class HygrometerActivity extends MisurAppInstrumentBaseActivity implements
         SensorEventListener {
@@ -37,7 +22,7 @@ public class HygrometerActivity extends MisurAppInstrumentBaseActivity implement
     private Sensor sensor;
     private ImageView imageView;
     private float value;
-    private TextView misura;
+    private TextView measure;
     float angle;
 
     @Override
@@ -55,18 +40,15 @@ public class HygrometerActivity extends MisurAppInstrumentBaseActivity implement
 
 
         imageView = findViewById(R.id.img_animazione);
-        misura = findViewById(R.id.misura);
+        measure = findViewById(R.id.misura);
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this,
-                        R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,
-                        value);
-            }
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(HygrometerActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,
+                    value);
         });
 
     }
@@ -86,7 +68,8 @@ public class HygrometerActivity extends MisurAppInstrumentBaseActivity implement
         angle = (((value - 50)*360)/120);
         imageView.setRotation((int) angle);
 
-        misura.setText(RoundOffUtility.roundOffNumber(value) +" %");
+        measure.setText(getString(R.string.hygrometer_textViewContent,
+                RoundOffUtility.roundOffNumber(value)));
     }
 
     @Override
