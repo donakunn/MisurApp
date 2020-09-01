@@ -31,7 +31,7 @@
     <string name="LogoutComplete">Logout completed with success</string>
     <string name="title_other_devices">Devices found:</string>
     <string name="button_scan">Scan</string>
-    <string name="none_paired">none pairing</string>
+    <string name="none_paired">"No paired device "</string>
     <string name="scanning">Scanning</string>
     <string name="select_device">Select device</string>
     <string name="none_found">Not found</string>
@@ -63,5 +63,6 @@
     <string name="bluetoothNeeded">" Bluetooth must be active to be able to exchange data"</string>
     <string name="discoverableNeeded">" Attention, by doing this you will not be visible to new devices, do you want to go ahead without making the device visible?"</string>
     <string name="action_ripristino">Restoration</string>
+    <string name="position_permission_needed">" In order to search for nearby devices you need to grant permissions for the location"</string>
 
 </resources>

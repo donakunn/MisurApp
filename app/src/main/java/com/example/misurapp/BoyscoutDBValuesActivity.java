@@ -1,7 +1,11 @@
 package com.example.misurapp;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,6 +80,11 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         requestSignIn();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
         for (final InstrumentRecord record : instrumentRecords) {
             TableRow dbBoyScoutQuery = new TableRow(BoyscoutDBValuesActivity.this);
@@ -119,6 +128,30 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             linearLayout.addView(dbBoyScoutQuery);
         }
     }
+
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                if (state == BluetoothAdapter.STATE_OFF) {
+                    setTitle(getResources().getString(R.string.disconnected));
+                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+                    dlgAlert.setMessage(R.string.bluetoothNotAvailable);
+                    dlgAlert.setTitle("MisurApp");
+                    dlgAlert.setCancelable(false);
+                    dlgAlert.setPositiveButton("Ok",
+                            (dialog, which) -> {
+                                finish();
+                            });
+                    dlgAlert.create().show();
+                }
+            }
+        }
+    };
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

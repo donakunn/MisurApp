@@ -43,6 +43,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -92,6 +93,11 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
      */
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
+    /**
+     * Button to perform device scan.
+     */
+    Button scanButton;
+
 
     /**
      * Member object for the connection services
@@ -116,6 +122,9 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
+        IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mReceiver, bluetoothStateFilter);
+
         instrumentName = Objects.requireNonNull
                 (getIntent().getExtras()).getString("sensorName");
 
@@ -125,12 +134,6 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // If the adapter is null, then Bluetooth is not supported
@@ -140,14 +143,55 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         }
 
         // Initialize the button to perform device discovery
-        Button scanButton = findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                doDiscovery();
-                v.setVisibility(View.GONE);
-            }
+        scanButton = findViewById(R.id.button_scan);
+        scanButton.setOnClickListener(v -> {
+            doDiscovery();
+            v.setVisibility(View.GONE);
         });
 
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
+                    (BluetoothConnectionActivity.this);
+            dlgAlert.setMessage(getString(R.string.position_permission_needed));
+            dlgAlert.setTitle("MisurApp");
+            dlgAlert.setCancelable(false);
+            dlgAlert.setPositiveButton("Ok",
+                    (dialog, which) -> ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                            1));
+            dlgAlert.create().show();
+        }
+        else {
+            initializeArrayAdapters();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                
+                initializeArrayAdapters();
+            } else {
+                final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
+                        (BluetoothConnectionActivity.this);
+                dlgAlert.setMessage(getString(R.string.position_permission_not_given));
+                dlgAlert.setTitle("MisurApp");
+                dlgAlert.setCancelable(false);
+                dlgAlert.setPositiveButton("Ok",
+                        (dialog, which) -> {
+                            finish();
+                        });
+                dlgAlert.create().show();
+            }
+        }
+    }
+
+    private void initializeArrayAdapters() {
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         ArrayAdapter<String> pairedDevicesArrayAdapter =
@@ -192,14 +236,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
 
             pairedListView.setOnItemClickListener(null);
         }
-    }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // If BT is not on, request that it be enabled.
-        // setupChat() will then be called during onActivityResult
         if (!mBtAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -219,11 +256,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
             dlgAlert.setTitle("MisurApp");
             dlgAlert.setCancelable(false);
             dlgAlert.setPositiveButton("Ok",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            BluetoothConnectionActivity.this.finish();
-                        }
-                    });
+                    (dialog, which) -> BluetoothConnectionActivity.this.finish());
             dlgAlert.create().show();
         }
     }
@@ -379,7 +412,6 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
      * The BroadcastReceiver that listens for discovered devices and changes the title when
      * discovery is finished
      */
-
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -393,7 +425,6 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
                 if (Objects.requireNonNull(device).getBondState() != BluetoothDevice.BOND_BONDED) {
                     mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
-                // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.select_device);
@@ -402,7 +433,22 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
                     String noDevices = getResources().getText(R.string.none_found).toString();
                     mNewDevicesArrayAdapter.add(noDevices);
                     newDevicesListView.setOnItemClickListener(null);
-
+                }
+                scanButton.setVisibility(View.VISIBLE);
+            }
+            if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                if (state == BluetoothAdapter.STATE_OFF) {
+                    setTitle(getResources().getString(R.string.disconnected));
+                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(BluetoothConnectionActivity.this);
+                    dlgAlert.setMessage(getString(R.string.bluetoothNotAvailable));
+                    dlgAlert.setTitle("MisurApp");
+                    dlgAlert.setCancelable(false);
+                    dlgAlert.setPositiveButton("Ok",
+                            (dialog, which) -> {
+                                finish();
+                            });
+                    dlgAlert.create().show();
                 }
             }
         }
