@@ -4,7 +4,6 @@
     <string name="lingua_inglese">Inglés</string>
     <string name="lingua_spagnola">Español</string>
     <string name="action_cambio_lingua">Cambiar idioma</string>
-    <string name="action_backup">Apoyo</string>
     <string name="utente_boyscout">Boyscout</string>
     <string name="utente_caposcout">Jefe de exploradores</string>
     <string name="categoria_posizione">Posición</string>
@@ -63,5 +62,6 @@
     <string name="disconnected">Desconectado</string>
     <string name="bluetoothNeeded">"Bluetooth debe estar activo para poder intercambiar datos "</string>
     <string name="discoverableNeeded">" Atención, al hacer esto no serás visible para nuevos dispositivos, ¿quieres seguir adelante sin hacer visible el dispositivo?"</string>
+    <string name="action_ripristino">Restauracion</string>
 
 </resources>

@@ -107,10 +107,7 @@ public class MisurAppBaseActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_backup) {
-            //da cambiare
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

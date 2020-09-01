@@ -53,7 +53,7 @@ public class DbManager {
             SimpleDateFormat dateFormat = new SimpleDateFormat(
                     "dd-MM-yyyy HH:mm:ss", Locale.ITALIAN);
             values.put(InstrumentsDBSchema.BoyscoutTable.cols.INSTRUMENTNAME, instrumentName);
-            if (timestamp.equals(null)) {
+            if (timestamp == null) {
                 values.put(InstrumentsDBSchema.BoyscoutTable.cols.TIMESTAMP,
                         dateFormat.format(new Date()));
             } else {

@@ -4,7 +4,6 @@
     <string name="lingua_inglese">English</string>
     <string name="lingua_spagnola">Spanish</string>
     <string name="action_cambio_lingua">Change Language</string>
-    <string name="action_backup">Backup</string>
     <string name="utente_boyscout">Boyscout</string>
     <string name="utente_caposcout">Scoutmaster</string>
     <string name="categoria_posizione">Position</string>
@@ -63,5 +62,6 @@
     <string name="disconnecting">Disconnection in progress</string>
     <string name="bluetoothNeeded">" Bluetooth must be active to be able to exchange data"</string>
     <string name="discoverableNeeded">" Attention, by doing this you will not be visible to new devices, do you want to go ahead without making the device visible?"</string>
+    <string name="action_ripristino">Restoration</string>
 
 </resources>

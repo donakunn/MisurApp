@@ -448,9 +448,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
             return true;
         }
 
-        if (id == R.id.action_backup) {
-            return true;
-        }
+
 
         if (id == R.id.action_google_drive) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);

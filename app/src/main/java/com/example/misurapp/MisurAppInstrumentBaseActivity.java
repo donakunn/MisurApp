@@ -116,14 +116,7 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
             return true;
         }
 
-        if (id == R.id.action_backup) {
-            try {
-                dbManager.backupDB();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return true;
-        }
+
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(this,BoyscoutDBValuesActivity.class);
