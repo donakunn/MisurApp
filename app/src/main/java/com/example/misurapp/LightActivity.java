@@ -5,13 +5,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -20,8 +20,8 @@ public class LightActivity extends MisurAppInstrumentBaseActivity implements Sen
     private SensorManager mSensorManager;
     private Sensor sensor;
     private ImageView lampadina;
-    private float valore;
-    private TextView misura;
+    private float value;
+    private TextView measure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +37,14 @@ public class LightActivity extends MisurAppInstrumentBaseActivity implements Sen
         sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
         lampadina = findViewById(R.id.img_lampadina);
-        misura = findViewById(R.id.misura);
+        measure = findViewById(R.id.misura);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,valore);
-            }
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(LightActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
+                    instrumentName, value);
         });
     }
 
@@ -60,26 +59,27 @@ public class LightActivity extends MisurAppInstrumentBaseActivity implements Sen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        valore = event.values[0];
+        value = event.values[0];
 
-        misura.setText(valore+" lx");
+        measure.setText(getString(R.string.light_textViewContent,
+                RoundOffUtility.roundOffNumber(value)));
 
-        if (valore < 10){
+        if (value < 10){
             lampadina.setImageResource(R.drawable.img_lampadina0);
         }
-        if (valore > 10 && valore < 100){
+        if (value > 10 && value < 100){
             lampadina.setImageResource(R.drawable.img_lampadina1);
         }
-        if (valore > 100 && valore < 500){
+        if (value > 100 && value < 500){
             lampadina.setImageResource(R.drawable.img_lampadina2);
         }
-        if (valore > 500 && valore < 10000){
+        if (value > 500 && value < 10000){
             lampadina.setImageResource(R.drawable.img_lampadina3);
         }
-        if (valore > 10000 && valore < 50000){
+        if (value > 10000 && value < 50000){
             lampadina.setImageResource(R.drawable.img_lampadina4);
         }
-        if (valore > 50000 && valore < 100000){
+        if (value > 50000 && value < 100000){
             lampadina.setImageResource(R.drawable.img_lampadina5);
         }
     }

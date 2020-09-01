@@ -26,6 +26,7 @@
         <item quantity="other">%d passi</item>
     </plurals>
 
+
     <string name="noValue">Nessun valore salvato</string>
     <string name="LoginRequest">Login necessario per procedere</string>
     <string name="LoginComplete">Login effettuato con successo</string>

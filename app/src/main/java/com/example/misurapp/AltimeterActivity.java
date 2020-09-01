@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,8 +21,8 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
     private SensorManager mSensorManager;
     private Sensor sensor;
     private ImageView imageView;
-    private float valore;
-    private TextView misura;
+    private float value;
+    private TextView measure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +38,14 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
 
         imageView = findViewById(R.id.img_animazione);
-        misura = findViewById(R.id.misura);
+        measure = findViewById(R.id.misura);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),instrumentName,valore);
-            }
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
+                    instrumentName, value);
         });
     }
 
@@ -63,9 +61,10 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        valore = event.values[0];
+        value = event.values[0];
 
-        float altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, valore);
+        float altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+                value);
 
         if (altitude > 6000 || altitude < 0) {
             imageView.setRotation(0);
@@ -73,7 +72,8 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
             float angle = ((altitude * 360) / 6000);
             imageView.setRotation(angle);
         }
-        misura.setText(RoundOffUtility.roundOffNumber(altitude) + " m");
+        measure.setText(getString(R.string.altitude_textViewContent,
+                RoundOffUtility.roundOffNumber(altitude)));
     }
 
     @Override

@@ -1,16 +1,15 @@
 package com.example.misurapp;
 
-import androidx.appcompat.widget.Toolbar;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.misurapp.utility.RoundOffUtility;
 import com.example.misurapp.utility.SaveAndFeedback;
@@ -42,12 +41,11 @@ public class BarometerActivity extends MisurAppInstrumentBaseActivity implements
         measurement = findViewById(R.id.misura);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName, value);
-            }
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(BarometerActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
+                    instrumentName, value);
         });
     }
 
@@ -71,7 +69,8 @@ public class BarometerActivity extends MisurAppInstrumentBaseActivity implements
             float angle = (((value - 1010) * 360) / 80);
             imageView.setRotation((int) angle);
         }
-        measurement.setText(RoundOffUtility.roundOffNumber(value) + " hPa");
+        measurement.setText(getString(R.string.barometer_textViewContent,
+                RoundOffUtility.roundOffNumber(value)));
     }
 
     @Override

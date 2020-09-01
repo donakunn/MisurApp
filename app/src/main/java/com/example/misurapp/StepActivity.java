@@ -1,7 +1,6 @@
 package com.example.misurapp;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,7 +8,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -64,33 +62,31 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
 
 
         Button reset = findViewById(R.id.reset);
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
+        reset.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this,
+                    R.anim.button_click));
 
-                stepsRegister = lastStepRegister.getInt("reset",0);
-                stepsShow = 0;
+            stepsRegister = lastStepRegister.getInt("reset",0);
+            stepsShow = 0;
 
-                editorStepDisplay.putInt("stepsDisplay",0);
-                editorStepDisplay.apply();
-                setUpText(0);
-            }
+            editorStepDisplay.putInt("stepsDisplay",0);
+            editorStepDisplay.apply();
+            setUpText(0);
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName,(float)stepsShow);
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
+                    instrumentName,(float)stepsShow);
 
 
-                //feedback
-                Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.salvato) , Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 300);
-                toast.show();
-            }
+            //feedback
+            Toast toast = Toast.makeText(getApplicationContext(),getResources()
+                    .getString(R.string.salvato) , Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
+            toast.show();
         });
 
     }
@@ -98,14 +94,6 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
-
-        if(prefs.getBoolean("flagStrumento", false)){
-            editor.putBoolean("flagStrumento", false);
-            editor.apply();
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
     }
     protected void onPause() {
         super.onPause();
@@ -121,7 +109,8 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
         if((int) event.values[0] == 0){
             stepsRegister = 0;
         }
-        stepsShow =  ((int) event.values[0] - stepsRegister) + stepDisplay.getInt("stepsDisplay", 0);
+        stepsShow =  ((int) event.values[0] - stepsRegister) + stepDisplay
+                .getInt("stepsDisplay", 0);
 
         if (stepsShow % 2 == 0) {
             imageView.setImageResource(R.drawable.contapassi1);

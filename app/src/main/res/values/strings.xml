@@ -78,6 +78,14 @@
     <string name="disconnecting">Disconnessione in corso</string>
     <string name="bluetoothNeeded">Bluetooth deve essere attivo per poter scambiare dati</string>
     <string name="discoverableNeeded">Attenzione, così facendo non sarai visibile a nuovi dispositivi, vuoi andare avanti senza rendere il dispositivo visibile?</string>
+
+    <string name="altitude_textViewContent" translatable="false">%.2f m</string>
+    <string name="barometer_textViewContent" translatable="false">%.2f hPa</string>
+    <string name="compass_textViewContent" translatable="false">%d %2$s</string>
+    <string name="hygrometer_textViewContent" translatable="false">%.2f %%</string>
+    <string name="light_textViewContent" translatable="false">%.0f lx</string>
+    <string name="step_textViewContent" translatable="false">%.2f %2$s</string>
+    <string name="thermometer_textViewContent" translatable="false">%.2f °C</string>
 </resources>
 
 

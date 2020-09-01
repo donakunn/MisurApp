@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,14 +47,12 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
         misura = findViewById(R.id.misura);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this, R.anim.button_click));
-                SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(), instrumentName, (float) mAzimuth);
-            }
+        fab.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(CompassActivity.this,
+                    R.anim.button_click));
+            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
+                    instrumentName, (float) mAzimuth);
         });
-
         start();
     }
 
@@ -76,7 +73,8 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
 
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
-            mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360;
+            mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat,
+                    orientation)[0]) + 360) % 360;
         }
 
 
@@ -90,7 +88,8 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
         if (mLastAccelerometerSet && mLastMagnetometerSet) {
             SensorManager.getRotationMatrix(rMat, null, mLastAccelerometer, mLastMagnetometer);
             SensorManager.getOrientation(rMat, orientation);
-            mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360;
+            mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat,
+                    orientation)[0]) + 360) % 360;
         }
 
         mAzimuth = Math.round(mAzimuth);
@@ -116,7 +115,7 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
             where = "NE";
 
 
-        misura.setText(mAzimuth + "° " + where);
+        misura.setText(getString(R.string.compass_textViewContent,mAzimuth,where));
     }
 
     @Override
@@ -125,17 +124,23 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
     }
 
     public void start() {
-        /*verifichiamo se il nostro dispositivo supporta il RotationVector che è l’insieme del sensore della Bussola e del Giroscopio.
-        In caso affermativo lo instanziamo. In caso negativo controlliamo che il nostro dispositivo sia provvisto dell’Accelerometro e della Bussola.
-        In caso affermativo instanziamo i due sensori, in caso negativo chiamiamo il metodo noSensorAlert() che ci mostra il messaggio di errore.*/
+        /*verifichiamo se il nostro dispositivo supporta il RotationVector che è l’insieme
+        del sensore della Bussola e del Giroscopio.
+        In caso affermativo lo instanziamo. In caso negativo controlliamo che il nostro dispositivo
+        sia provvisto dell’Accelerometro e della Bussola.
+        In caso affermativo instanziamo i due sensori, in caso negativo chiamiamo il metodo
+        noSensorAlert() che ci mostra il messaggio di errore.*/
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null) {
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-            haveSensor = mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
-            haveSensor2 = mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_UI);
+            haveSensor = mSensorManager.registerListener(this, mAccelerometer,
+                    SensorManager.SENSOR_DELAY_UI);
+            haveSensor2 = mSensorManager.registerListener(this, mMagnetometer,
+                    SensorManager.SENSOR_DELAY_UI);
         } else {
             mRotationV = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-            haveSensor = mSensorManager.registerListener(this, mRotationV, SensorManager.SENSOR_DELAY_UI);
+            haveSensor = mSensorManager.registerListener(this, mRotationV,
+                    SensorManager.SENSOR_DELAY_UI);
         }
     }
 
