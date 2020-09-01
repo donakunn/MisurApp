@@ -118,6 +118,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         } else {
             if (mBluetoothAdapter.getScanMode() ==
                     BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                startServer();
             }
         }
         showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
