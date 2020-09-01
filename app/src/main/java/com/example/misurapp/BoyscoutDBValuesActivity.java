@@ -1,7 +1,6 @@
 package com.example.misurapp;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -68,11 +66,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             dlgAlert.setTitle("MisurApp");
             dlgAlert.setCancelable(false);
             dlgAlert.setPositiveButton("Ok",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
+                    (dialog, which) -> finish());
             dlgAlert.create().show();
         } else {
             showBoyscoutTableValues(instrumentRecordsReadFromDB);
@@ -98,7 +92,8 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
 
             dbBoyScoutQuery.addView(date);
 
-            TextView value = new TextView(BoyscoutDBValuesActivity.this, null, R.style.textstyle);
+            TextView value = new TextView(BoyscoutDBValuesActivity.this, null,
+                    R.style.textstyle);
             tableRowPar.weight = 1;
             value.setLayoutParams(tableRowPar);
             value.setGravity(Gravity.CENTER);
@@ -112,14 +107,12 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             deleteButton.setLayoutParams(tableRowPar);
             deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    deleteButton.setClickable(false);
-                 DeleteRowActions deleteRowActions = new DeleteRowActions
-                         (BoyscoutDBValuesActivity.this,appDb,
-                                 linearLayout,InstrumentsDBSchema.BoyscoutTable.TABLENAME);
-                    deleteRowActions.actionsOnDeleteButtonPress(v, record);
-                }
+            deleteButton.setOnClickListener(v -> {
+                deleteButton.setClickable(false);
+             DeleteRowActions deleteRowActions = new DeleteRowActions
+                     (BoyscoutDBValuesActivity.this,appDb,
+                             linearLayout,InstrumentsDBSchema.BoyscoutTable.TABLENAME);
+                deleteRowActions.actionsOnDeleteButtonPress(v, record);
             });
 
             dbBoyScoutQuery.addView(deleteButton);
@@ -151,73 +144,61 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder
                     (BoyscoutDBValuesActivity.this);
             mBuilder.setSingleChoiceItems(listItems, -1,
-                    new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = getIntent();
+                    (dialog, which) -> {
+                        Intent intent = getIntent();
 
-
-                    switch (which) {
-
-                        case 0:
-                            setAppLocale("en");
-                            finish();
-                            startActivity(intent);
-                            break;
-
-                        case 1:
-                            setAppLocale("es");
-                            finish();
-                            startActivity(intent);
-                            break;
-
-                        case 2:
-                            setAppLocale("it");
-                            finish();
-                            startActivity(intent);
-                            break;
-                    }
-
-                }
-            });
+                        switch (which) {
+                            case 0:
+                                changeLang("en");
+                                currentLangCode = "en";
+                                finish();
+                                startActivity(intent);
+                                break;
+                            case 1:
+                                changeLang("es");
+                                currentLangCode = "es";
+                                finish();
+                                startActivity(intent);
+                                break;
+                            case 2:
+                                changeLang("it");
+                                currentLangCode = "it";
+                                finish();
+                                startActivity(intent);
+                                break;
+                        }
+                    });
 
             mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla),
-                    new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
+                    (dialog, which) -> {
+                    });
             AlertDialog mDialog = mBuilder.create();
             mDialog.show();
             return true;
         }
 
         if (id == R.id.action_ripristino) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
-            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul tuo Google Drive?");
-            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //codice di ripristino
-                    try {
-                        mDriveServiceHelper.restoreFile(appDb, sensorName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    //refresh data list
-                    /*linearLayout.removeAllViews();
-                    showBoyscoutTableValues(appDb.readBoyscoutValuesFromDB(sensorName));*/
-
-
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                    (BoyscoutDBValuesActivity.this);
+            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo " +
+                    "salvataggio fatte sul tuo Google Drive?");
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id1) -> {
+                //codice di ripristino
+                try {
+                    mDriveServiceHelper.restoreFile(appDb, sensorName);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
+                //refresh data list
+                /*linearLayout.removeAllViews();
+                showBoyscoutTableValues(appDb.readBoyscoutValuesFromDB(sensorName));*/
+
+
             });
 
-            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //annulla la scelta
-                }
+            alertDialog.setNegativeButton(R.string.No, (dialog, id12) -> {
+                //annulla la scelta
             });
             AlertDialog mDialog = alertDialog.create();
             alertDialog.show();
@@ -234,24 +215,20 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         }
 
         if (id == R.id.action_google_drive) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                    (BoyscoutDBValuesActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
-            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //Qui va il codice per salvare le misure su Google Drive
-                    try {
-                        mDriveServiceHelper.createAndSaveFile(appDb,sensorName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id13) -> {
+                //Qui va il codice per salvare le misure su Google Drive
+                try {
+                    mDriveServiceHelper.createAndSaveFile(appDb,sensorName);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
-            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //annulla la scelta
-                }
+            alertDialog.setNegativeButton(R.string.No, (dialog, id14) -> {
+                //annulla la scelta
             });
             AlertDialog mDialog = alertDialog.create();
             alertDialog.show();
@@ -299,8 +276,6 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
 
         // The result of the sign-in Intent is handled in onActivityResult.
         startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-
-
     }
 
     /**

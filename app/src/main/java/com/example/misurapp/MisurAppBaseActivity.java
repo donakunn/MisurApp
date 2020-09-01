@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MisurAppBaseActivity extends AppCompatActivity {
 
@@ -33,20 +35,9 @@ public class MisurAppBaseActivity extends AppCompatActivity {
         prefs = getSharedPreferences("shared_pref_name", MODE_PRIVATE);
         editor = prefs.edit();
 
-        currentLangCode = getResources().getConfiguration().locale.getLanguage();
+        currentLangCode = prefs.getString("Language", "it");
+        loadLocale();
 
-    }
-
-    protected void setAppLocale(String localCode) {
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            conf.setLocale(new Locale(localCode.toLowerCase()));
-        } else {
-            conf.locale = new Locale(localCode.toLowerCase());
-        }
-        res.updateConfiguration(conf, dm);
     }
 
     @Override
@@ -74,21 +65,21 @@ public class MisurAppBaseActivity extends AppCompatActivity {
                     Intent intent = getIntent();
 
                     switch (which) {
-
                         case 0:
-                            setAppLocale("en");
+                            changeLang("en");
+                            currentLangCode = "en";
                             finish();
                             startActivity(intent);
                             break;
-
                         case 1:
-                            setAppLocale("es");
+                            changeLang("es");
+                            currentLangCode = "es";
                             finish();
                             startActivity(intent);
                             break;
-
                         case 2:
-                            setAppLocale("it");
+                            changeLang("it");
+                            currentLangCode = "it";
                             finish();
                             startActivity(intent);
                             break;
@@ -108,19 +99,39 @@ public class MisurAppBaseActivity extends AppCompatActivity {
         }
 
 
-
         return super.onOptionsItemSelected(item);
     }
 
     protected void onResume() {
         super.onResume();
-        if(!currentLangCode.equals(getResources().getConfiguration().locale.getLanguage())){
+        if (!currentLangCode.equals(getResources().getConfiguration().locale.getLanguage())) {
             currentLangCode = getResources().getConfiguration().locale.getLanguage();
             recreate();
         }
     }
 
-    protected void changeLocale(int id) {
+    public void loadLocale() {
+        String langPref = "Language";
+        String language = prefs.getString(langPref, "");
+        changeLang(Objects.requireNonNull(language));
+    }
 
+    public void changeLang(String lang) {
+        if (lang.equalsIgnoreCase(""))
+            return;
+        Locale myLocale = new Locale(lang);
+        saveLocale(lang);
+        Locale.setDefault(myLocale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.locale = myLocale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources()
+                .getDisplayMetrics());
+
+    }
+
+    public void saveLocale(String lang) {
+        String langPref = "Language";
+        editor.putString(langPref, lang);
+        editor.apply();
     }
 }
