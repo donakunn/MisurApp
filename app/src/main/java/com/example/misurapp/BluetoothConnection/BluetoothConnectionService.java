@@ -19,7 +19,6 @@
         package com.example.misurapp.BluetoothConnection;
 
         import android.bluetooth.BluetoothAdapter;
-        import android.bluetooth.BluetoothDevice;
         import android.os.Bundle;
         import android.os.Handler;
         import android.os.Message;
@@ -110,7 +109,8 @@
 
             /**
              * Send a state message to be shown on a Toast to the Handler.
-             * @param message
+             *
+             * @param message String message to send back to the activity
              */
             protected void sendStringToastToHandler (String message) {
                 Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);

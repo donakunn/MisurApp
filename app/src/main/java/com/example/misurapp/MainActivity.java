@@ -62,16 +62,14 @@ public class MainActivity extends MisurAppBaseActivity {
             }
         });
 
-        scoutMasterButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        scoutMasterButton.setOnClickListener(v -> {
 
-                if (prefs.getBoolean("hasLogin", false)) {
-                    v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
-                    Intent intent = new Intent(MainActivity.this, ScoutMasterDatabaseActivity.class);
-                    startActivity(intent);
-                } else {
-                    toastMaker(getResources().getString(R.string.LoginRequest));
-                }
+            if (prefs.getBoolean("hasLogin", false)) {
+                v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_click));
+                Intent intent = new Intent(MainActivity.this, ScoutMasterDatabaseActivity.class);
+                startActivity(intent);
+            } else {
+                toastMaker(getResources().getString(R.string.LoginRequest));
             }
         });
 

@@ -37,7 +37,7 @@
     <string name="title_paired_devices">Dispositivi accoppiati</string>
     <string name="title_other_devices">Dispositivi trovati:</string>
     <string name="button_scan">Scansiona</string>
-    <string name="none_paired">nessun accoppiamento</string>
+    <string name="none_paired">Nessun dispositivo accoppiato</string>
     <string name="scanning">Sto cercando</string>
     <string name="select_device">Seleziona dispositivo</string>
     <string name="none_found">Non trovato</string>
@@ -78,6 +78,7 @@
     <string name="disconnecting">Disconnessione in corso</string>
     <string name="bluetoothNeeded">Bluetooth deve essere attivo per poter scambiare dati</string>
     <string name="discoverableNeeded">Attenzione, così facendo non sarai visibile a nuovi dispositivi, vuoi andare avanti senza rendere il dispositivo visibile?</string>
+    <string name="position_permission_needed">Per poter cercare i dispositivi nelle vicinanze è necessario concedere i permessi per la posizione</string>
 
     <string name="altitude_textViewContent" translatable="false">%.2f m</string>
     <string name="barometer_textViewContent" translatable="false">%.2f hPa</string>
@@ -86,6 +87,7 @@
     <string name="light_textViewContent" translatable="false">%.0f lx</string>
     <string name="step_textViewContent" translatable="false">%.2f %2$s</string>
     <string name="thermometer_textViewContent" translatable="false">%.2f °C</string>
+    <string name="position_permission_not_given">Senza concedere i permessi non è possibile utilizzare la connessione bluetooth per scambiare dati. Premere ok per tornare alla schermata precedente</string>
 </resources>
 
 

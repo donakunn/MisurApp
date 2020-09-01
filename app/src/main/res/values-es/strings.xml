@@ -31,13 +31,13 @@
     <string name="LogoutComplete">Cerrar sesión completato con successo</string>
     <string name="title_other_devices">Dispositivos encontrados:</string>
     <string name="button_scan">Escanear</string>
-    <string name="none_paired">ninguno emparejamiento</string>
+    <string name="none_paired">" Sin dispositivo emparejado"</string>
     <string name="scanning">Busco</string>
     <string name="select_device">Seleccione el dispositivo</string>
     <string name="none_found">Extraviado</string>
     <string name="title_paired_devices">Dispositivos emparejados</string>
     <string name="conferma_invio_dati">¿Está seguro de que desea enviar los datos a:</string>
-    <string name="Si">Sip</string>
+    <string name="Si">Si</string>
     <string name="No">No</string>
     <string name="Azzera">Reiniciar</string>
     <string name="data">Fecha</string>
@@ -63,5 +63,6 @@
     <string name="bluetoothNeeded">"Bluetooth debe estar activo para poder intercambiar datos "</string>
     <string name="discoverableNeeded">" Atención, al hacer esto no serás visible para nuevos dispositivos, ¿quieres seguir adelante sin hacer visible el dispositivo?"</string>
     <string name="action_ripristino">Restauracion</string>
+    <string name="position_permission_needed">Para buscar dispositivos cercanos, debe otorgar permisos para la ubicación</string>
 
 </resources>
