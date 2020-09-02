@@ -54,7 +54,7 @@ public class DriveServiceHelper {
                 (sensorName);
 
         for (final InstrumentRecord record : instrumentRecordsReadFromDB) {
-            fileContent = fileContent +" Data: "+ record.getDate() + " Misura: "+ record.getValue() + "\n";
+            fileContent = fileContent +" Data: "+ record.getTimestamp() + " Misura: "+ record.getValue() + "\n";
         }
 
         String finalFileContent = fileContent;
@@ -88,7 +88,7 @@ public class DriveServiceHelper {
 
                                         //controlla che il valore non sia già salvato sul database controllando il timestamp
                                         for (final InstrumentRecord record : instrumentRecordsReadFromDB) {
-                                            if (record.getDate().contentEquals(timestamp)) {
+                                            if (record.getTimestamp().contentEquals(timestamp)) {
                                                 control = true;
                                             }
                                         }

@@ -2,21 +2,35 @@ package com.example.misurapp.db;
 
 import java.io.Serializable;
 
+/**
+ * Class which describe and handle instrument records
+ */
 public class InstrumentRecord implements Serializable {
+    /**
+     * id of the record
+     */
     private long id;
-    private String date;
+
+    /**
+     * timestamp of the record
+     */
+    private String timestamp;
+
+    /**
+     * registered value
+     */
     private float value;
 
-    public InstrumentRecord(long id,String date, float value) {
+    public InstrumentRecord(long id,String timestamp, float value) {
         this.id = id;
-        this.date = date;
+        this.timestamp = timestamp;
         this.value = value;
     }
 
     public long getId() { return id; }
 
-    public String getDate() {
-        return date;
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public float getValue() {

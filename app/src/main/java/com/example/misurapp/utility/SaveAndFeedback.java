@@ -1,6 +1,7 @@
 package com.example.misurapp.utility;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -12,7 +13,9 @@ import com.example.misurapp.db.InstrumentsDBSchema;
  * This class save value registered by an instrument and make a toast for feedback
  */
 public class SaveAndFeedback {
-    public static void saveAndMakeToast(DbManager dbManager, Context context,String sensorUsed, Float valore) {
+    public static void saveAndMakeToast(DbManager dbManager, Context context,String sensorUsed,
+                                        Float valore) {
+        Log.d("SaveAndFeedback","saving registered values");
         dbManager.saveRegisteredValues(InstrumentsDBSchema.BoyscoutTable.TABLENAME,
                 null,null,sensorUsed, valore);
 

@@ -1,6 +1,5 @@
 package com.example.misurapp.BluetoothConnection;
 
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
@@ -12,7 +11,17 @@ import java.io.InputStream;
 
 public final class BluetoothServer extends BluetoothConnectionService {
 
+    //debugging
+    private final String TAG = "BluetoothServer";
+
+    /**
+     * AcceptThread object for incoming connections
+     */
     private AcceptThread mAcceptThread;
+
+    /**
+     * ConnectedThread object for managing connection
+     */
     private ConnectedThread mConnectedThread;
 
     /**
@@ -93,7 +102,6 @@ public final class BluetoothServer extends BluetoothConnectionService {
      *
      * @param socket The BluetoothSocket on which the connection was made
      */
-
     public synchronized void connected(BluetoothSocket socket) {
         Log.d(TAG, "connected");
 
@@ -151,8 +159,6 @@ public final class BluetoothServer extends BluetoothConnectionService {
             // Listen to the server socket if we're not connected
             while (mState != STATE_CONNECTED) {
                 try {
-                    // This is a blocking call and will only return on a
-                    // successful connection or an exception
                     socket = mmServerSocket.accept();
 
                     setStateAndUpdateTitle(STATE_CONNECTING);
@@ -167,12 +173,10 @@ public final class BluetoothServer extends BluetoothConnectionService {
                         switch (mState) {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
-                                // Situation normal. Start the connected thread.
                                 connected(socket);
                                 break;
                             case STATE_NONE:
                             case STATE_CONNECTED:
-                                // Either not ready or already connected. Terminate new socket.
                                 try {
                                     socket.close();
                                 } catch (IOException e) {
@@ -195,19 +199,16 @@ public final class BluetoothServer extends BluetoothConnectionService {
                 Log.e(TAG, "close() of server failed", e);
             } finally {
                 setStateAndUpdateTitle(STATE_NONE);
-
             }
         }
     }
 
     /**
      * This thread runs during a connection with a remote device.
-     * It handles all incoming and outgoing transmissions.
+     * It handles all incoming transmissions.
      */
-
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
         private final DataInputStream dataInputStream;
 
         public ConnectedThread(BluetoothSocket socket) {
@@ -215,14 +216,13 @@ public final class BluetoothServer extends BluetoothConnectionService {
             mmSocket = socket;
             InputStream tmpIn = null;
 
-            // Get the BluetoothSocket input and output streams
             try {
                 tmpIn = socket.getInputStream();
             } catch (IOException e) {
                 Log.e(TAG, "temp sockets not created", e);
             }
 
-            mmInStream = tmpIn;
+            InputStream mmInStream = tmpIn;
             dataInputStream = new DataInputStream(mmInStream);
             setStateAndUpdateTitle(STATE_CONNECTED);
         }
@@ -233,10 +233,10 @@ public final class BluetoothServer extends BluetoothConnectionService {
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
-                    int length = dataInputStream.readInt();      // read length of incoming message
+                    int length = dataInputStream.readInt();
                     if (length > 0) {
                         byte[] data = new byte[length];
-                        dataInputStream.readFully(data, 0, data.length); // read the message
+                        dataInputStream.readFully(data, 0, data.length);
                         mHandler.obtainMessage(Constants.MESSAGE_READ, data.length, -1, data)
                                 .sendToTarget();
                         setStateAndUpdateTitle(STATE_NONE);

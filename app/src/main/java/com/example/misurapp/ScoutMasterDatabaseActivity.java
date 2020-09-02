@@ -31,7 +31,7 @@ import com.example.misurapp.BluetoothConnection.BluetoothServer;
 import com.example.misurapp.BluetoothConnection.Constants;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
-import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
+import com.example.misurapp.db.RecordsWithEmailAndInstrument;
 import com.example.misurapp.db.ScoutMasterInstrumentRecord;
 import com.example.misurapp.utility.DeleteRowActions;
 
@@ -217,7 +217,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                         try {
                             List<ScoutMasterInstrumentRecord> receivedValues =
                                     scoutMasterRecordListMaker
-                                            (RecordsWithEmailAndInstrumentName
+                                            (RecordsWithEmailAndInstrument
                                                     .deserialize(readBuf));
                             saveReceivedRecordsOnDB(receivedValues);
                             Toast.makeText(ScoutMasterDatabaseActivity.this,
@@ -289,12 +289,12 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
     //trasforma l'oggetto contenente lista record, email e strumento in una lista di record con
     //schema uguale a tabella scout master che conterrà i valori
     private List<ScoutMasterInstrumentRecord> scoutMasterRecordListMaker
-    (RecordsWithEmailAndInstrumentName recordsWithEmail) {
+    (RecordsWithEmailAndInstrument recordsWithEmail) {
         List<ScoutMasterInstrumentRecord> scoutMasterRecordsList = new LinkedList<>();
         List<InstrumentRecord> recordList = recordsWithEmail.getBoyscoutRecords();
         for (InstrumentRecord record : recordList) {
             ScoutMasterInstrumentRecord recordToSave = new ScoutMasterInstrumentRecord
-                    (record.getId(), record.getDate(), record.getValue(),
+                    (record.getId(), record.getTimestamp(), record.getValue(),
                             recordsWithEmail.getBoyScoutEmail(),
                             recordsWithEmail.getInstrumentName());
             scoutMasterRecordsList.add(recordToSave);
@@ -336,7 +336,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
             timestamp.setGravity(Gravity.CENTER_VERTICAL);
             timestamp.setPadding(10, 10, 10, 10);
             timestamp.setTypeface(null, Typeface.BOLD);
-            timestamp.setText(record.getDate());
+            timestamp.setText(record.getTimestamp());
 
             query.addView(timestamp);
 
