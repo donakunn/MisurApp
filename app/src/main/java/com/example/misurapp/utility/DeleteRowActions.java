@@ -1,6 +1,7 @@
 package com.example.misurapp.utility;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,29 @@ import com.example.misurapp.db.InstrumentRecord;
  */
 public class DeleteRowActions {
 
+    /**
+     * debug tag
+     */
+    private final String TAG ="DeleteRowActions";
+
+    /**
+     * Activity in which to perform operations
+     */
     private Activity activityInterested;
+
+    /**
+     * DbManager object for managing operations on database
+     */
     private DbManager appDb;
+
+    /**
+     * Interested LinearLayout object
+     */
     private LinearLayout linearLayout;
+
+    /**
+     * name of the tables interested into delete operations.
+     */
     private String tableName;
 
     /**
@@ -33,6 +54,7 @@ public class DeleteRowActions {
      */
     public DeleteRowActions(Activity activityInterested, DbManager appDb, LinearLayout linearLayout,
                             String tableName) {
+        Log.d(TAG,"Starting delete row actions");
         this.activityInterested = activityInterested;
         this.appDb = appDb;
         this.linearLayout = linearLayout;
@@ -45,6 +67,7 @@ public class DeleteRowActions {
      * @param record record we want to delete from the table
      */
     public void actionsOnDeleteButtonPress(View v, InstrumentRecord record) {
+        Log.d(TAG,"delete button pressed");
         v.startAnimation(AnimationUtils.loadAnimation
                 (activityInterested, R.anim.button_click));
         appDb.deleteARow(tableName, record.getId());
@@ -61,6 +84,7 @@ public class DeleteRowActions {
      * @param v interested View
      */
     private void deleteAndRedraw(View v) {
+        Log.d(TAG,"delete and redraw");
         final View row = (View) v.getParent();
         onDeleteAnimation(row);
         linearLayout.postDelayed(new Runnable() {
@@ -77,6 +101,7 @@ public class DeleteRowActions {
      * @param row row to fade out
      */
     private void onDeleteAnimation(final View row) {
+        Log.d(TAG,"Starting animation");
         Animation fadeout = new AlphaAnimation(1.f, 0.f);
         fadeout.setDuration(500);
         fadeout.setAnimationListener(new Animation.AnimationListener() {

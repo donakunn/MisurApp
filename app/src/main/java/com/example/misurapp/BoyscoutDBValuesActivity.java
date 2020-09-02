@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,7 +96,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             date.setGravity(Gravity.CENTER_VERTICAL);
             date.setPadding(10, 10, 10, 10);
             date.setTypeface(null, Typeface.BOLD);
-            date.setText(record.getDate());
+            date.setText(record.getTimestamp());
 
             dbBoyScoutQuery.addView(date);
 

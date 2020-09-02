@@ -12,6 +12,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -20,10 +21,6 @@
         <activity android:name=".MisurAppInstrumentBaseActivity" />
         <activity android:name=".MisurAppBaseActivity" />
         <activity android:name=".BluetoothConnectionActivity" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ThermometerActivity" />
         <activity android:name=".StepActivity" />
         <activity android:name=".HygrometerActivity" />

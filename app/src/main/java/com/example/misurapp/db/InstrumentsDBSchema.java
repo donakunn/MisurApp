@@ -1,7 +1,13 @@
 package com.example.misurapp.db;
-//Questa classe descrive lo schema delle due tabelle contenenti i valori salvati dagli strumenti
+
+/**
+ * App tables schema
+ */
 public class InstrumentsDBSchema {
-    //schema tabella che contiene i valori registrati dall'app in modalità boyscout
+
+    /**
+     * BoyScout table schema
+     */
     public static final class BoyscoutTable {
         public static final String TABLENAME = "valuesRecordedByBoyscout";
 
@@ -11,7 +17,10 @@ public class InstrumentsDBSchema {
             public static final String TIMESTAMP = "timestamp";
         }
     }
-    //schema tabella che contiene valori mostrati al capo scout, ricevuti dai boyscout
+
+    /**
+     * ScoutMaster table schema
+     */
     public static final class ScoutMasterTable {
         public static final String TABLENAME = "valuesReceivedByBoyscout";
 

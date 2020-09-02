@@ -15,8 +15,22 @@ import java.io.OutputStream;
  */
 public class BluetoothClient extends BluetoothConnectionService {
 
+    // Debugging
+    protected static final String TAG = "BluetoothClient";
+
+    /**
+     * ConnectThread object for establish a connection
+     */
     private ConnectThread mConnectThread;
+
+    /**
+     * ConnectedThread object for managing connection
+     */
     private ConnectedThread mConnectedThread;
+
+    /**
+     * buffer used to send data
+     */
     private byte[] data = new byte[1024];
 
     /**
@@ -119,7 +133,6 @@ public class BluetoothClient extends BluetoothConnectionService {
      * with a device. It runs straight through; the connection either
      * succeeds or fails.
      */
-
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
 
@@ -182,9 +195,8 @@ public class BluetoothClient extends BluetoothConnectionService {
 
     /**
      * This thread runs during a connection with a remote device.
-     * It handles all incoming and outgoing transmissions.
+     * It handles all outgoing transmissions.
      */
-
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final DataOutputStream out;

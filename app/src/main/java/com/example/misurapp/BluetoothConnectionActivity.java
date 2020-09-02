@@ -53,7 +53,7 @@ import com.example.misurapp.BluetoothConnection.BluetoothClient;
 import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
 import com.example.misurapp.BluetoothConnection.Constants;
 import com.example.misurapp.db.DbManager;
-import com.example.misurapp.db.RecordsWithEmailAndInstrumentName;
+import com.example.misurapp.db.RecordsWithEmailAndInstrument;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -471,7 +471,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
      *
      * @param records data to be send over bluetooth
      */
-    private void setDataToSend(RecordsWithEmailAndInstrumentName records) throws IOException {
+    private void setDataToSend(RecordsWithEmailAndInstrument records) throws IOException {
         // Check that there's actually something to send
         if (records != null) {
             // Get the message bytes and tell the BluetoothChatService to write
