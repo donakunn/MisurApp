@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -210,27 +211,59 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         }
 
         if (id == R.id.action_ripristino) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder
-                    (BoyscoutDBValuesActivity.this);
-            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo " +
-                    "salvataggio fatte sul tuo Google Drive?");
-            alertDialog.setPositiveButton(R.string.Si, (dialog, id1) -> {
-                //codice di ripristino
-                try {
-                    mDriveServiceHelper.restoreFile(appDb, sensorName);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul tuo Google Drive?");
+            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //codice di ripristino
+                    try {
+                        mDriveServiceHelper.getIdentificativo(sensorName)
+                                .addOnSuccessListener(fileId -> mDriveServiceHelper.readFile(fileId)
+                                        .addOnSuccessListener(fileContent -> {
+                                            List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB(sensorName);
+                                            String timestamp;
+                                            boolean control = false;
+                                            String[] lines = fileContent.split("\n");
+                                            String[] words;
+                                            if (fileContent != null ) { //controlla che il file non sia vuoto
+                                                if (!instrumentRecordsReadFromDB.isEmpty()) {//controlla che nel db ci siano salvati dei valori
+                                                    for (String string : lines) {
+                                                        words = string.split(" ");
+                                                        timestamp = words[2] + " " + words[3];
+                                                        control = false;
+                                                        //controlla che il valore non sia già salvato sul database controllando il timestamp
+                                                        for (final InstrumentRecord record : instrumentRecordsReadFromDB) {
+                                                            if (record.getTimestamp().contentEquals(timestamp)) {
+                                                                control = true;
+                                                            }
+                                                        }
+                                                        if (!control) {
+                                                            appDb.saveRegisteredValues("valuesRecordedByBoyscout", null, timestamp,
+                                                                    sensorName, Float.valueOf(words[5]));
+                                                        }
+                                                    }
+                                                } else {
+                                                    for (String string : lines) {
+                                                        words = string.split(" ");
+                                                        timestamp = words[2] + " " + words[3];
+                                                        appDb.saveRegisteredValues("valuesRecordedByBoyscout", null, timestamp,
+                                                                sensorName, Float.valueOf(words[5]));
+                                                    }
+                                                }
+                                                showBoyscoutTableValues(appDb.readBoyscoutValuesFromDB(sensorName));
+                                            }
+                                        }));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                //refresh data list
-                /*linearLayout.removeAllViews();
-                showBoyscoutTableValues(appDb.readBoyscoutValuesFromDB(sensorName));*/
-
-
             });
 
-            alertDialog.setNegativeButton(R.string.No, (dialog, id12) -> {
-                //annulla la scelta
+            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    //annulla la scelta
+                }
             });
             AlertDialog mDialog = alertDialog.create();
             alertDialog.show();
