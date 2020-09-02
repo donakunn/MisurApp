@@ -101,7 +101,32 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
             mDialog.show();
             return true;
         }
+/*
+        if (id == R.id.action_ripristino) { //ripristino
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul tuo Google Drive?");
+            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //codice di ripristino
+                    try {
+                        mDriveServiceHelper.restoreFile(dbManager,instrumentName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
+            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    //annulla la scelta
+                }
+            });
+            AlertDialog mDialog = alertDialog.create();
+            alertDialog.show();
+            return true;
+        }//fine ripristino
+*/
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(this, BoyscoutDBValuesActivity.class);
