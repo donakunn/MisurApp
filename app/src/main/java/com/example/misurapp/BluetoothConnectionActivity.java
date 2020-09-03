@@ -1,22 +1,3 @@
-
-
-
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.misurapp;
 
 import android.Manifest;
@@ -26,7 +7,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -60,62 +40,63 @@ import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.Set;
 
-
 /**
- * This Activity appears as a dialog. It lists any paired devices and
- * devices detected in the area after discovery. When a device is chosen
- * by the user, the MAC address of the device is sent back to the parent
- * Activity in the result Intent.
+ * This Activity lists any paired devices and devices detected in the area after discovery.
+ * When a device is chosen by the user, establish a connection and send related data
  */
-
 public class BluetoothConnectionActivity extends MisurAppBaseActivity {
-    // Intent request codes
+    /**
+     * Intent request code
+     */
     private static final int REQUEST_ENABLE_BT = 3;
-
+    /**
+     * Instrument name
+     */
     private String instrumentName;
+    /**
+     * DbManager object used to perform database operations.
+     */
     private DbManager dbManager = new DbManager(this);
-
+    /**
+     * list view which contains new devices found.
+     */
     private ListView newDevicesListView;
-
     /**
      * Tag for Log
      */
     private static final String TAG = "DeviceListActivity";
-
-
     /**
-     * Member fields
+     * BluetoothAdapter reference
      */
     private BluetoothAdapter mBtAdapter;
-
     /**
      * Newly discovered devices
      */
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
-
     /**
      * Button to perform device scan.
      */
     Button scanButton;
-
-
     /**
      * Member object for the connection services
      */
-
     private BluetoothClient btConnectionHandler = null;
-
     /**
      * Boolean that indicates if data is already set to send
      */
     boolean dataReady = false;
 
+    /**
+     * initialize layout, register a BroadCastReceiver initialize scan button with a listener and
+     * check if app has COARSE_LOCATION permission
+     *
+     * @param savedInstanceState activity saved instance bundle
+     */
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Setup the window
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_device_list);
 
@@ -131,24 +112,28 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        // If the adapter is null, then Bluetooth is not supported
         if (mBtAdapter == null) {
             Toast.makeText(this, R.string.bluetoothNotAvailable, Toast.LENGTH_LONG).show();
             BluetoothConnectionActivity.this.finish();
         }
 
-        // Initialize the button to perform device discovery
         scanButton = findViewById(R.id.button_scan);
         scanButton.setOnClickListener(v -> {
             doDiscovery();
             v.setVisibility(View.GONE);
         });
+        coarsePermissionCheck();
+    }
 
+    /**
+     * check if app has COARSE_LOCATION permission, if is not granted start a request permission
+     * activity
+     */
+    private void coarsePermissionCheck() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
@@ -161,8 +146,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
                             new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                             1));
             dlgAlert.create().show();
-        }
-        else {
+        } else {
             initializeArrayAdapters();
         }
     }
@@ -171,10 +155,11 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionResult");
         if (requestCode == 1) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                
+
                 initializeArrayAdapters();
             } else {
                 final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
@@ -183,51 +168,44 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
                 dlgAlert.setTitle("MisurApp");
                 dlgAlert.setCancelable(false);
                 dlgAlert.setPositiveButton("Ok",
-                        (dialog, which) -> {
-                            finish();
-                        });
+                        (dialog, which) -> finish());
                 dlgAlert.create().show();
             }
         }
     }
 
+    /**
+     * This method manage operation to initialize array adapters. One for already paired devices and
+     * // one for newly discovered devices
+     */
     private void initializeArrayAdapters() {
-        // Initialize array adapters. One for already paired devices and
-        // one for newly discovered devices
+        Log.d(TAG, "initializing array adapters");
         ArrayAdapter<String> pairedDevicesArrayAdapter =
                 new ArrayAdapter<>(this, R.layout.device_name);
         mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_name);
 
-        // Find and set up the ListView for paired devices
         ListView pairedListView = findViewById(R.id.paired_devices);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
 
-        // Find and set up the ListView for newly discovered devices
         newDevicesListView = findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
 
-        // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(mReceiver, filter);
 
-        // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
 
-        // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        // Get a set of currently paired devices
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
-        // If there are paired devices, add each one to the ArrayAdapter
         if (pairedDevices.size() > 0) {
             findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
 
-            //add listener only if there are paired devices
             pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         } else {
@@ -261,9 +239,12 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         }
     }
 
+    /**
+     * This class handles messages received from the BluetoothClient class and performs operations
+     * based on the message received
+     */
     @SuppressLint("HandlerLeak")
     private class ClientHandler extends Handler {
-        //Using a weak reference means you won't prevent garbage collection
         private final WeakReference<BluetoothConnectionActivity> clientWeakReference;
 
         public ClientHandler(BluetoothConnectionActivity clientIstance) {
@@ -312,10 +293,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
     }
 
     /**
-     * An example getter to provide it to some external class
-     * or just use 'new MyHandler(this)' if you are using it internally.
-     * If you only use it internally you might even want it as final member:
-     * private final MyHandler mHandler = new MyHandler(this);
+     * A getter that returns an inner class ClientHandler object
      */
     private Handler getClientHandler() {
         return new ClientHandler(this);
@@ -325,14 +303,13 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // Make sure we're not doing discovery anymore
         if (mBtAdapter != null) {
             mBtAdapter.cancelDiscovery();
         }
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
         }
-        // Unregister broadcast listeners
+
         this.unregisterReceiver(mReceiver);
     }
 
@@ -340,88 +317,71 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
     /**
      * Start device discover with the BluetoothAdapter
      */
-
     private void doDiscovery() {
         Log.d(TAG, "doDiscovery()");
 
-        // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
         setTitle(getApplicationContext().getString(R.string.scanning));
 
-        // Turn on sub-title for new devices
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
-        // If we're already discovering, stop it
         if (mBtAdapter.isDiscovering()) {
             mBtAdapter.cancelDiscovery();
         }
 
-        // Request discover from BluetoothAdapter
         mBtAdapter.startDiscovery();
     }
 
-
     /**
-     * The on-click listener for all devices in the ListViews
+     * The on-click listener for all devices in the ListViews; on click show a dialog asking if
+     * we want to share data to the selected device, on positive result establish connection and
+     * send data.
      */
-
     private AdapterView.OnItemClickListener mDeviceClickListener
             = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, final View v, int arg2, long arg3) {
 
             final String info = ((TextView) v).getText().toString();
-            //0 Name, 1 Address
             final String[] nameAndAddress = info.split("\n");
             AlertDialog.Builder alertDialog = new AlertDialog.Builder
                     (BluetoothConnectionActivity.this);
             alertDialog.setMessage
                     (getApplicationContext().getString(R.string.conferma_invio_dati)
                             + " " + nameAndAddress[0]);
-            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id) -> {
 
-                    try {
-                        setDataToSend(dbManager.recordsToSendBuilder(instrumentName));
-                    } catch (IOException e) {
-                        e.printStackTrace(); //da gestire
-                    }
-                    mBtAdapter.cancelDiscovery();
-                    if (dataReady) {
-                        // Create the result Intent and include the MAC address
-                        connectDevice(nameAndAddress[1]); //check se corretto
-                    } else {
-                        Toast.makeText(BluetoothConnectionActivity.this,
-                                R.string.no_data,
-                                Toast.LENGTH_SHORT).show();
-                    }
+                try {
+                    setDataToSend(dbManager.recordsToSendBuilder(instrumentName));
+                } catch (IOException e) {
+                    Log.e(TAG, e.toString());
+                }
+                mBtAdapter.cancelDiscovery();
+                if (dataReady) {
+                    connectDevice(nameAndAddress[1]);
+                } else {
+                    Toast.makeText(BluetoothConnectionActivity.this,
+                            R.string.no_data,
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
-            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //annulla la scelta
-                }
+            alertDialog.setNegativeButton(R.string.No, (dialog, id) -> {
             });
             alertDialog.create().show();
         }
     };
 
-
     /**
-     * The BroadcastReceiver that listens for discovered devices and changes the title when
-     * discovery is finished
+     * The BroadcastReceiver that listens for discovered devices, changes the title when
+     * discovery is finished and finish the activity if the bluetooth is disabled
      */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // If it's already paired, skip it, because it's been listed already
                 if (Objects.requireNonNull(device).getBondState() != BluetoothDevice.BOND_BONDED) {
                     mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
@@ -437,17 +397,17 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
                 scanButton.setVisibility(View.VISIBLE);
             }
             if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR);
                 if (state == BluetoothAdapter.STATE_OFF) {
                     setTitle(getResources().getString(R.string.disconnected));
-                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(BluetoothConnectionActivity.this);
+                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
+                            (BluetoothConnectionActivity.this);
                     dlgAlert.setMessage(getString(R.string.bluetoothNotAvailable));
                     dlgAlert.setTitle("MisurApp");
                     dlgAlert.setCancelable(false);
                     dlgAlert.setPositiveButton("Ok",
-                            (dialog, which) -> {
-                                finish();
-                            });
+                            (dialog, which) -> finish());
                     dlgAlert.create().show();
                 }
             }
@@ -460,9 +420,8 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
      * @param address Address of the device we're connecting
      */
     private void connectDevice(String address) {
-        // Get the BluetoothDevice object
+        Log.d(TAG, "connecting to " + address);
         BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
-        // Attempt to connect to the device
         btConnectionHandler.connect(device);
     }
 
@@ -472,9 +431,8 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
      * @param records data to be send over bluetooth
      */
     private void setDataToSend(RecordsWithEmailAndInstrument records) throws IOException {
-        // Check that there's actually something to send
+        Log.d(TAG, "Setting data to send");
         if (records != null) {
-            // Get the message bytes and tell the BluetoothChatService to write
             byte[] bytesToSend = records.serialize();
             btConnectionHandler.setData(bytesToSend);
             dataReady = true;

@@ -1,6 +1,5 @@
 package com.example.misurapp;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -14,6 +13,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+/**
+ * This activity ini
+ */
 public class ListaStrumentiActivity extends MisurAppBaseActivity {
 
     @Override
@@ -60,7 +62,8 @@ public class ListaStrumentiActivity extends MisurAppBaseActivity {
 
         //bussola
         if (manager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null) {
-            if ((manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) || (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) == null)) {
+            if ((manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) ||
+                    (manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) == null)) {
                 bussolaNonSupportato.setVisibility(View.VISIBLE);
                 bussola.setEnabled(false);
             } else {
@@ -106,62 +109,25 @@ public class ListaStrumentiActivity extends MisurAppBaseActivity {
         }
 
 
-        bussola.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, CompassActivity.class);
-                startActivity(intent);
-            }
-        });
+        bussola.setOnClickListener(v -> onClickOperation(v,CompassActivity.class));
 
-        contapassi.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, StepActivity.class);
-                startActivity(intent);
-            }
-        });
+        contapassi.setOnClickListener(v -> onClickOperation(v,StepActivity.class));
 
+        luminosita.setOnClickListener(v -> onClickOperation(v,LightActivity.class));
 
-        luminosita.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, LightActivity.class);
-                startActivity(intent);
-            }
-        });
+        termometro.setOnClickListener(v -> onClickOperation(v,ThermometerActivity.class));
 
-        termometro.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, ThermometerActivity.class);
-                startActivity(intent);
-            }
-        });
+        barometro.setOnClickListener(v -> onClickOperation(v,BarometerActivity.class));
 
-        barometro.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, BarometerActivity.class);
-                startActivity(intent);
-            }
-        });
+        umidita.setOnClickListener(v -> onClickOperation(v,HygrometerActivity.class));
 
-        umidita.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, HygrometerActivity.class);
-                startActivity(intent);
-            }
-        });
+        altimetro.setOnClickListener(v -> onClickOperation(v,AltimeterActivity.class));
+    }
 
-        altimetro.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this, R.anim.button_click));
-                Intent intent = new Intent(ListaStrumentiActivity.this, AltimeterActivity.class);
-                startActivity(intent);
-            }
-        });
-
+    private void onClickOperation(View v, Class<?> nextActivityClass) {
+        v.startAnimation(AnimationUtils.loadAnimation(ListaStrumentiActivity.this,
+                R.anim.button_click));
+        Intent intent = new Intent(ListaStrumentiActivity.this, nextActivityClass);
+        startActivity(intent);
     }
 }

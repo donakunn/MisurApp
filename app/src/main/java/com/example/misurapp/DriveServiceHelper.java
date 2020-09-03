@@ -1,12 +1,6 @@
 package com.example.misurapp;
 
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.OpenableColumns;
 import android.util.Log;
-import android.util.Pair;
 
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
@@ -16,6 +10,8 @@ import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,20 +40,18 @@ public class DriveServiceHelper {
     public void createAndSaveFile(DbManager appDb, String sensorName) throws IOException {
         Log.d(TAG, "Creating a file.");
 
-        //setta nome del file
-        String fileName = sensorName; //nome file sarà nomesensore
-
         //setta contenuto del file
-        String fileContent = "";
+        StringBuilder fileContent = new StringBuilder();
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB
                 (sensorName);
 
         for (final InstrumentRecord record : instrumentRecordsReadFromDB) {
-            fileContent = fileContent +" Data: "+ record.getTimestamp() + " Misura: "+ record.getValue() + "\n";
+            fileContent.append(" Data: ").append(record.getTimestamp()).append(" Misura: ")
+                    .append(record.getValue()).append("\n");
         }
-        String finalFileContent = fileContent;
+        String finalFileContent = fileContent.toString();
         //salva file
-        getIdentificativo(fileName)
+        getIdentificativo(sensorName)
                 .addOnSuccessListener(fileId -> saveFile(fileId, finalFileContent))
                 .addOnFailureListener(exception ->
                         Log.e(TAG, "Couldn't create file.", exception));
@@ -69,44 +63,53 @@ public class DriveServiceHelper {
         getIdentificativo(sensorName)
                 .addOnSuccessListener(fileId -> readFile(fileId)
                         .addOnSuccessListener(fileContent -> {
-                            List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB(sensorName);
+                            List<InstrumentRecord> instrumentRecordsReadFromDB =
+                                    appDb.readBoyscoutValuesFromDB(sensorName);
                             String timestamp;
-                            boolean control = false;
+                            boolean control;
                             String[] lines = fileContent.split("\n");
                             String[] words;
-                            if (fileContent != null ) { //controlla che il file non sia vuoto
-                                if (!instrumentRecordsReadFromDB.isEmpty()) {//controlla che nel db ci siano salvati dei valori
+                            if (!fileContent.isEmpty() ) { //controlla che il file non sia vuoto
+                                if (!instrumentRecordsReadFromDB.isEmpty()) {//controlla che
+                                    // nel db ci siano salvati dei valori
                                     for (String string : lines) {
                                         words = string.split(" ");
                                         timestamp = words[2] + " " + words[3];
                                         control = false;
-                                        //controlla che il valore non sia già salvato sul database controllando il timestamp
-                                        for (final InstrumentRecord record : instrumentRecordsReadFromDB) {
+                                        //controlla che il valore non sia già salvato sul
+                                        // database controllando il timestamp
+                                        for (final InstrumentRecord record :
+                                                instrumentRecordsReadFromDB) {
                                             if (record.getTimestamp().contentEquals(timestamp)) {
                                                 control = true;
                                             }
                                         }
                                         if (!control) {
-                                            appDb.saveRegisteredValues("valuesRecordedByBoyscout", null, timestamp,
-                                                    sensorName, Float.valueOf(words[5]));
+                                            appDb.saveRegisteredValues
+                                                    ("valuesRecordedByBoyscout",
+                                                            null, timestamp,
+                                                    sensorName, Float.parseFloat(words[5]));
                                         }
                                     }
                                 } else {
                                     for (String string : lines) {
                                         words = string.split(" ");
                                         timestamp = words[2] + " " + words[3];
-                                        appDb.saveRegisteredValues("valuesRecordedByBoyscout", null, timestamp,
-                                                sensorName, Float.valueOf(words[5]));
+                                        appDb.saveRegisteredValues(
+                                                "valuesRecordedByBoyscout", null,
+                                                timestamp,
+                                                sensorName, Float.parseFloat(words[5]));
                                     }
                                 }
                             }
                         }));
     }
 
-    //in base al nome del file controlla se il file esiste già; se esiste ritorna il suo id, se non esiste crea un nuovo file e restituisce l'id
+    //in base al nome del file controlla se il file esiste già; se esiste ritorna il suo id, se
+    // non esiste crea un nuovo file e restituisce l'id
     public Task<String> getIdentificativo(String nomeFile) throws IOException {
         return Tasks.call(mExecutor, () -> {
-            FileList fileList = mDriveService.files().list().setSpaces("drive").execute();//queryFiles()
+            FileList fileList = mDriveService.files().list().setSpaces("drive").execute();
             String fileId = "";
             boolean control = false;
 
@@ -120,7 +123,7 @@ public class DriveServiceHelper {
                 }
             }
             //se il file non esiste ne crea uno e ne recupera l'id
-            if (control==false){
+            if (!control){
                 File metadata = new File()
                         .setParents(Collections.singletonList("root"))
                         .setMimeType("text/plain")
@@ -153,10 +156,9 @@ public class DriveServiceHelper {
                 String line;
 
                 while ((line = reader.readLine()) != null) {
-                    stringBuilder.append(line + "\n");
+                    stringBuilder.append(line).append("\n");
                 }
-                String contents = stringBuilder.toString();
-                return contents;
+                return stringBuilder.toString();
             }
         });
     }
@@ -165,8 +167,8 @@ public class DriveServiceHelper {
      * Updates the file identified by {@code fileId} with the given {@code name} and {@code
      * content}.
      */
-    private Task<Void> saveFile(String fileId, String content) {
-        return Tasks.call(mExecutor, () -> {
+    private void saveFile(String fileId, String content) {
+        Tasks.call(mExecutor, () -> {
             // Create a File containing any metadata changes.
             File metadata = new File();
 

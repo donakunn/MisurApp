@@ -1,32 +1,37 @@
 package com.example.misurapp;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AnimationUtils;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.misurapp.db.DbManager;
-import com.example.misurapp.utility.SaveAndFeedback;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
-import java.util.Locale;
 
+/**
+ * This class extend MisurAppBaseActivity by adding layout elements and properties that are in
+ * common to all Instrument activities
+ */
 public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
-
+    /**
+     * debug tag
+     */
+    private final String TAG = "InstrumentBaseActivity";
+    /**
+     * instrument name related to the activity
+     */
     protected static String instrumentName;
+    /**
+     * DbManager object to perform database operations.
+     */
     protected DbManager dbManager = new DbManager(this);
+
+    private DriveServiceHelper mDriveServiceHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,96 +42,92 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * Override inherited method by adding share button
+     *
+     * @param menu Menu object related to the activity
+     * @return boolean that describe operation result
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem condividi = menu.findItem(R.id.action_archivio);
-        condividi.setVisible(true);
+        Log.d(TAG, "onPrepareOptionsMenu");
+        MenuItem share = menu.findItem(R.id.action_archivio);
+        share.setVisible(true);
         return true;
     }
 
+    /**
+     * Override inherited method by adding restore and archive button
+     *
+     * @param item MenuItem object related to the activity
+     * @return boolean that describe operation result
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /* Gestisci i clic sugli elementi della barra delle azioni qui.
-        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
-        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
+        Log.d(TAG, "onOptionItemSelected");
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
             String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese),
                     getResources().getString(R.string.lingua_spagnola), getResources().
                     getString(R.string.lingua_italiana)};
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
             mBuilder.setSingleChoiceItems(listItems, -1,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = getIntent();
+                    (dialog, which) -> {
+                        Intent intent = getIntent();
 
-                            switch (which) {
-                                case 0:
-                                    changeLang("en");
-                                    currentLangCode = "en";
-                                    finish();
-                                    startActivity(intent);
-                                    break;
-                                case 1:
-                                    changeLang("es");
-                                    currentLangCode = "es";
-                                    finish();
-                                    startActivity(intent);
-                                    break;
-                                case 2:
-                                    changeLang("it");
-                                    currentLangCode = "it";
-                                    finish();
-                                    startActivity(intent);
-                                    break;
-                            }
+                        switch (which) {
+                            case 0:
+                                changeLang("en");
+                                currentLangCode = "en";
+                                finish();
+                                startActivity(intent);
+                                break;
+                            case 1:
+                                changeLang("es");
+                                currentLangCode = "es";
+                                finish();
+                                startActivity(intent);
+                                break;
+                            case 2:
+                                changeLang("it");
+                                currentLangCode = "it";
+                                finish();
+                                startActivity(intent);
+                                break;
                         }
                     });
             mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    (dialog, which) -> {
 
-                        }
                     });
             AlertDialog mDialog = mBuilder.create();
             mDialog.show();
             return true;
         }
-/*
         if (id == R.id.action_ripristino) { //ripristino
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul tuo Google Drive?");
-            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //codice di ripristino
-                    try {
-                        mDriveServiceHelper.restoreFile(dbManager,instrumentName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id1) -> {
+                //codice di ripristino
+                try {
+                    mDriveServiceHelper = getGDriveServiceHelper();
+                    mDriveServiceHelper.restoreFile(dbManager,instrumentName);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
-            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //annulla la scelta
-                }
+            alertDialog.setNegativeButton(R.string.No, (dialog, id12) -> {
             });
             AlertDialog mDialog = alertDialog.create();
             alertDialog.show();
             return true;
         }//fine ripristino
-*/
 
         if (id == R.id.action_archivio) {
             Intent intent = new Intent(this, BoyscoutDBValuesActivity.class);
@@ -137,4 +138,5 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
