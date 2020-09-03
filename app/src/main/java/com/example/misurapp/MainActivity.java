@@ -1,7 +1,6 @@
 package com.example.misurapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,14 +20,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
-import com.google.gson.Gson;
 
-import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -137,8 +130,7 @@ public class MainActivity extends MisurAppBaseActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this,
                 signInOptionsBuilder());
 
-        if ((account = GoogleSignIn.getLastSignedInAccount(MainActivity.this))!= null) {
-        }
+        account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
 
     }
 
