@@ -365,15 +365,13 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
             deleteButton.setLayoutParams(tableRowPar);
             deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    deleteButton.setClickable(false);
-                    DeleteRowActions deleteRowActions = new DeleteRowActions
-                            (ScoutMasterDatabaseActivity.this, dbManager,
-                                    linearLayout, InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
-                    deleteRowActions.actionsOnDeleteButtonPress(v, record);
+            deleteButton.setOnClickListener(v -> {
+                deleteButton.setClickable(false);
+                DeleteRowActions deleteRowActions = new DeleteRowActions
+                        (ScoutMasterDatabaseActivity.this, dbManager,
+                                linearLayout, InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
+                deleteRowActions.actionsOnDeleteButtonPress(v, record);
 
-                }
             });
 
             query.addView(deleteButton);
@@ -425,11 +423,8 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                 }
             });
 
-            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            mBuilder.setNeutralButton(getResources().getString(R.string.dialog_annulla), (dialog, which) -> {
 
-                }
             });
             AlertDialog mDialog = mBuilder.create();
             mDialog.show();
@@ -447,11 +442,8 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                 }
             });
 
-            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //annulla la scelta
-                }
+            alertDialog.setNegativeButton(R.string.No, (dialog, id1) -> {
+                //annulla la scelta
             });
             AlertDialog mDialog = alertDialog.create();
             alertDialog.show();

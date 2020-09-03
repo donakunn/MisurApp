@@ -1,14 +1,12 @@
 package com.example.misurapp;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,45 +22,36 @@ import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.utility.DeleteRowActions;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Scope;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
-    //ATTRUIBUTI GOOGLE DRIVE
-    private static final String TAG = "GoogleDrive";
-    private static final int REQUEST_CODE_SIGN_IN = 1;
+private final String TAG ="BoyScoutDBValActivity";
     private DriveServiceHelper mDriveServiceHelper;
     //FINE ATTRIBUTI GOOGLE DRIVE
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     private DbManager appDb;
     private LinearLayout linearLayout;
-    private String sensorName;
+    private String instrumentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorName = Objects.requireNonNull(getIntent().getExtras()).getString("sensorName");
+        instrumentName = Objects.requireNonNull(getIntent().getExtras()).getString("sensorName");
         appDb = new DbManager(this);
         List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB
-                (sensorName);
+                (instrumentName);
         setContentView(R.layout.activity_database_boyscout);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
+
+        IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mBroadcastReceiver, bluetoothStateFilter);
 
         if (instrumentRecordsReadFromDB.isEmpty()) {
             final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
@@ -76,13 +65,14 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             showBoyscoutTableValues(instrumentRecordsReadFromDB);
         }
 
-        //ACCESSO GOOGLE DRIVE
-        requestSignIn();
+        //ACCESSO CREDENZIALI GOOGLE DRIVE
+        mDriveServiceHelper = getGDriveServiceHelper();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
@@ -136,17 +126,17 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             final String action = intent.getAction();
 
             if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR);
                 if (state == BluetoothAdapter.STATE_OFF) {
                     setTitle(getResources().getString(R.string.disconnected));
-                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
+                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
+                            (BoyscoutDBValuesActivity.this);
                     dlgAlert.setMessage(R.string.bluetoothNotAvailable);
                     dlgAlert.setTitle("MisurApp");
                     dlgAlert.setCancelable(false);
                     dlgAlert.setPositiveButton("Ok",
-                            (dialog, which) -> {
-                                finish();
-                            });
+                            (dialog, which) -> finish());
                     dlgAlert.create().show();
                 }
             }
@@ -211,59 +201,69 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         }
 
         if (id == R.id.action_ripristino) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoyscoutDBValuesActivity.this);
-            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul tuo Google Drive?");
-            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //codice di ripristino
-                    try {
-                        mDriveServiceHelper.getIdentificativo(sensorName)
-                                .addOnSuccessListener(fileId -> mDriveServiceHelper.readFile(fileId)
-                                        .addOnSuccessListener(fileContent -> {
-                                            List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB(sensorName);
-                                            String timestamp;
-                                            boolean control = false;
-                                            String[] lines = fileContent.split("\n");
-                                            String[] words;
-                                            if (fileContent != null ) { //controlla che il file non sia vuoto
-                                                if (!instrumentRecordsReadFromDB.isEmpty()) {//controlla che nel db ci siano salvati dei valori
-                                                    for (String string : lines) {
-                                                        words = string.split(" ");
-                                                        timestamp = words[2] + " " + words[3];
-                                                        control = false;
-                                                        //controlla che il valore non sia già salvato sul database controllando il timestamp
-                                                        for (final InstrumentRecord record : instrumentRecordsReadFromDB) {
-                                                            if (record.getTimestamp().contentEquals(timestamp)) {
-                                                                control = true;
-                                                            }
-                                                        }
-                                                        if (!control) {
-                                                            appDb.saveRegisteredValues("valuesRecordedByBoyscout", null, timestamp,
-                                                                    sensorName, Float.valueOf(words[5]));
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                    (BoyscoutDBValuesActivity.this);
+            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul" +
+                    " tuo Google Drive?");
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
+                //codice di ripristino
+                try {
+                    mDriveServiceHelper.getIdentificativo(instrumentName)
+                            .addOnSuccessListener(fileId -> mDriveServiceHelper.readFile(fileId)
+                                    .addOnSuccessListener(fileContent -> {
+                                        List<InstrumentRecord> instrumentRecordsReadFromDB =
+                                                appDb.readBoyscoutValuesFromDB(instrumentName);
+                                        String timestamp;
+                                        boolean control;
+                                        String[] lines = fileContent.split("\n");
+                                        String[] words;
+                                        if (!fileContent.isEmpty() ) { //controlla che il file
+                                            // non sia vuoto
+                                            if (!instrumentRecordsReadFromDB.isEmpty()) {//controlla
+                                                // che nel db ci siano salvati dei valori
+                                                for (String string : lines) {
+                                                    words = string.split(" ");
+                                                    timestamp = words[2] + " " + words[3];
+                                                    control = false;
+                                                    //controlla che il valore non sia già
+                                                    // salvato sul database controllando il timestamp
+                                                    for (final InstrumentRecord record :
+                                                            instrumentRecordsReadFromDB) {
+                                                        if (record.getTimestamp()
+                                                                .contentEquals(timestamp)) {
+                                                            control = true;
                                                         }
                                                     }
-                                                } else {
-                                                    for (String string : lines) {
-                                                        words = string.split(" ");
-                                                        timestamp = words[2] + " " + words[3];
-                                                        appDb.saveRegisteredValues("valuesRecordedByBoyscout", null, timestamp,
-                                                                sensorName, Float.valueOf(words[5]));
+                                                    if (!control) {
+                                                        appDb.saveRegisteredValues
+                                                                ("valuesRecordedByBoyscout",
+                                                                        null, timestamp,
+                                                                instrumentName,
+                                                                Float.parseFloat(words[5]));
                                                     }
                                                 }
-                                                showBoyscoutTableValues(appDb.readBoyscoutValuesFromDB(sensorName));
+                                            } else {
+                                                for (String string : lines) {
+                                                    words = string.split(" ");
+                                                    timestamp = words[2] + " " + words[3];
+                                                    appDb.saveRegisteredValues
+                                                            ("valuesRecordedByBoyscout",
+                                                                    null, timestamp,
+                                                            instrumentName,
+                                                            Float.parseFloat(words[5]));
+                                                }
                                             }
-                                        }));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                                            showBoyscoutTableValues
+                                                    (appDb.readBoyscoutValuesFromDB
+                                                            (instrumentName));
+                                        }
+                                    }));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
-            alertDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //annulla la scelta
-                }
+            alertDialog.setNegativeButton(R.string.No, (dialog, id1) -> {
             });
             AlertDialog mDialog = alertDialog.create();
             alertDialog.show();
@@ -274,7 +274,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         if (id == R.id.action_condividi) {
             Intent intent = new Intent(BoyscoutDBValuesActivity.this,
                     BluetoothConnectionActivity.class);
-            intent.putExtra("sensorName", sensorName);
+            intent.putExtra("sensorName", instrumentName);
             startActivity(intent);
             return true;
         }
@@ -284,9 +284,8 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
                     (BoyscoutDBValuesActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id13) -> {
-                //Qui va il codice per salvare le misure su Google Drive
                 try {
-                    mDriveServiceHelper.createAndSaveFile(appDb,sensorName);
+                    mDriveServiceHelper.createAndSaveFile(appDb, instrumentName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -302,74 +301,4 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    //METODI PER IL SIGN IN PER ACCEDERE ALL'ACCOUNT GOOGLE DRIVE
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        switch (requestCode) {
-            case REQUEST_CODE_SIGN_IN:
-                if (resultCode == Activity.RESULT_OK && resultData != null) {
-                    handleSignInResult(resultData);
-                }
-                break;
-
-            /*case REQUEST_CODE_OPEN_DOCUMENT:
-                if (resultCode == Activity.RESULT_OK && resultData != null) {
-                    Uri uri = resultData.getData();
-                    if (uri != null) {
-                        openFileFromFilePicker(uri);
-                    }
-                }
-                break;*/
-        }
-
-        super.onActivityResult(requestCode, resultCode, resultData);
-    }
-
-    /**
-     * Starts a sign-in activity using {@link #REQUEST_CODE_SIGN_IN}.
-     */
-    //include signIn() in main activity
-    private void requestSignIn() {
-        Log.d(TAG, "Requesting sign-in");
-
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
-        GoogleSignInClient client = GoogleSignIn.getClient(this, signInOptions);
-
-        // The result of the sign-in Intent is handled in onActivityResult.
-        startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-    }
-
-    /**
-     * Handles the {@code result} of a completed sign-in activity initiated from {@link
-     * #requestSignIn()}.
-     */
-    private void handleSignInResult(Intent result) {
-        GoogleSignIn.getSignedInAccountFromIntent(result)
-                .addOnSuccessListener(googleAccount -> {
-                    Log.d(TAG, "Signed in as " + googleAccount.getEmail());
-
-                    // Use the authenticated account to sign in to the Drive service.
-                    GoogleAccountCredential credential =
-                            GoogleAccountCredential.usingOAuth2(
-                                    this, Collections.singleton(DriveScopes.DRIVE_FILE));
-                    credential.setSelectedAccount(googleAccount.getAccount());
-                    Drive googleDriveService =
-                            new Drive.Builder(
-                                    AndroidHttp.newCompatibleTransport(),
-                                    new GsonFactory(),
-                                    credential)
-                                    .setApplicationName("Drive API Migration")
-                                    .build();
-
-                    // The DriveServiceHelper encapsulates all REST API and SAF functionality.
-                    // Its instantiation is required before handling any onClick actions.
-                    mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                })
-                .addOnFailureListener(exception -> Log.e(TAG, "Unable to sign in.", exception));
-    }
-
 }
