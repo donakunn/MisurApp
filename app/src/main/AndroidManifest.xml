@@ -18,20 +18,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MisurAppInstrumentBaseActivity" />
-        <activity android:name=".MisurAppBaseActivity" />
-        <activity android:name=".BluetoothConnectionActivity" />
-        <activity android:name=".ThermometerActivity" />
-        <activity android:name=".StepActivity" />
-        <activity android:name=".HygrometerActivity" />
-        <activity android:name=".CompassActivity" />
-        <activity android:name=".BarometerActivity" />
-        <activity android:name=".AltimeterActivity" />
-        <activity android:name=".ScoutMasterDatabaseActivity" />
-        <activity android:name=".BoyscoutDBValuesActivity" />
-        <activity android:name=".LightActivity" />
-        <activity android:name=".ListaStrumentiActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MisurAppInstrumentBaseActivity" />
+        <activity android:name=".activities.MisurAppBaseActivity" />
+        <activity android:name=".activities.BluetoothConnectionActivity" />
+        <activity android:name=".activities.instrumentActivity.ThermometerActivity" />
+        <activity android:name=".activities.instrumentActivity.StepActivity" />
+        <activity android:name=".activities.instrumentActivity.HygrometerActivity" />
+        <activity android:name=".activities.instrumentActivity.CompassActivity" />
+        <activity android:name=".activities.instrumentActivity.BarometerActivity" />
+        <activity android:name=".activities.instrumentActivity.AltimeterActivity" />
+        <activity android:name=".activities.ScoutMasterDbActivity" />
+        <activity android:name=".activities.BoyscoutDBValuesActivity" />
+        <activity android:name=".activities.instrumentActivity.PhotometerActivity" />
+        <activity android:name=".activities.ListaStrumentiActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

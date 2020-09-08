@@ -64,5 +64,13 @@
     <string name="discoverableNeeded">" Atención, al hacer esto no serás visible para nuevos dispositivos, ¿quieres seguir adelante sin hacer visible el dispositivo?"</string>
     <string name="action_ripristino">Restauracion</string>
     <string name="position_permission_needed">Para buscar dispositivos cercanos, debe otorgar permisos para la ubicación</string>
+    <string name="position_permission_not_given">Sin conceder permisos, no es posible utilizar la conexión bluetooth para intercambiar datos. Presione ok para regresar a la pantalla anterior.</string>
+    <string name="conferma_ripristino">¿Desea restaurar las últimas medidas guardadas realizadas en su Google Drive?</string>
+    <string name="misure_ripristinate">Las medidas han sido restauradas</string>
+    <string name="nessuna_misura_da_ripristinare">No se encontraron medidas para restaurar</string>
+    <string name="nessuna_misura_nel_file">No se encontraron medidas</string>
+    <string name="testo_progress_bar">Por favor espera...</string>
+    <string name="success_salvataggio_drive">Las medidas se han guardado correctamente en Google Drive.</string>
+    <string name="nessuna_misura_da_salvare">No tienes medidas para ahorrar</string>
 
 </resources>

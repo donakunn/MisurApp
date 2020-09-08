@@ -1,4 +1,4 @@
-package com.example.misurapp.BluetoothConnection;
+package com.example.misurapp.bluetoothConnection;
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;

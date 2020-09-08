@@ -1,4 +1,4 @@
-package com.example.misurapp.BluetoothConnection;
+package com.example.misurapp.bluetoothConnection;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -11,7 +11,7 @@ import java.io.OutputStream;
 
 
 /**
- * This class manage bluetooth connection on client-side
+ * This class manage bluetooth connection and data transfer on client-side
  */
 public class BluetoothClient extends BluetoothConnectionService {
 

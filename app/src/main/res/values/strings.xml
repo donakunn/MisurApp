@@ -87,7 +87,15 @@
     <string name="light_textViewContent" translatable="false">%.0f lx</string>
     <string name="step_textViewContent" translatable="false">%.2f %2$s</string>
     <string name="thermometer_textViewContent" translatable="false">%.2f °C</string>
-    <string name="position_permission_not_given">Senza concedere i permessi non è possibile utilizzare la connessione bluetooth per scambiare dati. Premere ok per tornare alla schermata precedente</string>
+    <string name="position_permission_not_given">Senza concedere i permessi non è possibile utilizzare la connessione bluetooth per scambiare dati. Premere OK per tornare alla schermata precedente</string>
+    <string name="conferma_ripristino"> Vuoi ripristinare le misure dell\'ultimo salvataggio fatte sul tuo Google Drive? </string>
+    <string name="misure_ripristinate"> Le misure sono state ripristinate </string>
+    <string name="nessuna_misura_da_ripristinare"> Nessuna misura trovata da ripristinare </string>
+    <string name="nessuna_misura_nel_file"> Nessuna misura trovata </string>
+    <string name="testo_progress_bar"> Attendere prego... </string>
+    <string name="success_salvataggio_drive"> Le misure sono state salvate correttamente su Google Drive</string>
+    <string name="nessuna_misura_da_salvare"> Non hai misure da salvare</string>
+
 </resources>
 
 
