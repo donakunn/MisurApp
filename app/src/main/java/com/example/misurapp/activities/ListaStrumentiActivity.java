@@ -1,4 +1,4 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.TableRow;
@@ -13,13 +14,24 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.misurapp.R;
+import com.example.misurapp.activities.instrumentActivity.AltimeterActivity;
+import com.example.misurapp.activities.instrumentActivity.BarometerActivity;
+import com.example.misurapp.activities.instrumentActivity.CompassActivity;
+import com.example.misurapp.activities.instrumentActivity.HygrometerActivity;
+import com.example.misurapp.activities.instrumentActivity.PhotometerActivity;
+import com.example.misurapp.activities.instrumentActivity.StepActivity;
+import com.example.misurapp.activities.instrumentActivity.ThermometerActivity;
+
 /**
- * This activity ini
+ * this activity creates a list with the instruments, checks whether or not they are supported by
+ * the device, and instantiates the various button listeners
  */
 public class ListaStrumentiActivity extends MisurAppBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("ListaStrumentiActivity", "creating the activity layout");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_strumenti);
 
@@ -108,20 +120,19 @@ public class ListaStrumentiActivity extends MisurAppBaseActivity {
             altimetro.setEnabled(false);
         }
 
+        bussola.setOnClickListener(v -> onClickOperation(v, CompassActivity.class));
 
-        bussola.setOnClickListener(v -> onClickOperation(v,CompassActivity.class));
+        contapassi.setOnClickListener(v -> onClickOperation(v, StepActivity.class));
 
-        contapassi.setOnClickListener(v -> onClickOperation(v,StepActivity.class));
+        luminosita.setOnClickListener(v -> onClickOperation(v, PhotometerActivity.class));
 
-        luminosita.setOnClickListener(v -> onClickOperation(v,LightActivity.class));
+        termometro.setOnClickListener(v -> onClickOperation(v, ThermometerActivity.class));
 
-        termometro.setOnClickListener(v -> onClickOperation(v,ThermometerActivity.class));
+        barometro.setOnClickListener(v -> onClickOperation(v, BarometerActivity.class));
 
-        barometro.setOnClickListener(v -> onClickOperation(v,BarometerActivity.class));
+        umidita.setOnClickListener(v -> onClickOperation(v, HygrometerActivity.class));
 
-        umidita.setOnClickListener(v -> onClickOperation(v,HygrometerActivity.class));
-
-        altimetro.setOnClickListener(v -> onClickOperation(v,AltimeterActivity.class));
+        altimetro.setOnClickListener(v -> onClickOperation(v, AltimeterActivity.class));
     }
 
     private void onClickOperation(View v, Class<?> nextActivityClass) {

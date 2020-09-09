@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.misurapp.MainActivity">
+    tools:context="com.example.misurapp.activities.MainActivity">
     <item
         android:id="@+id/action_cambio_lingua"
         android:orderInCategory="1"

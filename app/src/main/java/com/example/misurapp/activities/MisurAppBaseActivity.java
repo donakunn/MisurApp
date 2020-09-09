@@ -1,4 +1,4 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.misurapp.googleDrive.DriveServiceHelper;
+import com.example.misurapp.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -144,7 +146,7 @@ public class MisurAppBaseActivity extends AppCompatActivity {
     /**
      * load saved locale code.
      */
-    public void loadLocale() {
+    protected void loadLocale() {
         Log.d(TAG, "loading locale");
         String langPref = "Language";
         String language = prefs.getString(langPref, "");
@@ -156,7 +158,7 @@ public class MisurAppBaseActivity extends AppCompatActivity {
      *
      * @param lang String code for the language to be set
      */
-    public void changeLang(String lang) {
+    protected void changeLang(String lang) {
         Log.d(TAG, "changing language");
         if (lang.equalsIgnoreCase(""))
             return;
@@ -175,17 +177,30 @@ public class MisurAppBaseActivity extends AppCompatActivity {
      *
      * @param lang locale code to be stored.
      */
-    public void saveLocale(String lang) {
+    protected void saveLocale(String lang) {
         Log.d(TAG, "saving locale");
         String langPref = "Language";
         editor.putString(langPref, lang);
         editor.apply();
     }
 
+    /**
+     * This method create a new instance of DriveServiceHelper class
+     *
+     * @return DriveServiceHelper object
+     */
     protected DriveServiceHelper getGDriveServiceHelper() {
+        Log.d(TAG, "Creating new DriverServiceHelper object");
         return new DriveServiceHelper(googleAccountCredentialMaker
                 (Objects.requireNonNull(GoogleSignIn.getLastSignedInAccount(this))));
     }
+
+    /**
+     * This method build a Drive object using User google credentials
+     *
+     * @param account GoogleSignInAccount object containing user credentials
+     * @return Drive object for handle operation on Google Drive
+     */
     private Drive googleAccountCredentialMaker(GoogleSignInAccount account) {
         Log.d(TAG, "Signed in as " + account.getEmail());
 

@@ -1,4 +1,4 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.misurapp.googleDrive.DriveServiceHelper;
+import com.example.misurapp.R;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
@@ -27,32 +31,71 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This activity is about showing the saved values of the instrument from which you called the
+ * function.
+ * Each row contains date, value, and its delete button. From the top bar, you can invoke the
+ * function of sharing, backing up on Google Drive, and restoring values.
+ */
 public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
-private final String TAG ="BoyScoutDBValActivity";
+    /**
+     * debug tag
+     */
+    private final String TAG = "BoyScoutDBValActivity";
+    /**
+     * DriveServiceHelper to handle google Drive operations
+     */
     private DriveServiceHelper mDriveServiceHelper;
-    //FINE ATTRIBUTI GOOGLE DRIVE
+    /**
+     * Set of layout parameters used in table rows.
+     */
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams
             (TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-    private DbManager appDb;
+    /**
+     * DbManager object to manage database operations.
+     */
+    private DbManager dbManager;
+    /**
+     * Layout used to show values in the activity
+     */
     private LinearLayout linearLayout;
+    /**
+     * name of the instrument whose values you want to display
+     */
     private String instrumentName;
+    /**
+     * progress bar of the activity
+     */
+    private LinearLayout progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        instrumentName = Objects.requireNonNull(getIntent().getExtras()).getString("sensorName");
-        appDb = new DbManager(this);
-        List<InstrumentRecord> instrumentRecordsReadFromDB = appDb.readBoyscoutValuesFromDB
+        Log.d(TAG,"onCreate");
+        instrumentName = Objects.requireNonNull(getIntent().getExtras())
+                .getString("sensorName");
+        dbManager = new DbManager(this);
+        List<InstrumentRecord> instrumentRecordsReadFromDB = dbManager.readBoyscoutValuesFromDB
                 (instrumentName);
         setContentView(R.layout.activity_database_boyscout);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
+        progressBar = (LinearLayout) findViewById(R.id.llProgressBar);
+
 
         IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mBroadcastReceiver, bluetoothStateFilter);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart");
+        List<InstrumentRecord> instrumentRecordsReadFromDB = dbManager.readBoyscoutValuesFromDB
+                (instrumentName);
         if (instrumentRecordsReadFromDB.isEmpty()) {
             final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage(R.string.noValue);
@@ -63,19 +106,26 @@ private final String TAG ="BoyScoutDBValActivity";
             dlgAlert.create().show();
         } else {
             showBoyscoutTableValues(instrumentRecordsReadFromDB);
+            //ACCESSO CREDENZIALI GOOGLE DRIVE
+            mDriveServiceHelper = getGDriveServiceHelper();
         }
-
-        //ACCESSO CREDENZIALI GOOGLE DRIVE
-        mDriveServiceHelper = getGDriveServiceHelper();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG,"onDestroy");
         unregisterReceiver(mBroadcastReceiver);
     }
 
-    private void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
+    /**
+     * This method manage showing queries read from the database
+     *
+     * @param instrumentRecords List of the values read from database
+     */
+    public void showBoyscoutTableValues(List<InstrumentRecord> instrumentRecords) {
+        linearLayout.removeAllViews();
+        Log.d(TAG,"showing values read from DB");
         for (final InstrumentRecord record : instrumentRecords) {
             TableRow dbBoyScoutQuery = new TableRow(BoyscoutDBValuesActivity.this);
             dbBoyScoutQuery.setPadding(20, 20, 5, 20);
@@ -108,9 +158,9 @@ private final String TAG ="BoyScoutDBValActivity";
 
             deleteButton.setOnClickListener(v -> {
                 deleteButton.setClickable(false);
-             DeleteRowActions deleteRowActions = new DeleteRowActions
-                     (BoyscoutDBValuesActivity.this,appDb,
-                             linearLayout,InstrumentsDBSchema.BoyscoutTable.TABLENAME);
+                DeleteRowActions deleteRowActions = new DeleteRowActions
+                        (BoyscoutDBValuesActivity.this, dbManager,
+                                linearLayout, InstrumentsDBSchema.BoyscoutTable.TABLENAME);
                 deleteRowActions.actionsOnDeleteButtonPress(v, record);
             });
 
@@ -119,6 +169,10 @@ private final String TAG ="BoyScoutDBValActivity";
         }
     }
 
+    /**
+     * This broadcast receiver is responsible for checking whether bluetooth is turned off while
+     * activity is active, and if this happens it kills the activity and shows error message
+     */
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
         @Override
@@ -143,6 +197,11 @@ private final String TAG ="BoyScoutDBValActivity";
         }
     };
 
+    /**
+     * This methods adds share and google Drive button on the activity menu
+     * @param menu Activity menu reference.
+     * @return true if it succeeds, false otherwise
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem condividi = menu.findItem(R.id.action_condividi);
@@ -153,11 +212,16 @@ private final String TAG ="BoyScoutDBValActivity";
         return true;
     }
 
+    /**
+     * This hook is called whenever an item in your options menu is selected. It perform language
+     * change based on the selected item, backup on Google Drive, restore, and calls the activity
+     * for the bluetooth connection.
+     *
+     * @param item MenuItem object
+     * @return boolean that describe operations result
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /* Gestisci i clic sugli elementi della barra delle azioni qui.
-        La barra delle azioni gestirà automaticamente i clic sul pulsante Home / Up button,
-        a condizione che specifichi un'attività genitore in AndroidManifest.xml.*/
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
@@ -203,61 +267,13 @@ private final String TAG ="BoyScoutDBValActivity";
         if (id == R.id.action_ripristino) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder
                     (BoyscoutDBValuesActivity.this);
-            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul" +
-                    " tuo Google Drive?");
+            alertDialog.setMessage(R.string.conferma_ripristino);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
                 //codice di ripristino
+                progressBar.setVisibility(View.VISIBLE);
                 try {
-                    mDriveServiceHelper.getIdentificativo(instrumentName)
-                            .addOnSuccessListener(fileId -> mDriveServiceHelper.readFile(fileId)
-                                    .addOnSuccessListener(fileContent -> {
-                                        List<InstrumentRecord> instrumentRecordsReadFromDB =
-                                                appDb.readBoyscoutValuesFromDB(instrumentName);
-                                        String timestamp;
-                                        boolean control;
-                                        String[] lines = fileContent.split("\n");
-                                        String[] words;
-                                        if (!fileContent.isEmpty() ) { //controlla che il file
-                                            // non sia vuoto
-                                            if (!instrumentRecordsReadFromDB.isEmpty()) {//controlla
-                                                // che nel db ci siano salvati dei valori
-                                                for (String string : lines) {
-                                                    words = string.split(" ");
-                                                    timestamp = words[2] + " " + words[3];
-                                                    control = false;
-                                                    //controlla che il valore non sia già
-                                                    // salvato sul database controllando il timestamp
-                                                    for (final InstrumentRecord record :
-                                                            instrumentRecordsReadFromDB) {
-                                                        if (record.getTimestamp()
-                                                                .contentEquals(timestamp)) {
-                                                            control = true;
-                                                        }
-                                                    }
-                                                    if (!control) {
-                                                        appDb.saveRegisteredValues
-                                                                ("valuesRecordedByBoyscout",
-                                                                        null, timestamp,
-                                                                instrumentName,
-                                                                Float.parseFloat(words[5]));
-                                                    }
-                                                }
-                                            } else {
-                                                for (String string : lines) {
-                                                    words = string.split(" ");
-                                                    timestamp = words[2] + " " + words[3];
-                                                    appDb.saveRegisteredValues
-                                                            ("valuesRecordedByBoyscout",
-                                                                    null, timestamp,
-                                                            instrumentName,
-                                                            Float.parseFloat(words[5]));
-                                                }
-                                            }
-                                            showBoyscoutTableValues
-                                                    (appDb.readBoyscoutValuesFromDB
-                                                            (instrumentName));
-                                        }
-                                    }));
+                    mDriveServiceHelper.restoreFile(dbManager, instrumentName,
+                            BoyscoutDBValuesActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -265,7 +281,7 @@ private final String TAG ="BoyScoutDBValActivity";
 
             alertDialog.setNegativeButton(R.string.No, (dialog, id1) -> {
             });
-            AlertDialog mDialog = alertDialog.create();
+            alertDialog.create();
             alertDialog.show();
             return true;
         }
@@ -285,7 +301,8 @@ private final String TAG ="BoyScoutDBValActivity";
             alertDialog.setMessage(R.string.conferma_google_drive);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id13) -> {
                 try {
-                    mDriveServiceHelper.createAndSaveFile(appDb, instrumentName);
+                    mDriveServiceHelper.createAndSaveFile(dbManager,
+                            BoyscoutDBValuesActivity.this, instrumentName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -294,7 +311,7 @@ private final String TAG ="BoyScoutDBValActivity";
             alertDialog.setNegativeButton(R.string.No, (dialog, id14) -> {
                 //annulla la scelta
             });
-            AlertDialog mDialog = alertDialog.create();
+            alertDialog.create();
             alertDialog.show();
             return true;
         }

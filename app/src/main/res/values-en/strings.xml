@@ -64,5 +64,13 @@
     <string name="discoverableNeeded">" Attention, by doing this you will not be visible to new devices, do you want to go ahead without making the device visible?"</string>
     <string name="action_ripristino">Restoration</string>
     <string name="position_permission_needed">" In order to search for nearby devices you need to grant permissions for the location"</string>
+    <string name="position_permission_not_given">Without granting permissions, it is not possible to use the bluetooth connection to exchange data. Press OK to return to the previous screen.</string>
+    <string name="conferma_ripristino">Do you want to restore the last save measurements made on your Google Drive?</string>
+    <string name="misure_ripristinate">The measures have been restored</string>
+    <string name="nessuna_misura_da_ripristinare">No measures found to restore</string>
+    <string name="nessuna_misura_nel_file">No measurements found</string>
+    <string name="testo_progress_bar">Please wait...</string>
+    <string name="success_salvataggio_drive">The measurements have been successfully saved on Google Drive</string>
+    <string name="nessuna_misura_da_salvare">You have no measures to save</string>
 
 </resources>

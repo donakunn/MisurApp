@@ -1,4 +1,4 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.misurapp.R;
 import com.example.misurapp.db.DbManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -78,7 +79,7 @@ public class MainActivity extends MisurAppBaseActivity {
                 (v, ListaStrumentiActivity.class));
 
         scoutMasterButton.setOnClickListener(v -> onScoutClickOperations
-                (v, ScoutMasterDatabaseActivity.class));
+                (v, ScoutMasterDbActivity.class));
 
         btnLogin = findViewById(R.id.btnLogin);
         btnLogout = findViewById(R.id.btnLogout);
@@ -178,7 +179,8 @@ public class MainActivity extends MisurAppBaseActivity {
 
     /**
      * Save login properties on Shared preferences.
-     *  @param email      logged in user email.
+     *
+     * @param email      logged in user email.
      * @param loginState Boolean indicating whether the user was successfully logged in
      */
     private void saveLoginPropertiesInPreferences(String email, boolean loginState) {

@@ -1,76 +1,86 @@
-package com.example.misurapp;
+package com.example.misurapp.activities.instrumentActivity;
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.misurapp.db.DbManager;
+import com.example.misurapp.R;
+import com.example.misurapp.activities.MisurAppInstrumentBaseActivity;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * This class is about defining the layout, showing the value read by the sensors,
+ * showing an animation and allowing you to save the read value for the StepCounter instrument
+ */
 public class StepActivity extends MisurAppInstrumentBaseActivity implements SensorEventListener {
-
+    /**
+     * Debug Tag
+     */
+    private final String TAG = this.getClass().toString();
+    /**
+     * SensorManager object to manage access to device's sensors.
+     */
     private SensorManager mSensorManager;
+    /**
+     * object representing a sensor
+     */
     private Sensor sensor;
+    /**
+     * TextView to show current values
+     */
     private TextView misura;
+    /**
+     * View containing an animation relative to the instrument activity
+     */
     private ImageView imageView;
-    private DbManager dbManager = new DbManager(this);
+    /**
+     * last value registered  before stopping the activity
+     */
     private int stepsRegister = 0;
+    /**
+     * last displayed value before stopping activity
+     */
     private int stepsShow;
 
-    SharedPreferences lastStepRegister;
-    SharedPreferences.Editor editorLastStepRegister;
-
-    SharedPreferences stepDisplay;
-    SharedPreferences.Editor editorStepDisplay;
-
-    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_step);
 
-        lastStepRegister = getSharedPreferences("reset", MODE_PRIVATE);
-        editorLastStepRegister = lastStepRegister.edit();
-        stepsRegister = lastStepRegister.getInt("reset",0);
+        stepsRegister = prefs.getInt("reset", 0);
 
-        stepDisplay = getSharedPreferences("stepsDisplay", MODE_PRIVATE);
-        editorStepDisplay = stepDisplay.edit();
-
-        instrumentName ="lastStepsRegister";
+        instrumentName = "lastStepsRegister";
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor=mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         imageView = findViewById(R.id.img_animazione);
-        misura =  findViewById(R.id.misura);
-
+        misura = findViewById(R.id.misura);
 
         Button reset = findViewById(R.id.reset);
         reset.setOnClickListener(v -> {
             v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this,
                     R.anim.button_click));
 
-            stepsRegister = lastStepRegister.getInt("reset",0);
+            stepsRegister = prefs.getInt("reset", 0);
             stepsShow = 0;
 
-            editorStepDisplay.putInt("stepsDisplay",0);
-            editorStepDisplay.apply();
+            editor.putInt("stepsDisplay", 0);
+            editor.apply();
             setUpText(0);
         });
 
@@ -78,38 +88,30 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
         fab.setOnClickListener(v -> {
             v.startAnimation(AnimationUtils.loadAnimation(StepActivity.this,
                     R.anim.button_click));
-            SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
-                    instrumentName,(float)stepsShow);
-
-
-            //feedback
-            Toast toast = Toast.makeText(getApplicationContext(),getResources()
-                    .getString(R.string.salvato) , Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM, 0, 300);
-            toast.show();
+            SaveAndFeedback.saveAndMakeToast(dbManager, getApplicationContext(),
+                    instrumentName, (float) stepsShow);
         });
 
     }
 
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
-    protected void onPause() {
-        super.onPause();
-    }
 
-
-    protected void onDestroy(){
-        super.onDestroy();
-    }
-
+    /**
+     * Refresh animation based on the value read by the sensor
+     * @param event Sensor event object wich holds information such as the sensor's type,
+     * the time-stamp, accuracy and of course the sensor's SensorEvent#values
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if((int) event.values[0] == 0){
+        if ((int) event.values[0] == 0) {
+            Log.d(TAG, "onSensorChanged");
             stepsRegister = 0;
         }
-        stepsShow =  ((int) event.values[0] - stepsRegister) + stepDisplay
+        stepsShow = ((int) event.values[0] - stepsRegister) + prefs
                 .getInt("stepsDisplay", 0);
 
         if (stepsShow % 2 == 0) {
@@ -119,11 +121,11 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
         }
         setUpText(stepsShow);
 
-        editorStepDisplay.putInt("stepsDisplay",stepsShow);
-        editorStepDisplay.apply();
+        editor.putInt("stepsDisplay", stepsShow);
+        editor.apply();
 
-        editorLastStepRegister.putInt("reset",(int) event.values[0]);
-        editorLastStepRegister.apply();
+        editor.putInt("reset", (int) event.values[0]);
+        editor.apply();
 
     }
 
@@ -132,8 +134,13 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
 
     }
 
-    //plurals
+    /**
+     * Set TextView text with proper plural
+     *
+     * @param nlastStepsRegister registered steps to show
+     */
     private void setUpText(int nlastStepsRegister) {
+        Log.d(TAG, "Setup text on TextView");
         String lastStepsRegisterDetect = getResources().getQuantityString(R.plurals.numberOfSteps, nlastStepsRegister, nlastStepsRegister);
         misura.setText(lastStepsRegisterDetect);
     }

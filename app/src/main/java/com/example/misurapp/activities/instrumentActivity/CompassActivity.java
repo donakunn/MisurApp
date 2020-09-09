@@ -1,39 +1,88 @@
-package com.example.misurapp;
+package com.example.misurapp.activities.instrumentActivity;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.misurapp.R;
+import com.example.misurapp.activities.MisurAppInstrumentBaseActivity;
 import com.example.misurapp.utility.SaveAndFeedback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * This class is about defining the layout, showing the value read by the sensors,
+ * showing an animation and allowing you to save the read value for the compass instrument
+ */
 public class CompassActivity extends MisurAppInstrumentBaseActivity implements SensorEventListener {
-
+    /**
+     * Debug Tag
+     */
+    private final String TAG = this.getClass().toString();
+    /**
+     * SensorManager object to manage access to device's sensors.
+     */
     private SensorManager mSensorManager;
-    private TextView misura;
+    /**
+     * TextView to show current values
+     */
+    private TextView measure;
+    /**
+     *  View containing an animation relative to the instrument activity
+     */
     private ImageView imageView;
-
-    int mAzimuth; //gradi rispetto al Nord
-    //private SensorManager mSensorManager;
+    /**
+     * degrees compared to the North
+     */
+    private int mAzimuth;
+    /**
+     * object representing sensors used by compass instrument
+     */
     private Sensor mRotationV, mAccelerometer, mMagnetometer;
-    boolean haveSensor = false, haveSensor2 = false;
-    float[] rMat = new float[9];
-    float[] orientation = new float[3];
+    /**
+     * Boolean indicating whether the device has the first sensor
+     */
+    private boolean haveSensor = false;
+    /**
+     * Boolean indicating whether the device has the second sensor
+     */
+    private boolean haveSensor2 = false;
+    /**
+     * rotation vector registered values
+     */
+    private float[] rMat = new float[9];
+    /**
+     * orientation registered values
+     */
+    private float[] orientation = new float[3];
+    /**
+     * accelerometer registered values
+     */
     private float[] mLastAccelerometer = new float[3];
+    /**
+     * magnetometer registered values
+     */
     private float[] mLastMagnetometer = new float[3];
+    /**
+     * Boolean indicating whether the accelerometer is set
+     */
     private boolean mLastAccelerometerSet = false;
+    /**
+     * Boolean indicating whether the magnetometer is set
+     */
     private boolean mLastMagnetometerSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate");
         setContentView(R.layout.activity_compass);
 
         instrumentName = "compass";
@@ -44,7 +93,7 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         imageView = findViewById(R.id.img_animazione);
-        misura = findViewById(R.id.misura);
+        measure = findViewById(R.id.misura);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
@@ -59,18 +108,25 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG,"onPause");
         stop();
     }
 
+    /**
+     * Refresh animation based on the value read by the sensor
+     * @param event Sensor event object wich holds information such as the sensor's type,
+     * the time-stamp, accuracy and of course the sensor's SensorEvent#values
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
-
+        Log.d(TAG,"onSensorChanged");
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
             mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat,
@@ -115,21 +171,21 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
             where = "NE";
 
 
-        misura.setText(getString(R.string.compass_textViewContent,mAzimuth,where));
+        measure.setText(getString(R.string.compass_textViewContent,mAzimuth,where));
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 
+    /**
+     * This method check if device supports the RotationVector which is the set of compass and
+     * gyroscope sensor. If so, we will establish it. If not, we check that our device
+     * equipped with the accelerometer and compass. If so, we set up the two sensors,
+     * if not we call the method noSensorAlert() showing us the error message.
+     */
     public void start() {
-        /*verifichiamo se il nostro dispositivo supporta il RotationVector che è l’insieme
-        del sensore della Bussola e del Giroscopio.
-        In caso affermativo lo instanziamo. In caso negativo controlliamo che il nostro dispositivo
-        sia provvisto dell’Accelerometro e della Bussola.
-        In caso affermativo instanziamo i due sensori, in caso negativo chiamiamo il metodo
-        noSensorAlert() che ci mostra il messaggio di errore.*/
+        Log.d(TAG,"Starting reading values from sensors");
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null) {
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -144,7 +200,11 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
         }
     }
 
+    /**
+     * This method unregister listener for used sensors.
+     */
     public void stop() {
+        Log.d(TAG,"Stopping sensors read");
         if (haveSensor && haveSensor2) {
             mSensorManager.unregisterListener(this, mAccelerometer);
             mSensorManager.unregisterListener(this, mMagnetometer);

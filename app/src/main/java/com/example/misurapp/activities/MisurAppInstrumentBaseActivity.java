@@ -1,6 +1,5 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +8,8 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.misurapp.googleDrive.DriveServiceHelper;
+import com.example.misurapp.R;
 import com.example.misurapp.db.DbManager;
 
 import java.io.IOException;
@@ -31,6 +32,9 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
      */
     protected DbManager dbManager = new DbManager(this);
 
+    /**
+     * DriveServiceHelper to handle google Drive operations
+     */
     private DriveServiceHelper mDriveServiceHelper;
 
     @Override
@@ -111,12 +115,13 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
         }
         if (id == R.id.action_ripristino) { //ripristino
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setMessage("Vuoi ripristinare le misure dell'ultimo salvataggio fatte sul tuo Google Drive?");
+            alertDialog.setMessage(R.string.conferma_ripristino);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id1) -> {
                 //codice di ripristino
                 try {
                     mDriveServiceHelper = getGDriveServiceHelper();
-                    mDriveServiceHelper.restoreFile(dbManager,instrumentName);
+                    mDriveServiceHelper.restoreFile(dbManager,MisurAppInstrumentBaseActivity
+                            .this,instrumentName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -124,7 +129,7 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
 
             alertDialog.setNegativeButton(R.string.No, (dialog, id12) -> {
             });
-            AlertDialog mDialog = alertDialog.create();
+            alertDialog.create();
             alertDialog.show();
             return true;
         }//fine ripristino

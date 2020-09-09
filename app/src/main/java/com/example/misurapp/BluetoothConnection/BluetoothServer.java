@@ -1,4 +1,4 @@
-package com.example.misurapp.BluetoothConnection;
+package com.example.misurapp.bluetoothConnection;
 
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -9,21 +9,22 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class manage bluetooth connection and data transfer on server-side
+ */
 public final class BluetoothServer extends BluetoothConnectionService {
-
-    //debugging
+    /**
+     * debug tag
+     */
     private final String TAG = "BluetoothServer";
-
     /**
      * AcceptThread object for incoming connections
      */
     private AcceptThread mAcceptThread;
-
     /**
      * ConnectedThread object for managing connection
      */
     private ConnectedThread mConnectedThread;
-
     /**
      * Constructor. Prepares a new BluetoothChat session.
      *
@@ -32,7 +33,6 @@ public final class BluetoothServer extends BluetoothConnectionService {
     public BluetoothServer(Handler handler) {
         super(handler);
     }
-
 
     /**
      * Start the chat service. Specifically start AcceptThread to begin a

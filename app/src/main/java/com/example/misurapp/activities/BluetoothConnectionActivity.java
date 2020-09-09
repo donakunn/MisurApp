@@ -1,4 +1,4 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -29,9 +29,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.misurapp.BluetoothConnection.BluetoothClient;
-import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
-import com.example.misurapp.BluetoothConnection.Constants;
+import com.example.misurapp.bluetoothConnection.BluetoothClient;
+import com.example.misurapp.bluetoothConnection.BluetoothConnectionService;
+import com.example.misurapp.bluetoothConnection.Constants;
+import com.example.misurapp.R;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.RecordsWithEmailAndInstrument;
 

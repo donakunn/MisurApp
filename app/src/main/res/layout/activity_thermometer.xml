@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ThermometerActivity">
+    tools:context=".activities.instrumentActivity.ThermometerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -47,7 +47,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/misura" />
@@ -60,8 +60,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_add_24"
         app:backgroundTint="@color/colorImportantButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/img_animazione"
+        app:layout_constraintEnd_toEndOf="@+id/img_animazione" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

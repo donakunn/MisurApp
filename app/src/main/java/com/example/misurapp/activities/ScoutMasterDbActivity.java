@@ -1,14 +1,12 @@
-package com.example.misurapp;
+package com.example.misurapp.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,9 +24,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.misurapp.BluetoothConnection.BluetoothConnectionService;
-import com.example.misurapp.BluetoothConnection.BluetoothServer;
-import com.example.misurapp.BluetoothConnection.Constants;
+import com.example.misurapp.bluetoothConnection.BluetoothConnectionService;
+import com.example.misurapp.bluetoothConnection.BluetoothServer;
+import com.example.misurapp.bluetoothConnection.Constants;
+import com.example.misurapp.googleDrive.DriveServiceHelper;
+import com.example.misurapp.R;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.db.RecordsWithEmailAndInstrument;
@@ -41,27 +41,53 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity {
-
+/**
+ * This activity is about showing the values received by the boyscout, starting a bluetooth server
+ * that takes care of receiving and showing new values. Each row contains email from the user who
+ * sent the values, date, tool name, value and its delete button. from the top bar you can back up
+ * the values to Google Drive and restore them.
+ */
+public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
+    /**
+     * debug tag
+     */
+    private final String TAG = "ScoutMasterDBActivity";
+    /**
+     * DriveServiceHelper to handle google Drive operations
+     */
+    private DriveServiceHelper mDriveServiceHelper;
+    /**
+     * progress bar of the activity
+     */
+    private LinearLayout progressBar;
+    /**
+     * Duration of the bluetooth discovery mode.
+     */
     public static final int DISCOVERY_DURATION = 300;
-    private SharedPreferences.Editor editor;
-
     /**
      * Local Bluetooth adapter
      */
-
     private BluetoothAdapter mBluetoothAdapter = null;
-
     /**
-     * Intent request Code
+     * Intent request Code for discoverable mode.
      */
     private static final int REQUEST_ACTION_DISCOVERABLE = 3;
+    /**
+     * Intent request Code for enable bluetooth request.
+     */
     private static final int REQUEST_ENABLE_BT = 2;
-
+    /**
+     * BluetoothServer object to start using bluetooth server features
+     */
     private BluetoothServer btConnectionHandler = null;
-
+    /**
+     * Set of layout parameters used in table rows.
+     */
     private TableRow.LayoutParams tableRowPar = new TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+    /**
+     * Layout used to show values in the activity
+     */
     private LinearLayout linearLayout;
 
     @SuppressLint("CommitPrefEdits")
@@ -76,6 +102,8 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        progressBar = findViewById(R.id.llProgressBar);
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // If the adapter is null, then Bluetooth is not supported
@@ -84,6 +112,8 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                     Toast.LENGTH_LONG).show();
             finish();
         }
+        //ACCESSO CREDENZIALI GOOGLE DRIVE
+        mDriveServiceHelper = getGDriveServiceHelper();
     }
 
     @Override
@@ -91,12 +121,13 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         super.onStart();
         // If BT is not on, request that it be enabled.
         // startServer() will then be called during onActivityResult
-            ensureDiscoverable();
+        ensureDiscoverable();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //stop the server
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
         }
@@ -124,6 +155,10 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
     }
 
+    /**
+     * This method is responsible for checking whether the bluetooth is active and in discovery
+     * mode, otherwise it starts a discoverableIntent to prompt it to be activated
+     */
     private void ensureDiscoverable() {
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
@@ -134,6 +169,16 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         }
     }
 
+    /**
+     * This method reads the response received from the discoverableIntent and whether or
+     * not to start the server
+     * @param requestCode The integer request code originally supplied to startActivityForResult(),
+     *                    allowing you to identify who this result came from.
+     * @param resultCode The integer result code returned by the child activity through its
+     *                   setResult().
+     * @param data An Intent, which can return result data to the caller
+     *             (various data can be attached to Intent "extras").
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -142,23 +187,12 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                 startServer();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder
-                        (ScoutMasterDatabaseActivity.this);
-                alertDialog.setMessage
-                        (getApplicationContext().getString(R.string.discoverableNeeded));
-                alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (mBluetoothAdapter.isEnabled()) {
-                            startServer();
-                        } else {
-                            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-                        }
-                    }
-                });
-
-                alertDialog.setNegativeButton(R.string.No, (dialog, id) -> ensureDiscoverable());
-                alertDialog.create().show();
+                if (mBluetoothAdapter.isEnabled()) {
+                    startServer();
+                } else {
+                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                }
             }
         } else if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == RESULT_OK) {
@@ -176,23 +210,30 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         }
     }
 
+    /**
+     * This method initializes the server and starts it
+     */
     private void startServer() {
         btConnectionHandler = new BluetoothServer(getServerHandler());
         btConnectionHandler.start();
     }
 
+    /**
+     * Handler implementation to manage Message object received by server. It manage update activity
+     * title, save values received by the server and refresh the values list
+     */
     @SuppressLint("HandlerLeak")
     private class ServerHandler extends Handler {
         //Using a weak reference means you won't prevent garbage collection
-        private final WeakReference<ScoutMasterDatabaseActivity> serverWeakReference;
+        private final WeakReference<ScoutMasterDbActivity> serverWeakReference;
 
-        public ServerHandler(ScoutMasterDatabaseActivity serverIstance) {
+        public ServerHandler(ScoutMasterDbActivity serverIstance) {
             serverWeakReference = new WeakReference<>(serverIstance);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            ScoutMasterDatabaseActivity handler = serverWeakReference.get();
+            ScoutMasterDbActivity handler = serverWeakReference.get();
             if (handler != null) {
                 switch (msg.what) {
                     case Constants.MESSAGE_STATE_CHANGE:
@@ -220,7 +261,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                                             (RecordsWithEmailAndInstrument
                                                     .deserialize(readBuf));
                             saveReceivedRecordsOnDB(receivedValues);
-                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                            Toast.makeText(ScoutMasterDbActivity.this,
                                     getResources().getString(R.string.newData),
                                     Toast.LENGTH_SHORT).show();
 
@@ -235,11 +276,11 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
                     case Constants.MESSAGE_TOAST:
                         if (Objects.equals(msg.getData().getString(Constants.TOAST),
                                 Constants.CONNECTIONLOST)) {
-                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                            Toast.makeText(ScoutMasterDbActivity.this,
                                     getResources().getString(R.string.connectionLost),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(ScoutMasterDatabaseActivity.this,
+                            Toast.makeText(ScoutMasterDbActivity.this,
                                     getResources().getString(R.string.connectionFailed),
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -266,17 +307,18 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
             final String action = intent.getAction();
 
             if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                switch(state) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR);
+                switch (state) {
                     case BluetoothAdapter.STATE_OFF:
-                    setTitle(getResources().getString(R.string.disconnected));
-                    btConnectionHandler.stop();
+                        setTitle(getResources().getString(R.string.disconnected));
+                        btConnectionHandler.stop();
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         setTitle(getResources().getString(R.string.disconnecting));
                         break;
                     case BluetoothAdapter.STATE_ON:
-                    startServer();
+                        startServer();
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         setTitle(getResources().getString(R.string.connecting));
@@ -286,8 +328,12 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         }
     };
 
-    //trasforma l'oggetto contenente lista record, email e strumento in una lista di record con
-    //schema uguale a tabella scout master che conterrà i valori
+    /**
+     * turns the object containing record list, email, and tool into a list of records with schema
+     * equal to master scout table that will contain values
+     * @param recordsWithEmail object wich contains user email and read values.
+     * @return list with ScoutMasterInstrumentRecord objects
+     */
     private List<ScoutMasterInstrumentRecord> scoutMasterRecordListMaker
     (RecordsWithEmailAndInstrument recordsWithEmail) {
         List<ScoutMasterInstrumentRecord> scoutMasterRecordsList = new LinkedList<>();
@@ -302,12 +348,19 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         return scoutMasterRecordsList;
     }
 
-    //salva la lista su db
+    /**
+     * This method saves the queries contained in the list within the database.
+     * @param records list which contains values to be saved on the database.
+     */
     private void saveReceivedRecordsOnDB(List<ScoutMasterInstrumentRecord> records) {
         dbManager.multipleInsert(records);
     }
 
-    private void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
+    /**
+     * This method manage showing queries read from the database.
+     * @param records list of the values read from database
+     */
+    public void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
         linearLayout = findViewById(R.id.linearLayout);
         linearLayout.removeAllViews();
         TableRow query;
@@ -315,10 +368,10 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         TextView nickname, timestamp, strumento, value;
 
         for (final ScoutMasterInstrumentRecord record : records) {
-            query = new TableRow(ScoutMasterDatabaseActivity.this);
+            query = new TableRow(ScoutMasterDbActivity.this);
             query.setPadding(20, 20, 5, 20);
 
-            nickname = new TextView(ScoutMasterDatabaseActivity.this, null,
+            nickname = new TextView(ScoutMasterDbActivity.this, null,
                     R.style.textstyle);
             tableRowPar.weight = 1;
             nickname.setLayoutParams(tableRowPar);
@@ -329,7 +382,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
 
             query.addView(nickname);
 
-            timestamp = new TextView(ScoutMasterDatabaseActivity.this, null,
+            timestamp = new TextView(ScoutMasterDbActivity.this, null,
                     R.style.textstyle);
             tableRowPar.weight = 1;
             timestamp.setLayoutParams(tableRowPar);
@@ -340,7 +393,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
 
             query.addView(timestamp);
 
-            strumento = new TextView(ScoutMasterDatabaseActivity.this, null,
+            strumento = new TextView(ScoutMasterDbActivity.this, null,
                     R.style.textstyle);
             tableRowPar.weight = 1;
             strumento.setLayoutParams(tableRowPar);
@@ -351,7 +404,7 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
 
             query.addView(strumento);
 
-            value = new TextView(ScoutMasterDatabaseActivity.this, null,
+            value = new TextView(ScoutMasterDbActivity.this, null,
                     R.style.textstyle);
             tableRowPar.weight = 1;
             value.setLayoutParams(tableRowPar);
@@ -361,14 +414,16 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
 
             query.addView(value);
 
-            final ImageButton deleteButton = new ImageButton(ScoutMasterDatabaseActivity.this, null, R.style.buttondeletestyle);
+            final ImageButton deleteButton = new ImageButton
+                    (ScoutMasterDbActivity.this, null,
+                            R.style.buttondeletestyle);
             deleteButton.setLayoutParams(tableRowPar);
             deleteButton.setImageResource(R.drawable.ic_baseline_delete_24);
 
             deleteButton.setOnClickListener(v -> {
                 deleteButton.setClickable(false);
                 DeleteRowActions deleteRowActions = new DeleteRowActions
-                        (ScoutMasterDatabaseActivity.this, dbManager,
+                        (ScoutMasterDbActivity.this, dbManager,
                                 linearLayout, InstrumentsDBSchema.ScoutMasterTable.TABLENAME);
                 deleteRowActions.actionsOnDeleteButtonPress(v, record);
 
@@ -379,13 +434,24 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         }
     }
 
+    /**
+     * This methods add google Drive button on the activity menu
+     * @param menu Activity menu reference.
+     * @return true if it succeeds, false otherwise
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem googleDrive = menu.findItem(R.id.action_google_drive);
         googleDrive.setVisible(true);
         return true;
     }
-
+    /**
+     * This hook is called whenever an item in your options menu is selected. It perform language
+     * change based on the selected item, backup on Google Drive and restore.
+     *
+     * @param item MenuItem object
+     * @return boolean that describe operations result
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Gestisci i clic sugli elementi della barra delle azioni qui.
@@ -394,32 +460,32 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cambio_lingua) {
-            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese), getResources().getString(R.string.lingua_spagnola), getResources().getString(R.string.lingua_italiana)};
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);
-            mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = getIntent();
-                    switch (which) {
-                        case 0:
-                            changeLang("en");
-                            currentLangCode = "en";
-                            finish();
-                            startActivity(intent);
-                            break;
-                        case 1:
-                            changeLang("es");
-                            currentLangCode = "es";
-                            finish();
-                            startActivity(intent);
-                            break;
-                        case 2:
-                            changeLang("it");
-                            currentLangCode = "it";
-                            finish();
-                            startActivity(intent);
-                            break;
-                    }
+            String[] listItems = new String[]{getResources().getString(R.string.lingua_inglese),
+                    getResources().getString(R.string.lingua_spagnola), getResources()
+                    .getString(R.string.lingua_italiana)};
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder
+                    (ScoutMasterDbActivity.this);
+            mBuilder.setSingleChoiceItems(listItems, -1, (dialog, which) -> {
+                Intent intent = getIntent();
+                switch (which) {
+                    case 0:
+                        changeLang("en");
+                        currentLangCode = "en";
+                        finish();
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        changeLang("es");
+                        currentLangCode = "es";
+                        finish();
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        changeLang("it");
+                        currentLangCode = "it";
+                        finish();
+                        startActivity(intent);
+                        break;
                 }
             });
 
@@ -431,21 +497,46 @@ public class ScoutMasterDatabaseActivity extends MisurAppInstrumentBaseActivity 
             return true;
         }
 
+        if (id == R.id.action_ripristino) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                    (ScoutMasterDbActivity.this);
+            alertDialog.setMessage(R.string.conferma_ripristino);
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
+                //codice di ripristino
+                progressBar.setVisibility(View.VISIBLE);
+                try {
+                    mDriveServiceHelper.restoreFile(dbManager,
+                            ScoutMasterDbActivity.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
+            alertDialog.setNegativeButton(R.string.No, (dialog, id1) -> {
+            });
+            alertDialog.create();
+            alertDialog.show();
+            return true;
+        }
 
         if (id == R.id.action_google_drive) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(ScoutMasterDatabaseActivity.this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder
+                    (ScoutMasterDbActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
-            alertDialog.setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //Qui va il codice per salvare le misure su Google Drive
+            alertDialog.setPositiveButton(R.string.Si, (dialog, id13) -> {
+                //Qui va il codice per salvare le misure su Google Drive
+                try {
+                    mDriveServiceHelper.createAndSaveFile(dbManager,
+                            ScoutMasterDbActivity.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
             alertDialog.setNegativeButton(R.string.No, (dialog, id1) -> {
                 //annulla la scelta
             });
-            AlertDialog mDialog = alertDialog.create();
+            alertDialog.create();
             alertDialog.show();
             return true;
         }
