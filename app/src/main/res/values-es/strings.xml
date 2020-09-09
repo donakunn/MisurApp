@@ -72,5 +72,6 @@
     <string name="testo_progress_bar">Por favor espera...</string>
     <string name="success_salvataggio_drive">Las medidas se han guardado correctamente en Google Drive.</string>
     <string name="nessuna_misura_da_salvare">No tienes medidas para ahorrar</string>
+    <string name="no_internet_connection">" Sin conexión a Internet"</string>
 
 </resources>

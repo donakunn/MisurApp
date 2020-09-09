@@ -72,5 +72,6 @@
     <string name="testo_progress_bar">Please wait...</string>
     <string name="success_salvataggio_drive">The measurements have been successfully saved on Google Drive</string>
     <string name="nessuna_misura_da_salvare">You have no measures to save</string>
+    <string name="no_internet_connection">No internet connection</string>
 
 </resources>
