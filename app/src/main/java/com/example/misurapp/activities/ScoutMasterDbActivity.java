@@ -11,7 +11,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,10 +92,12 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      */
     private LinearLayout linearLayout;
 
+
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate");
         setContentView(R.layout.activity_database_caposcout);
 
         IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -112,6 +116,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
                     Toast.LENGTH_LONG).show();
             finish();
         }
+
         //ACCESSO CREDENZIALI GOOGLE DRIVE
         mDriveServiceHelper = getGDriveServiceHelper();
     }
@@ -119,6 +124,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG,"onStart");
         // If BT is not on, request that it be enabled.
         // startServer() will then be called during onActivityResult
         ensureDiscoverable();
@@ -127,6 +133,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG,"onDestroy");
         //stop the server
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
@@ -137,6 +144,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
@@ -160,6 +168,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      * mode, otherwise it starts a discoverableIntent to prompt it to be activated
      */
     private void ensureDiscoverable() {
+        Log.d(TAG,"ensure discoverable");
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -214,6 +223,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      * This method initializes the server and starts it
      */
     private void startServer() {
+        Log.d(TAG,"starting server");
         btConnectionHandler = new BluetoothServer(getServerHandler());
         btConnectionHandler.start();
     }
@@ -300,6 +310,11 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
         return new ServerHandler(this);
     }
 
+    /**
+     * This broadcast receiver is responsible for checking whether bluetooth state change while
+     * activity is active, and if this happens it update activity title and start or stop the server
+     * based on bluetooth state
+     */
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
         @Override
@@ -336,6 +351,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      */
     private List<ScoutMasterInstrumentRecord> scoutMasterRecordListMaker
     (RecordsWithEmailAndInstrument recordsWithEmail) {
+        Log.d(TAG,"making list of queries");
         List<ScoutMasterInstrumentRecord> scoutMasterRecordsList = new LinkedList<>();
         List<InstrumentRecord> recordList = recordsWithEmail.getBoyscoutRecords();
         for (InstrumentRecord record : recordList) {
@@ -353,6 +369,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      * @param records list which contains values to be saved on the database.
      */
     private void saveReceivedRecordsOnDB(List<ScoutMasterInstrumentRecord> records) {
+        Log.d(TAG,"saving multiple queries");
         dbManager.multipleInsert(records);
     }
 
@@ -361,6 +378,8 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      * @param records list of the values read from database
      */
     public void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
+        Log.d(TAG,"showing records");
+
         linearLayout = findViewById(R.id.linearLayout);
         linearLayout.removeAllViews();
         TableRow query;
@@ -502,9 +521,8 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
                     (ScoutMasterDbActivity.this);
             alertDialog.setMessage(R.string.conferma_ripristino);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
-                //codice di ripristino
-                progressBar.setVisibility(View.VISIBLE);
                 try {
+                    progressBar.setVisibility(View.VISIBLE);
                     mDriveServiceHelper.restoreFile(dbManager,
                             ScoutMasterDbActivity.this);
                 } catch (IOException e) {

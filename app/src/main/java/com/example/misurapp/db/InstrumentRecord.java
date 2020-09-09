@@ -10,12 +10,10 @@ public class InstrumentRecord implements Serializable {
      * id of the record
      */
     private long id;
-
     /**
      * timestamp of the record
      */
     private String timestamp;
-
     /**
      * registered value
      */

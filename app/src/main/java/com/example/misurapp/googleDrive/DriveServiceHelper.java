@@ -1,5 +1,9 @@
 package com.example.misurapp.googleDrive;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -46,6 +50,10 @@ public class DriveServiceHelper {
      * debug tag
      */
     private static final String TAG = "GoogleDrive";
+    /**
+     * progress bar that give a visual feedback while it restore data from googleDrive
+     */
+    private LinearLayout progressBar;
 
     public DriveServiceHelper(Drive driveService) {
         mDriveService = driveService;
@@ -60,7 +68,15 @@ public class DriveServiceHelper {
      */
     public void createAndSaveFile(DbManager dbManager, BoyscoutDBValuesActivity activity,
                                   String nomeFile) throws IOException {
+
         Log.d(TAG, "Creating a file.");
+        if (!checkForConnection(activity)) {
+            Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
+            toast.show();
+            return;
+        }
         StringBuilder fileContent = new StringBuilder();
         //setta contenuto del file
         List<InstrumentRecord> instrumentRecordsReadFromDB = dbManager.readBoyscoutValuesFromDB
@@ -92,6 +108,20 @@ public class DriveServiceHelper {
     }
 
     /**
+     * This method check if device is connected to the internet.
+     *
+     * @param activity activity involved in backup and restore operations
+     * @return true if your device is connected, false otherwise
+     */
+    private boolean checkForConnection(Activity activity) {
+        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService
+                (Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+
+        return ni != null;
+    }
+
+    /**
      * This method create and save files in GDrive for Scoutmaster type of user
      *
      * @param dbManager DbManager object to handle operations on database.
@@ -100,6 +130,13 @@ public class DriveServiceHelper {
     public void createAndSaveFile(DbManager dbManager, ScoutMasterDbActivity activity)
             throws IOException {
         Log.d(TAG, "Creating a file.");
+        if (!checkForConnection(activity)) {
+            Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
+            toast.show();
+            return;
+        }
         StringBuilder fileContent = new StringBuilder();
         //setta contenuto del file
         List<ScoutMasterInstrumentRecord> instrumentRecordsReadFromDB =
@@ -140,11 +177,21 @@ public class DriveServiceHelper {
      */
     public void restoreFile(DbManager dbManager, ScoutMasterDbActivity activity)
             throws IOException {
-        Log.d(TAG,"restoring values on ScoutMaster");
+        Log.d(TAG, "restoring values on ScoutMaster");
+        LinearLayout progressBar = activity.findViewById(R.id.llProgressBar);
+
+        if (!checkForConnection(activity)) {
+            Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
+            toast.show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
         getIdentificativo("misure ricevute")
                 .addOnSuccessListener(fileId -> readFile(fileId)
                         .addOnSuccessListener(fileContent -> {
-                            LinearLayout progressBar = activity.findViewById(R.id.llProgressBar);
+                            progressBar.setVisibility(View.VISIBLE);
                             List<ScoutMasterInstrumentRecord> instrumentRecordsReadFromDB =
                                     dbManager.readScoutMasterValuesFromDB();
                             boolean control;
@@ -191,9 +238,9 @@ public class DriveServiceHelper {
                                         valoriRipristino = true;
                                     }
                                 }
+                                progressBar.setVisibility(View.GONE);
                                 activity.showRecordsOnScoutMasterActivity
                                         (dbManager.readScoutMasterValuesFromDB());
-                                progressBar.setVisibility(View.GONE);
                                 if (valoriRipristino) {
                                     //feedback
                                     Toast toast = Toast.makeText(activity,
@@ -228,7 +275,14 @@ public class DriveServiceHelper {
      */
     public void restoreFile(DbManager dbManager, MisurAppInstrumentBaseActivity activity,
                             String nomeFile) throws IOException {
-        Log.d(TAG,"restoring values on Instrument Activity");
+        Log.d(TAG, "restoring values on Instrument Activity");
+        if (!checkForConnection(activity)) {
+            Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
+            toast.show();
+            return;
+        }
         getIdentificativo(nomeFile)
                 .addOnSuccessListener(fileId -> readFile(fileId)
                         .addOnSuccessListener(fileContent -> {
@@ -314,11 +368,19 @@ public class DriveServiceHelper {
      */
     public void restoreFile(DbManager dbManager, String instrumentName,
                             BoyscoutDBValuesActivity activity) throws IOException {
-        Log.d(TAG,"restoring values on BoyScout");
+        Log.d(TAG, "restoring values on BoyScout");
+        progressBar = activity.findViewById(R.id.llProgressBar);
+        if (!checkForConnection(activity)) {
+            Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
+            toast.show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
         getIdentificativo(instrumentName)
                 .addOnSuccessListener(fileId -> readFile(fileId)
                         .addOnSuccessListener(fileContent -> {
-                            LinearLayout progressBar = activity.findViewById(R.id.llProgressBar);
                             List<InstrumentRecord> instrumentRecordsReadFromDB = dbManager
                                     .readBoyscoutValuesFromDB(instrumentName);
                             String timestamp;
@@ -346,7 +408,7 @@ public class DriveServiceHelper {
                                             dbManager.saveRegisteredValues
                                                     ("valuesRecordedByBoyscout",
                                                             null, timestamp,
-                                                    instrumentName, Float.parseFloat(words[5]));
+                                                            instrumentName, Float.parseFloat(words[5]));
                                             valoriRipristino = true;//indica che c'è stato un
                                             // ripristino dei valori, altrimenti i valori del file
                                             // sono già visualizzati
@@ -360,7 +422,7 @@ public class DriveServiceHelper {
                                         dbManager.saveRegisteredValues
                                                 ("valuesRecordedByBoyscout",
                                                         null, timestamp,
-                                                instrumentName, Float.parseFloat(words[5]));
+                                                        instrumentName, Float.parseFloat(words[5]));
                                         valoriRipristino = true;
                                     }
                                 }
@@ -370,7 +432,7 @@ public class DriveServiceHelper {
                                 if (valoriRipristino) {
                                     //feedback
                                     Toast toast = Toast.makeText(activity,
-                                            R.string.misure_ripristinate,Toast.LENGTH_SHORT);
+                                            R.string.misure_ripristinate, Toast.LENGTH_SHORT);
                                     toast.setGravity(Gravity.BOTTOM, 0, 300);
                                     toast.show();
                                 } else {
@@ -394,11 +456,12 @@ public class DriveServiceHelper {
 
     /**
      * This method checks whether the file already exists; if it exists
+     *
      * @param nomeFile name of the file to check
      * @return file id, if it does not exist it creates a new file and returns the id
      */
     private Task<String> getIdentificativo(String nomeFile) throws IOException {
-        Log.d(TAG,"in getID");
+        Log.d(TAG, "in getID");
         return Tasks.call(mExecutor, () -> {
             FileList fileList = mDriveService.files().list().setSpaces("drive").execute();
             String fileId = "";
@@ -432,6 +495,7 @@ public class DriveServiceHelper {
 
     /**
      * reads the identified file and returns its contents
+     *
      * @param fileId id of the file to read
      * @return content of the file as a string
      */
@@ -452,7 +516,8 @@ public class DriveServiceHelper {
     /**
      * updates the contents of the file with the content it receives as a parameter identified
      * with the id
-     * @param fileId id of the file to update
+     *
+     * @param fileId  id of the file to update
      * @param content query to add to file
      */
     private void saveFile(String fileId, String content) {

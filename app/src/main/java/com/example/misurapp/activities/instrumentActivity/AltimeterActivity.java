@@ -48,6 +48,10 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
      * TextView to show current values
      */
     private TextView measure;
+    /**
+     * registered altitude value
+     */
+    private float altitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,7 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
             v.startAnimation(AnimationUtils.loadAnimation(AltimeterActivity.this,
                     R.anim.button_click));
             SaveAndFeedback.saveAndMakeToast(dbManager,getApplicationContext(),
-                    instrumentName, value);
+                    instrumentName, altitude);
         });
     }
 
@@ -97,7 +101,7 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
         Log.d(TAG,"onSensorChanged");
         value = event.values[0];
 
-        float altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+        altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
                 value);
 
         if (altitude > 6000 || altitude < 0) {

@@ -29,10 +29,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.misurapp.R;
 import com.example.misurapp.bluetoothConnection.BluetoothClient;
 import com.example.misurapp.bluetoothConnection.BluetoothConnectionService;
 import com.example.misurapp.bluetoothConnection.Constants;
-import com.example.misurapp.R;
 import com.example.misurapp.db.DbManager;
 import com.example.misurapp.db.RecordsWithEmailAndInstrument;
 
@@ -85,7 +85,16 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
     /**
      * Boolean that indicates if data is already set to send
      */
-    boolean dataReady = false;
+    private boolean dataReady = false;
+    /**
+     * Boolean indicating if we're looking for new devices
+     */
+    private boolean isDiscovering = false;
+    /**
+     * Constant key for bundle
+     */
+    private final String DISCOVERING_CHECK = "discoveringCheck";
+
 
     /**
      * initialize layout, register a BroadCastReceiver initialize scan button with a listener and
@@ -126,8 +135,24 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         scanButton.setOnClickListener(v -> {
             doDiscovery();
             v.setVisibility(View.GONE);
+            isDiscovering= true;
         });
         coarsePermissionCheck();
+
+        if (savedInstanceState != null) {
+            isDiscovering = savedInstanceState.getBoolean(DISCOVERING_CHECK);
+        }
+        //check se la view è stata ricreata mentre stava cercando dispositivi
+        if (isDiscovering) {
+            scanButton.setVisibility(View.GONE);
+            doDiscovery();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(DISCOVERING_CHECK,isDiscovering);
     }
 
     /**
@@ -390,6 +415,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
                 setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.select_device);
                 newDevicesListView.setOnItemClickListener(mDeviceClickListener);
+                isDiscovering= false;
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
                     String noDevices = getResources().getText(R.string.none_found).toString();
                     mNewDevicesArrayAdapter.add(noDevices);

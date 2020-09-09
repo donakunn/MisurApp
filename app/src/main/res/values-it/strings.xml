@@ -74,4 +74,5 @@
     <string name="testo_progress_bar">" Attendere prego... "</string>
     <string name="success_salvataggio_drive">" Le misure sono state salvate correttamente su Google Drive"</string>
     <string name="nessuna_misura_da_salvare">" Non hai misure da salvare"</string>
+    <string name="no_internet_connection">Nessuna connessione ad intenet</string>
 </resources>

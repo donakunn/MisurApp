@@ -18,7 +18,9 @@ import java.util.Locale;
  * this class is responsible for managing reading and writing data to the database
  */
 public class DbManager {
-    //debugging
+    /**
+     * debug tag
+     */
     private static final String TAG = "DbManager";
     /**
      * Context object of the activity
