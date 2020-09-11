@@ -41,10 +41,6 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
      */
     private ImageView imageView;
     /**
-     * value read
-     */
-    private float value;
-    /**
      * TextView to show current values
      */
     private TextView measure;
@@ -99,7 +95,8 @@ public class AltimeterActivity extends MisurAppInstrumentBaseActivity
     @Override
     public void onSensorChanged(SensorEvent event) {
         Log.d(TAG,"onSensorChanged");
-        value = event.values[0];
+
+        float value = event.values[0];
 
         altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
                 value);

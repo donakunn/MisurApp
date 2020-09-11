@@ -75,14 +75,12 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         instrumentName = Objects.requireNonNull(getIntent().getExtras())
                 .getString("sensorName");
         dbManager = new DbManager(this);
-        List<InstrumentRecord> instrumentRecordsReadFromDB = dbManager.readBoyscoutValuesFromDB
-                (instrumentName);
         setContentView(R.layout.activity_database_boyscout);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
-        progressBar = (LinearLayout) findViewById(R.id.llProgressBar);
+        progressBar = findViewById(R.id.llProgressBar);
 
 
         IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
