@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,15 +25,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.misurapp.R;
 import com.example.misurapp.bluetoothConnection.BluetoothConnectionService;
 import com.example.misurapp.bluetoothConnection.BluetoothServer;
 import com.example.misurapp.bluetoothConnection.Constants;
-import com.example.misurapp.googleDrive.DriveServiceHelper;
-import com.example.misurapp.R;
 import com.example.misurapp.db.InstrumentRecord;
 import com.example.misurapp.db.InstrumentsDBSchema;
 import com.example.misurapp.db.RecordsWithEmailAndInstrument;
 import com.example.misurapp.db.ScoutMasterInstrumentRecord;
+import com.example.misurapp.googleDrive.DriveServiceHelper;
 import com.example.misurapp.utility.DeleteRowActions;
 
 import java.io.IOException;
@@ -419,7 +418,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
             strumento.setGravity(Gravity.CENTER_VERTICAL);
             strumento.setPadding(10, 10, 10, 10);
             strumento.setTypeface(null, Typeface.BOLD);
-            strumento.setText(record.getInstrumentName());
+            strumento.setText(getInstrumentNameBasedOnLanguage(record.getInstrumentName()));
 
             query.addView(strumento);
 
@@ -451,6 +450,33 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
             query.addView(deleteButton);
             linearLayout.addView(query);
         }
+    }
+
+    /**
+     * This method returns the name of the instrument translated into the language in use based on
+     * the name of the tool passed
+     * @param instrumentName name of the tool to provide the string from the resources
+     * @return Tool name from resource constant strings
+     */
+    private String getInstrumentNameBasedOnLanguage(String instrumentName) {
+        switch (instrumentName) {
+            case "altimeter":
+                return getString(R.string.strumento_altimetro);
+            case "barometer":
+                return getString(R.string.strumento_barometro);
+            case "compass":
+                return getString(R.string.strumento_bussola);
+            case "hygrometer":
+                return getString(R.string.strumento_igrometro);
+            case "photometer":
+                return getString(R.string.strumento_fotometro);
+            case "lastStepsRegister":
+                return getString(R.string.strumento_contapassi);
+            case "thermometer":
+                return getString(R.string.strumento_termometro);
+        }
+        //se per qualche motivo la stringa non viene trovata
+        return instrumentName;
     }
 
     /**
