@@ -96,7 +96,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate");
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_database_caposcout);
 
         IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -123,7 +123,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG,"onStart");
+        Log.d(TAG, "onStart");
         // If BT is not on, request that it be enabled.
         // startServer() will then be called during onActivityResult
         ensureDiscoverable();
@@ -132,7 +132,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy");
+        Log.d(TAG, "onDestroy");
         //stop the server
         if (btConnectionHandler != null) {
             btConnectionHandler.stop();
@@ -143,7 +143,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
+        Log.d(TAG, "onResume");
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
@@ -167,7 +167,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      * mode, otherwise it starts a discoverableIntent to prompt it to be activated
      */
     private void ensureDiscoverable() {
-        Log.d(TAG,"ensure discoverable");
+        Log.d(TAG, "ensure discoverable");
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -180,12 +180,13 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     /**
      * This method reads the response received from the discoverableIntent and whether or
      * not to start the server
+     *
      * @param requestCode The integer request code originally supplied to startActivityForResult(),
      *                    allowing you to identify who this result came from.
-     * @param resultCode The integer result code returned by the child activity through its
-     *                   setResult().
-     * @param data An Intent, which can return result data to the caller
-     *             (various data can be attached to Intent "extras").
+     * @param resultCode  The integer result code returned by the child activity through its
+     *                    setResult().
+     * @param data        An Intent, which can return result data to the caller
+     *                    (various data can be attached to Intent "extras").
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -222,7 +223,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
      * This method initializes the server and starts it
      */
     private void startServer() {
-        Log.d(TAG,"starting server");
+        Log.d(TAG, "starting server");
         btConnectionHandler = new BluetoothServer(getServerHandler());
         btConnectionHandler.start();
     }
@@ -345,12 +346,13 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     /**
      * turns the object containing record list, email, and tool into a list of records with schema
      * equal to master scout table that will contain values
+     *
      * @param recordsWithEmail object wich contains user email and read values.
      * @return list with ScoutMasterInstrumentRecord objects
      */
     private List<ScoutMasterInstrumentRecord> scoutMasterRecordListMaker
     (RecordsWithEmailAndInstrument recordsWithEmail) {
-        Log.d(TAG,"making list of queries");
+        Log.d(TAG, "making list of queries");
         List<ScoutMasterInstrumentRecord> scoutMasterRecordsList = new LinkedList<>();
         List<InstrumentRecord> recordList = recordsWithEmail.getBoyscoutRecords();
         for (InstrumentRecord record : recordList) {
@@ -365,19 +367,21 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
 
     /**
      * This method saves the queries contained in the list within the database.
+     *
      * @param records list which contains values to be saved on the database.
      */
     private void saveReceivedRecordsOnDB(List<ScoutMasterInstrumentRecord> records) {
-        Log.d(TAG,"saving multiple queries");
+        Log.d(TAG, "saving multiple queries");
         dbManager.multipleInsert(records);
     }
 
     /**
      * This method manage showing queries read from the database.
+     *
      * @param records list of the values read from database
      */
     public void showRecordsOnScoutMasterActivity(List<ScoutMasterInstrumentRecord> records) {
-        Log.d(TAG,"showing records");
+        Log.d(TAG, "showing records");
 
         linearLayout = findViewById(R.id.linearLayout);
         linearLayout.removeAllViews();
@@ -455,6 +459,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     /**
      * This method returns the name of the instrument translated into the language in use based on
      * the name of the tool passed
+     *
      * @param instrumentName name of the tool to provide the string from the resources
      * @return Tool name from resource constant strings
      */
@@ -481,6 +486,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
 
     /**
      * This methods add google Drive button on the activity menu
+     *
      * @param menu Activity menu reference.
      * @return true if it succeeds, false otherwise
      */
@@ -490,6 +496,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
         googleDrive.setVisible(true);
         return true;
     }
+
     /**
      * This hook is called whenever an item in your options menu is selected. It perform language
      * change based on the selected item, backup on Google Drive and restore.
