@@ -113,14 +113,14 @@ public class MainActivity extends MisurAppBaseActivity {
     }
 
     /**
-     * Switch the visibility of login and logout buttons
+     * Switch the visibility of login and logout buttons based on login status
      */
     private void buttonVisibilitySwitch() {
         Log.d(TAG, "in button visibility switch");
         if (prefs.getBoolean("hasLogin", false))
-            btnLogin.setVisibility(View.GONE);
+            setLogoutVisible();
         else
-            btnLogout.setVisibility(View.GONE);
+            setLoginVisible();
     }
 
     /**
@@ -160,20 +160,23 @@ public class MainActivity extends MisurAppBaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
             if (account != null) {
                 if (!Objects.equals(account.getEmail(), prefs.getString("email", ""))) {
                     new DbManager(this).dropTables();
+                    saveLoginPropertiesInPreferences(account.getEmail(),true);
                 }
-                saveLoginPropertiesInPreferences(account.getEmail(), true);
                 setLogoutVisible();
 
                 toastMaker(getResources().getString(R.string.LoginComplete));
 
-            } else toastMaker(getResources().getString(R.string.loginNotSucceded));
+            } else {
+                saveLoginPropertiesInPreferences(null, false);
+                toastMaker(getResources().getString(R.string.loginNotSucceded));
+                setLoginVisible();
+            }
         }
     }
 
@@ -211,6 +214,8 @@ public class MainActivity extends MisurAppBaseActivity {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> revokeAccess());
         saveLoginPropertiesInPreferences(null, false);
+
+        account = null;
         toastMaker(getResources().getString(R.string.LogoutComplete));
     }
 
