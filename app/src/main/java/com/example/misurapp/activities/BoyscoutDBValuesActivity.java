@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -207,6 +209,9 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
 
         MenuItem googleDrive = menu.findItem(R.id.action_google_drive);
         googleDrive.setVisible(true);
+
+        MenuItem ripristino = menu.findItem(R.id.action_ripristino);
+        ripristino.setVisible(true);
         return true;
     }
 
@@ -268,6 +273,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             alertDialog.setMessage(R.string.conferma_ripristino);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
                 //codice di ripristino
+                blockScreen(true);
                 progressBar.setVisibility(View.VISIBLE);
                 try {
                     mDriveServiceHelper.restoreFile(dbManager, instrumentName,
@@ -298,6 +304,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
                     (BoyscoutDBValuesActivity.this);
             alertDialog.setMessage(R.string.conferma_google_drive);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id13) -> {
+                progressBar.setVisibility(View.VISIBLE);
                 try {
                     mDriveServiceHelper.createAndSaveFile(dbManager,
                             BoyscoutDBValuesActivity.this, instrumentName);
@@ -315,5 +322,17 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void blockScreen(boolean value){
+        if(value) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
     }
 }
