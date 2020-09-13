@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -494,6 +496,9 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem googleDrive = menu.findItem(R.id.action_google_drive);
         googleDrive.setVisible(true);
+
+        MenuItem ripristino = menu.findItem(R.id.action_ripristino);
+        ripristino.setVisible(true);
         return true;
     }
 
@@ -555,6 +560,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
             alertDialog.setMessage(R.string.conferma_ripristino);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
                 try {
+                    blockScreen(true);
                     progressBar.setVisibility(View.VISIBLE);
                     mDriveServiceHelper.restoreFile(dbManager,
                             ScoutMasterDbActivity.this);
@@ -576,6 +582,7 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
             alertDialog.setMessage(R.string.conferma_google_drive);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id13) -> {
                 //Qui va il codice per salvare le misure su Google Drive
+                progressBar.setVisibility(View.VISIBLE);
                 try {
                     mDriveServiceHelper.createAndSaveFile(dbManager,
                             ScoutMasterDbActivity.this);
@@ -592,5 +599,17 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void blockScreen(boolean value){
+        if(value) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
     }
 }

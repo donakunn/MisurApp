@@ -350,6 +350,10 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
         setTitle(getApplicationContext().getString(R.string.scanning));
 
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
+        findViewById(R.id.title_paired_devices).setVisibility(View.GONE);
+        findViewById(R.id.new_devices).setVisibility(View.VISIBLE);
+        findViewById(R.id.paired_devices).setVisibility(View.GONE);
+
 
         if (mBtAdapter.isDiscovering()) {
             mBtAdapter.cancelDiscovery();

@@ -70,11 +70,13 @@ public class DriveServiceHelper {
                                   String nomeFile) throws IOException {
 
         Log.d(TAG, "Creating a file.");
+        LinearLayout progressBar = activity.findViewById(R.id.llProgressBar);
         if (!checkForConnection(activity)) {
             Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
                     Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM, 0, 300);
             toast.show();
+            progressBar.setVisibility(View.GONE);
             return;
         }
         StringBuilder fileContent = new StringBuilder();
@@ -87,6 +89,7 @@ public class DriveServiceHelper {
         }
         String finalFileContent = fileContent.toString();
         if (finalFileContent.isEmpty()) {//se il contenuto è vuoto
+            progressBar.setVisibility(View.GONE);
             //feedback
             Toast toast = Toast.makeText(activity, R.string.nessuna_misura_da_salvare, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM, 0, 300);
@@ -96,6 +99,7 @@ public class DriveServiceHelper {
             getIdentificativo(nomeFile)
                     .addOnSuccessListener(fileId -> {
                         saveFile(fileId, finalFileContent);
+                        progressBar.setVisibility(View.GONE);
                         //feedback
                         Toast toast = Toast.makeText(activity, R.string.success_salvataggio_drive,
                                 Toast.LENGTH_SHORT);
@@ -130,11 +134,13 @@ public class DriveServiceHelper {
     public void createAndSaveFile(DbManager dbManager, ScoutMasterDbActivity activity)
             throws IOException {
         Log.d(TAG, "Creating a file.");
+        LinearLayout progressBar = activity.findViewById(R.id.llProgressBar);
         if (!checkForConnection(activity)) {
             Toast toast = Toast.makeText(activity, R.string.no_internet_connection,
                     Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM, 0, 300);
             toast.show();
+            progressBar.setVisibility(View.GONE);
             return;
         }
         StringBuilder fileContent = new StringBuilder();
@@ -149,6 +155,7 @@ public class DriveServiceHelper {
         }
         String finalFileContent = fileContent.toString();
         if (finalFileContent.isEmpty()) {//se il contenuto è vuoto
+            progressBar.setVisibility(View.GONE);
             //feedback
             Toast toast = Toast.makeText(activity, R.string.nessuna_misura_da_salvare, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM, 0, 300);
@@ -158,6 +165,7 @@ public class DriveServiceHelper {
             getIdentificativo("misure ricevute")
                     .addOnSuccessListener(fileId -> {
                         saveFile(fileId, finalFileContent);
+                        progressBar.setVisibility(View.GONE);
                         //feedback
                         Toast toast = Toast.makeText(activity,
                                 R.string.success_salvataggio_drive, Toast.LENGTH_SHORT);
@@ -186,6 +194,7 @@ public class DriveServiceHelper {
             toast.setGravity(Gravity.BOTTOM, 0, 300);
             toast.show();
             progressBar.setVisibility(View.GONE);
+            activity.blockScreen(false);
             return;
         }
         getIdentificativo("misure ricevute")
@@ -241,6 +250,7 @@ public class DriveServiceHelper {
                                 progressBar.setVisibility(View.GONE);
                                 activity.showRecordsOnScoutMasterActivity
                                         (dbManager.readScoutMasterValuesFromDB());
+                                activity.blockScreen(false);
                                 if (valoriRipristino) {
                                     //feedback
                                     Toast toast = Toast.makeText(activity,
@@ -257,6 +267,7 @@ public class DriveServiceHelper {
                                 }
                             } else {
                                 progressBar.setVisibility(View.GONE);
+                                activity.blockScreen(false);
                                 //feedback
                                 Toast toast = Toast.makeText(activity, R.string.nessuna_misura_nel_file,
                                         Toast.LENGTH_SHORT);
@@ -376,6 +387,7 @@ public class DriveServiceHelper {
             toast.setGravity(Gravity.BOTTOM, 0, 300);
             toast.show();
             progressBar.setVisibility(View.GONE);
+            activity.blockScreen(false);
             return;
         }
         getIdentificativo(instrumentName)
@@ -429,6 +441,7 @@ public class DriveServiceHelper {
                                 activity.showBoyscoutTableValues(dbManager.readBoyscoutValuesFromDB
                                         (instrumentName));
                                 progressBar.setVisibility(View.GONE);
+                                activity.blockScreen(false);
                                 if (valoriRipristino) {
                                     //feedback
                                     Toast toast = Toast.makeText(activity,
@@ -445,6 +458,7 @@ public class DriveServiceHelper {
                                 }
                             } else {
                                 progressBar.setVisibility(View.GONE);
+                                activity.blockScreen(false);
                                 //feedback
                                 Toast toast = Toast.makeText(activity, R.string.nessuna_misura_nel_file,
                                         Toast.LENGTH_SHORT);

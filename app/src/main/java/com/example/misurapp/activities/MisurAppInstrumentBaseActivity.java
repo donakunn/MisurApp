@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -37,11 +39,15 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
      */
     private DriveServiceHelper mDriveServiceHelper;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_misur_app_instrument_base);
+
+
     }
 
     @Override
@@ -59,8 +65,11 @@ public class MisurAppInstrumentBaseActivity extends MisurAppBaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         Log.d(TAG, "onPrepareOptionsMenu");
-        MenuItem share = menu.findItem(R.id.action_archivio);
-        share.setVisible(true);
+        MenuItem archivio = menu.findItem(R.id.action_archivio);
+        archivio.setVisible(true);
+
+        MenuItem ripristino = menu.findItem(R.id.action_ripristino);
+        ripristino.setVisible(true);
         return true;
     }
 
