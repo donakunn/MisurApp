@@ -100,6 +100,12 @@ public class StepActivity extends MisurAppInstrumentBaseActivity implements Sens
         mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause");
+        mSensorManager.unregisterListener(this);
+    }
+
     /**
      * Refresh animation based on the value read by the sensor
      * @param event Sensor event object wich holds information such as the sensor's type,

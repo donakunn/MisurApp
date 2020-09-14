@@ -202,7 +202,7 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
 
     /**
      * This method manage operation to initialize array adapters. One for already paired devices and
-     * one for newly discovered devices
+     * // one for newly discovered devices
      */
     private void initializeArrayAdapters() {
         Log.d(TAG, "initializing array adapters");
@@ -345,8 +345,6 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
      */
     private void doDiscovery() {
         Log.d(TAG, "doDiscovery()");
-
-        mNewDevicesArrayAdapter.clear();
 
         setProgressBarIndeterminateVisibility(true);
         setTitle(getApplicationContext().getString(R.string.scanning));
