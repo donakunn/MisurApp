@@ -44,7 +44,6 @@
 
     <ImageView
         android:id="@+id/img_lampadina"
-        style="@style/imagestyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
@@ -61,7 +60,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_add_24"
         app:backgroundTint="@color/colorImportantButton"
-        app:layout_constraintBottom_toBottomOf="@+id/img_lampadina"
-        app:layout_constraintEnd_toEndOf="@+id/img_lampadina" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

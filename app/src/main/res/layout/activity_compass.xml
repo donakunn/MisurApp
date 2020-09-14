@@ -23,17 +23,6 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
-            android:elevation="2dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ago_bussola"
-
-            />
-
     </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -53,10 +42,23 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="1dp"
+
+        android:scaleType="centerInside"
+        android:src="@drawable/ago_bussola"
+        app:layout_constraintBottom_toBottomOf="@+id/img_animazione"
+        app:layout_constraintEnd_toEndOf="@+id/img_animazione"
+        app:layout_constraintStart_toStartOf="@+id/img_animazione"
+        app:layout_constraintTop_toTopOf="@+id/img_animazione" />
+
+    <ImageView
         android:id="@+id/img_animazione"
-        style="@style/imagestyle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:scaleType="centerInside"
         android:src="@drawable/sfondo_bussola"
@@ -71,11 +73,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:layout_marginEnd="125dp"
-        android:layout_marginBottom="42dp"
         android:src="@drawable/ic_baseline_add_24"
         app:backgroundTint="@color/colorImportantButton"
-        app:layout_constraintBottom_toBottomOf="@+id/img_animazione"
-        app:layout_constraintEnd_toEndOf="@+id/img_animazione" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
