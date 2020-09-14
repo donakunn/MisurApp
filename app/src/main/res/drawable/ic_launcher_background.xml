@@ -10,7 +10,7 @@
         android:strokeAlpha="0.980392"
         android:strokeLineJoin="round"
         android:strokeWidth="0"
-        android:fillColor="#ffda91"
+        android:fillColor="#FFFFFF"
         android:strokeColor="#62a6b6"
         android:strokeLineCap="round"/>
   </group>

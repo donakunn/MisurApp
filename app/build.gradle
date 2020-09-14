@@ -16,6 +16,13 @@ android {
 
     }
 
+    configurations {
+        all {
+            exclude module: 'httpclient'
+            exclude module: 'commons-logging'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

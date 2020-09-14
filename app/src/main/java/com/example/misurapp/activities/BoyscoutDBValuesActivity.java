@@ -83,11 +83,6 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         setSupportActionBar(toolbar);
         linearLayout = findViewById(R.id.linearLayout);
         progressBar = findViewById(R.id.llProgressBar);
-
-
-        IntentFilter bluetoothStateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mBroadcastReceiver, bluetoothStateFilter);
-
     }
 
     @Override
@@ -115,7 +110,6 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG,"onDestroy");
-        unregisterReceiver(mBroadcastReceiver);
     }
 
     /**
@@ -168,34 +162,6 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
             linearLayout.addView(dbBoyScoutQuery);
         }
     }
-
-    /**
-     * This broadcast receiver is responsible for checking whether bluetooth is turned off while
-     * activity is active, and if this happens it kills the activity and shows error message
-     */
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            if (Objects.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                        BluetoothAdapter.ERROR);
-                if (state == BluetoothAdapter.STATE_OFF) {
-                    setTitle(getResources().getString(R.string.disconnected));
-                    final AlertDialog.Builder dlgAlert = new AlertDialog.Builder
-                            (BoyscoutDBValuesActivity.this);
-                    dlgAlert.setMessage(R.string.bluetoothNotAvailable);
-                    dlgAlert.setTitle("MisurApp");
-                    dlgAlert.setCancelable(false);
-                    dlgAlert.setPositiveButton("Ok",
-                            (dialog, which) -> finish());
-                    dlgAlert.create().show();
-                }
-            }
-        }
-    };
 
     /**
      * This methods adds share and google Drive button on the activity menu

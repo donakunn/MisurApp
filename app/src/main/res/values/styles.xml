@@ -5,7 +5,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/sfondo</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>i
     </style>
@@ -23,14 +22,14 @@
         <item name="android:textColor">@color/bianco</item>
         <item name="android:background">@drawable/button_shape</item>
         <item name="android:layout_margin">10dp</item>
-        <item name="android:elevation">1dp</item>
+        <item name="android:elevation">8dp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="buttonstyle">
         <item name="android:textColor">@color/nero</item>
         <item name="android:layout_margin">10dp</item>
-        <item name="android:elevation">1dp</item>
+        <item name="android:elevation">4dp</item>
         <item name="android:background">@drawable/row_shape</item>
     </style>
 
@@ -45,12 +44,12 @@
     <style name="imagestyle">
         <item name="android:padding">20dp</item>
         <item name="android:background">@drawable/row_shape</item>
-        <item name="android:elevation">1dp</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
     <style name="imagebuttonstyle">
         <item name="android:background">@drawable/imagebutton_shape</item>
-        <item name="android:elevation">2dp</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
     <style name="buttondeletestyle">
