@@ -129,8 +129,8 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
         Log.d(TAG,"onSensorChanged");
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
-            mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat,
-                    orientation)[0]) + 360) % 360;
+            mAzimuth = (int) (Math.abs((Math.toDegrees(SensorManager.getOrientation(rMat,
+                    orientation)[0]) - 360))) % 360;
         }
 
 
@@ -144,12 +144,12 @@ public class CompassActivity extends MisurAppInstrumentBaseActivity implements S
         if (mLastAccelerometerSet && mLastMagnetometerSet) {
             SensorManager.getRotationMatrix(rMat, null, mLastAccelerometer, mLastMagnetometer);
             SensorManager.getOrientation(rMat, orientation);
-            mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat,
-                    orientation)[0]) + 360) % 360;
+            mAzimuth = (int) (Math.abs((Math.toDegrees(SensorManager.getOrientation(rMat,
+                    orientation)[0]) - 360))) % 360;
         }
 
         mAzimuth = Math.round(mAzimuth);
-        imageView.setRotation(mAzimuth);
+        imageView.setRotation(mAzimuth * -1);
 
         String where = "NO";
 
