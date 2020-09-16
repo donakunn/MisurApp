@@ -262,6 +262,8 @@ public class BluetoothConnectionActivity extends MisurAppBaseActivity {
             dlgAlert.setPositiveButton("Ok",
                     (dialog, which) -> BluetoothConnectionActivity.this.finish());
             dlgAlert.create().show();
+        } else  {
+            initializeArrayAdapters();
         }
     }
 
