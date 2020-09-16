@@ -611,9 +611,15 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method block the screen if value is true. Used during an operation, to make it done
+     * before any change of state
+     * @param value boolean
+     */
     public void blockScreen(boolean value){
         if(value) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (getResources().getConfiguration().orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             } else {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

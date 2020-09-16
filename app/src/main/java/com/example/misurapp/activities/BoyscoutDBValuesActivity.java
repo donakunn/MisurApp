@@ -238,8 +238,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
                     (BoyscoutDBValuesActivity.this);
             alertDialog.setMessage(R.string.conferma_ripristino);
             alertDialog.setPositiveButton(R.string.Si, (dialog, id12) -> {
-                //codice di ripristino
-                blockScreen(true);
+
                 progressBar.setVisibility(View.VISIBLE);
                 try {
                     mDriveServiceHelper.restoreFile(dbManager, instrumentName,
@@ -290,9 +289,15 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method block the screen if value is true. Used during an operation, to make it done
+     * before any change of state
+     * @param value boolean
+     */
     public void blockScreen(boolean value){
         if(value) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (getResources().getConfiguration()
+                    .orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             } else {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
