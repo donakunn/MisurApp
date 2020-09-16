@@ -241,6 +241,7 @@ public class BoyscoutDBValuesActivity extends MisurAppBaseActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
                 try {
+                    blockScreen(true);
                     mDriveServiceHelper.restoreFile(dbManager, instrumentName,
                             BoyscoutDBValuesActivity.this);
                 } catch (IOException e) {
