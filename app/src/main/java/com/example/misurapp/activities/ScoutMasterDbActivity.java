@@ -132,17 +132,6 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-        //stop the server
-        if (btConnectionHandler != null) {
-            btConnectionHandler.stop();
-        }
-        unregisterReceiver(mBroadcastReceiver);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
@@ -162,6 +151,27 @@ public class ScoutMasterDbActivity extends MisurAppInstrumentBaseActivity {
             }
         }
         showRecordsOnScoutMasterActivity(dbManager.readScoutMasterValuesFromDB());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause");
+        if (btConnectionHandler != null) {
+            btConnectionHandler.stop();
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+        //stop the server
+        if (btConnectionHandler != null) {
+            btConnectionHandler.stop();
+        }
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     /**
